@@ -1,9 +1,34 @@
-﻿# Convert-ToColoredSegments.ps1
+﻿<#
+================================================================================
+ORION DESIGN - POWERSHELL UI FRAMEWORK | Convert-ToColoredSegments Function
+================================================================================
+Author:        Sune Alexandersen Narud  
+Date:          August 22, 2025
+Module:        OrionDesign v1.0.0
+Category:      Private Helper Function
+Dependencies:  OrionDesign Theme System
+
+FUNCTION PURPOSE:
+Parses markup tags in text and converts them to colored segments.
+Core helper function providing markup parsing for rich text formatting
+across multiple OrionDesign functions with theme-aware color mapping.
+
+HLD INTEGRATION:
+┌─ PRIVATE HELPER ─┐    ┌─ MARKUP PARSING ─┐    ┌─ OUTPUT ─┐
+│ Convert-ToColored│◄──►│ <accent> tags    │───►│ Colored  │
+│ Segments         │    │ <success><error> │    │ Text     │
+│ • Parse Markup   │    │ Theme Mapping    │    │ Segments │
+│ • Theme Colors   │    │ Tag Processing   │    │ Array    │
+└──────────────────┘    └──────────────────┘    └──────────┘
+================================================================================
+#>
+
+# Convert-ToColoredSegments.ps1
 function Convert-ToColoredSegments {
     param([string]$Text,[hashtable]$Theme=$script:Theme)
 
     $pattern = '<(/?)([a-zA-Z]+)>'
-    $matches = [regex]::Matches($Text, $pattern)
+    $tagMatches = [regex]::Matches($Text, $pattern)
 
     $segments = @(); 
     $colorStack = New-Object System.Collections.Stack
@@ -24,7 +49,7 @@ function Convert-ToColoredSegments {
         }
     }
 
-    foreach ($m in $matches) {
+    foreach ($m in $tagMatches) {
         if ($m.Index -gt $pos) {
             $plain = $Text.Substring($pos, $m.Index - $pos)
             $curColor = if ($colorStack.Count -gt 0) { $colorStack.Peek() } else { $null }
