@@ -135,8 +135,13 @@ function Write-Panel {
         foreach ($line in $lines) {
             if ($line.Length -gt $maxLength) { $maxLength = $line.Length }
         }
-        $Width = $maxLength + ($Padding * 2) + 4  # Extra space for borders/icons
-        if ($Width -lt 40) { $Width = 40 }
+        $Width = $maxLength + ($Padding * 2) + 6  # Space for borders, icons, and spacing
+        if ($Width -lt 30) { $Width = 30 }
+        
+        # Apply global max width if set
+        if ($script:OrionMaxWidth -and $Width -gt $script:OrionMaxWidth) {
+            $Width = $script:OrionMaxWidth
+        }
     }
 
     Write-Host
@@ -150,7 +155,8 @@ function Write-Panel {
 
             # Title
             if ($Title) {
-                $titlePadding = $Width - $Title.Length - 4 - $Icon.Length
+                $usedSpace = 4 + $Icon.Length + $Title.Length  # "│ " + icon + title + " │"
+                $titlePadding = [Math]::Max(0, $Width - $usedSpace)
                 $leftPad = [Math]::Floor($titlePadding / 2)
                 $rightPad = $titlePadding - $leftPad
 
@@ -169,9 +175,6 @@ function Write-Panel {
 
             # Content
             foreach ($line in $lines) {
-                $contentPadding = $Width - $line.Length - 2 - ($Padding * 2)
-                if (-not $Title) { $contentPadding -= ($Icon.Length + 1) }
-
                 Write-Host "│" -ForegroundColor $color -NoNewline
                 Write-Host (" " * $Padding) -NoNewline
 
@@ -181,7 +184,15 @@ function Write-Panel {
                 }
 
                 Write-Host $line -ForegroundColor $script:Theme.Text -NoNewline
-                Write-Host (" " * ($contentPadding)) -NoNewline
+                
+                # Calculate exact remaining space to match border width
+                $contentWidth = $Padding + $line.Length
+                if (-not $Title) { $contentWidth += $Icon.Length + 1 }
+                $remainingSpace = $Width - 2 - $contentWidth - $Padding  # Width - borders - content - right padding
+                $remainingSpace = [Math]::Max(0, $remainingSpace)
+                
+                Write-Host (" " * $Padding) -NoNewline  # Right padding
+                Write-Host (" " * $remainingSpace) -NoNewline  # Fill to border
                 Write-Host "│" -ForegroundColor $color
             }
 
@@ -241,10 +252,12 @@ function Write-Panel {
 
             # Title
             if ($Title) {
+                $usedSpace = 4 + $Icon.Length + $Title.Length  # "│ " + icon + " " + title + "│"
+                $remaining = [Math]::Max(0, $Width - $usedSpace)
+                
                 Write-Host "│ " -ForegroundColor $color -NoNewline
                 Write-Host $Icon -ForegroundColor $color -NoNewline
                 Write-Host " $Title" -ForegroundColor $color -NoNewline
-                $remaining = $Width - $Title.Length - 4 - $Icon.Length
                 Write-Host (" " * $remaining) -NoNewline
                 Write-Host "│" -ForegroundColor $color -NoNewline
                 Write-Host "▌" -ForegroundColor $script:Theme.Muted
@@ -258,6 +271,10 @@ function Write-Panel {
 
             # Content
             foreach ($line in $lines) {
+                $iconSpace = if (-not $Title) { $Icon.Length + 1 } else { 0 }
+                $usedSpace = 2 + 1 + $line.Length + $iconSpace  # "│" + " " + content + icon + "│"
+                $remaining = [Math]::Max(0, $Width - $usedSpace)
+                
                 Write-Host "│" -ForegroundColor $color -NoNewline
                 Write-Host " " -NoNewline
 
@@ -267,8 +284,6 @@ function Write-Panel {
                 }
 
                 Write-Host $line -ForegroundColor $script:Theme.Text -NoNewline
-                $remaining = $Width - $line.Length - 2
-                if (-not $Title) { $remaining -= ($Icon.Length + 1) }
                 Write-Host (" " * $remaining) -NoNewline
                 Write-Host "│" -ForegroundColor $color -NoNewline
                 Write-Host "▌" -ForegroundColor $script:Theme.Muted
