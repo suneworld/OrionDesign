@@ -1,4 +1,5 @@
-﻿function Write-Header {
+﻿# Write-Header.ps1
+function Write-Header {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$Text,

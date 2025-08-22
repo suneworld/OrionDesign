@@ -1,5 +1,5 @@
 ﻿@{
-    RootModule        = 'Orion.Design.psm1'
+    RootModule        = 'OrionDesign.psm1'
     ModuleVersion     = '0.1.0'
     GUID              = '7e6a0c07-1b71-4e11-8d7c-123456789abc'
     Author            = 'Sune Alexandersen Narud'

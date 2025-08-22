@@ -1,4 +1,5 @@
-﻿function Write-Colored {
+﻿# Write-Colored.ps1
+function Write-Colored {
     param([array]$Segments,[hashtable]$Theme=$script:Theme)
 
     foreach ($seg in $Segments) {

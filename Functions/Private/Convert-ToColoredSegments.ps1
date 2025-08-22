@@ -1,4 +1,5 @@
-﻿function Convert-ToColoredSegments {
+﻿# Convert-ToColoredSegments.ps1
+function Convert-ToColoredSegments {
     param([string]$Text,[hashtable]$Theme=$script:Theme)
 
     $pattern = '<(/?)([a-zA-Z]+)>'
