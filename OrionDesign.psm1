@@ -5,7 +5,7 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK
 
 Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
-Version:       0.1.0
+Version:       1.0.0
 
 HIGH LEVEL DESIGN (HLD):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━

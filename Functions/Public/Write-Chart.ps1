@@ -19,7 +19,7 @@ HLD INTEGRATION:
 │ • Multiple Types    │    │ Line/Pie      │    │ Charts   │
 │ • Custom Dimensions │    │ Custom Size   │    │ Color    │
 │ • Value Display     │    │ Auto Scale    │    │ Coded    │
-└────────────────────┘    └───────────────┘    └──────────┘
+└─────────────────────┘    └───────────────┘    └──────────┘
 ================================================================================
 #>
 

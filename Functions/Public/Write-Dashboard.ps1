@@ -15,12 +15,12 @@ comprehensive system monitoring and status overview displays.
 
 HLD INTEGRATION:
 ┌─ DATA PRESENTATION ─┐    ┌─ HELPER FUNCTIONS ─┐   ┌─ OUTPUT ─┐
-│ Write-Dashboard     │◄──►│ Write-DashboardRow  │──►│ Metrics  │
-│ • Multi-Column      │    │ Render-Section      │   │ Progress │
-│ • Metrics Display   │    │ Get-DefaultSections │   │ Lists    │
-│ • Progress Bars     │    │ Theming Support     │   │ Layout   │
-│ • List Content      │    └─────────────────────┘   └──────────┘
-└────────────────────┘
+│ Write-Dashboard     │◄──►│ Write-DashboardRow │──►│ Metrics  │
+│ • Multi-Column      │    │ Render-Section     │   │ Progress │
+│ • Metrics Display   │    │ Get-DefaultSections│   │ Lists    │
+│ • Progress Bars     │    │ Theming Support    │   │ Layout   │
+│ • List Content      │    └────────────────────┘   └──────────┘
+└─────────────────────┘
 ================================================================================
 #>
 

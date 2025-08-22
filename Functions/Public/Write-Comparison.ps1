@@ -19,7 +19,7 @@ HLD INTEGRATION:
 │ • Text/Array/Object │    │ Differences  │    │ Side     │
 │ • Difference Hilite │    │ Table Format │    │ Visual   │
 │ • Custom Titles     │    │ Line Numbers │    │ Compare  │
-└────────────────────┘    └──────────────┘    └──────────┘
+└─────────────────────┘    └──────────────┘    └──────────┘
 ================================================================================
 #>
 
