@@ -34,12 +34,14 @@ The Write-Separator function creates visual separators to divide sections of out
 Optional text to display in the separator.
 
 .PARAMETER Style
-The visual style of the separator. Valid values:
-- 'Single' - Single line
-- 'Double' - Double line  
-- 'Thick' - Thick line
-- 'Dotted' - Dotted line
-- 'Custom' - Custom character
+The visual style of the separator. Available styles:
+• Single: Clean single-line separator using standard horizontal line characters
+• Double: Elegant double-line separator with enhanced visual weight and prominence
+• Thick: Bold thick line separator for strong section divisions and major breaks
+• Dotted: Subtle dotted line separator for gentle section divisions and soft breaks
+• Custom: Flexible custom character separator allowing personalized visual elements
+
+Valid values: Single, Double, Thick, Dotted, Custom
 
 .PARAMETER Length
 Length of the separator (default: terminal width).

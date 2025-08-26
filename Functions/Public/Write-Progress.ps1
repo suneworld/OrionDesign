@@ -37,12 +37,14 @@ Current progress value.
 Maximum progress value.
 
 .PARAMETER Style
-The visual style of the progress bar. Valid values:
-- 'Bar' - Traditional progress bar
-- 'Blocks' - Block-style progress
-- 'Dots' - Animated dots
-- 'Spinner' - Spinning indicator
-- 'Modern' - Modern flat design
+The visual style of the progress bar. Available styles:
+• Bar: Traditional horizontal progress bar with filled/empty segments
+• Blocks: Block-style progress using square characters for visual segments
+• Dots: Animated dots that pulse and rotate to show ongoing activity
+• Spinner: Spinning indicator with rotating characters for active processes
+• Modern: Modern flat design with clean lines and subtle gradients
+
+Valid values: Bar, Blocks, Dots, Spinner, Modern
 
 .PARAMETER Width
 Width of the progress bar.

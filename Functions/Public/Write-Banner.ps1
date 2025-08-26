@@ -6,7 +6,13 @@ Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.0.0
 Category:      Information Display
-Dependencies:  OrionDesign Theme System
+Dependencies:  OrionD    # Left padding
+    Write-Host ($Indent2 + $Padding2[0]) -ForegroundColor $Theme.Accent -NoNewline
+    # Content
+    $PaddingSpaces2 = ' ' * $ContentPadding2
+    Write-Host ($PaddingSpaces2 + $Content2 + $PaddingSpaces2) -ForegroundColor $Theme.Text -NoNewline
+    # Right padding
+    Write-Host ($Padding2[1] + $Indent2) -ForegroundColor $Theme.Accentheme System
 
 FUNCTION PURPOSE:
 Creates decorative banners for script headers with multiple design options.
@@ -32,6 +38,15 @@ The Write-Banner function displays decorative banners with script information in
 
 .PARAMETER Theme
 Optional hashtable containing color theme. Uses module default if not specified.
+Available themes can be set using Set-OrionTheme with these presets:
+
+Standard Themes: Default (Blue accent), Dark (Dark blue/gray), Light (Blue with white background)
+Nature Themes: Ocean (Blue/teal marine colors), Forest (Green woodland colors)  
+Retro/Vintage Themes: OldSchool (Amber monochrome DOS-style), Vintage (Sepia warm tones), Retro80s (Magenta/cyan synthwave)
+Tech/Futuristic Themes: Matrix (Green hacker aesthetic), Cyberpunk (Neon cyan/purple)
+Artistic Themes: Sunset (Orange/purple gradients), Monochrome (Pure black/white contrast)
+
+Use Get-OrionTheme to see current theme or Set-OrionTheme -Preset <ThemeName> to change.
 
 .PARAMETER ScriptName
 The name of the script to display in the banner.
@@ -46,7 +61,15 @@ Optional date/timestamp to display.
 Optional description text to display.
 
 .PARAMETER Design
-The design style for the banner. Valid values: Wings, Classic, Modern, Minimal, Geometric, Diamond.
+The design style for the banner. Available designs:
+• Wings: Elegant banner with wing-like decorative elements extending from center
+• Classic: Traditional banner with corner decorations and straight lines
+• Modern: Clean, sleek banner with subtle accents and minimal decorations
+• Minimal: Simple, understated banner with minimal decorative elements
+• Geometric: Modern banner featuring geometric patterns and shapes
+• Diamond: Decorative banner with diamond/rhombus shaped accents
+
+Valid values: Wings, Classic, Modern, Minimal, Geometric, Diamond.
 
 .EXAMPLE
 Write-Banner -ScriptName "Data Processor" -Author "John Doe" -Design Wings
@@ -62,6 +85,39 @@ Creates a diamond-style banner with script name and description.
 Write-Banner -ScriptName "Backup Tool" -Author "Admin" -AuthorDate "2025-01-15" -Design Modern
 
 Creates a modern-style banner with full script information.
+
+.EXAMPLE
+Write-Banner -ScriptName "Security Scanner" -Design Classic
+
+Creates a classic-style banner with traditional corner decorations.
+
+.EXAMPLE
+Write-Banner -ScriptName "Quick Task" -Design Minimal
+
+Creates a minimal-style banner with understated decorative elements.
+
+.EXAMPLE
+Write-Banner -ScriptName "Analytics Engine" -Design Geometric
+
+Creates a geometric-style banner featuring modern patterns and shapes.
+
+.EXAMPLE
+Set-OrionTheme -Preset Matrix
+Write-Banner -ScriptName "Security Audit" -Author "IT Team" -Design Modern
+
+Sets Matrix theme (green hacker aesthetic) and creates a modern banner.
+
+.EXAMPLE
+Set-OrionTheme -Preset Sunset  
+Write-Banner -ScriptName "Data Analysis" -Description "Monthly reporting tool" -Design Wings
+
+Uses Sunset theme (orange/purple) with wings design for an elegant banner.
+
+.EXAMPLE
+$customTheme = @{ Accent='Magenta'; Success='Green'; Warning='Yellow'; Error='Red'; Text='White'; Muted='Gray' }
+Write-Banner -Theme $customTheme -ScriptName "Custom Script" -Design Classic
+
+Creates a banner using a custom color theme with classic design.
 #>
 function Write-Banner {
     [CmdletBinding()]
@@ -142,7 +198,7 @@ function Write-WingsDesign {
     $nameWidth = $ScriptName.Length
     $nameSpaces = [Math]::Max(0, [Math]::Floor(($bannerWidth - $nameWidth) / 2))
     $nameLine = (' ' * $nameSpaces) + $ScriptName + (' ' * ($bannerWidth - $nameSpaces - $nameWidth))
-    Write-Host $nameLine -ForegroundColor $Theme.Text -BackgroundColor $Theme.Accent
+    Write-Host $nameLine -ForegroundColor $Theme.Text -BackgroundColor $Theme.Success
     
     # Author and date line (if provided)
     if ($Author -or $AuthorDate) {
@@ -168,7 +224,7 @@ function Write-WingsDesign {
             $line = $line.Trim()
             if ($line) {
                 $lineSpaces = [Math]::Max(0, [Math]::Floor(($bannerWidth - $line.Length) / 2))
-                Write-Host ((' ' * $lineSpaces) + $line) -ForegroundColor $Theme.Success
+                Write-Host ((' ' * $lineSpaces) + $line) -ForegroundColor $Theme.Muted
             }
         }
     }
@@ -215,7 +271,7 @@ function Write-ClassicDesign {
         foreach ($line in $descLines) {
             $line = $line.Trim()
             if ($line) {
-                Write-Host $line -ForegroundColor $Theme.Success
+                Write-Host $line -ForegroundColor $Theme.Accent
             }
         }
     }
@@ -257,7 +313,7 @@ function Write-ModernDesign {
         foreach ($line in $descLines) {
             $line = $line.Trim()
             if ($line) {
-                Write-Host "  ▸ $line" -ForegroundColor $Theme.Success
+                Write-Host "  ▸ $line" -ForegroundColor $Theme.Accent
             }
         }
     }
@@ -289,7 +345,7 @@ function Write-MinimalDesign {
         foreach ($line in $descLines) {
             $line = $line.Trim()
             if ($line) {
-                Write-Host $line -ForegroundColor $Theme.Success
+                Write-Host $line -ForegroundColor $Theme.Accent
             }
         }
     }
@@ -335,7 +391,7 @@ function Write-GeometricDesign {
         foreach ($line in $descLines) {
             $line = $line.Trim()
             if ($line) {
-                Write-Host "  ◈ $line" -ForegroundColor $Theme.Success
+                Write-Host "  ◈ $line" -ForegroundColor $Theme.Accent
             }
         }
     }
@@ -388,7 +444,7 @@ function Write-DiamondDesign {
     $Indent1 = $Indentations[0]
     $PaddingWidth1 = $bannerWidth - ($Indent1.Length * 2)
     $Line1Padding = $paddingSymbol * $PaddingWidth1
-    Write-Host ($Indent1 + $Line1Padding + $Indent1) -ForegroundColor $Theme.Success
+    Write-Host ($Indent1 + $Line1Padding + $Indent1) -ForegroundColor $Theme.Accent
 
     # Line 2: Indentation Level 1 (script name)
     $Indent2 = $Indentations[1]
@@ -397,12 +453,12 @@ function Write-DiamondDesign {
     $Padding2 = Get-Padding -TotalWidth $bannerWidth -LeftIndentLength $Indent2.Length -RightIndentLength $Indent2.Length -Content $Content2 -ContentPadding $ContentPadding2
     
     # Left padding
-    Write-Host ($Indent2 + $Padding2[0]) -ForegroundColor $Theme.Success -NoNewline
+    Write-Host ($Indent2 + $Padding2[0]) -ForegroundColor $Theme.Accent -NoNewline
     # Content
     $PaddingSpaces2 = ' ' * $ContentPadding2
     Write-Host ($PaddingSpaces2 + $Content2 + $PaddingSpaces2) -ForegroundColor $Theme.Text -NoNewline
     # Right padding
-    Write-Host ($Padding2[1] + $Indent2) -ForegroundColor $Theme.Success
+    Write-Host ($Padding2[1] + $Indent2) -ForegroundColor $Theme.Accent
 
     # Line 3: Indentation Level 2 (author and date)
     if ($Author -or $AuthorDate) {
@@ -412,19 +468,19 @@ function Write-DiamondDesign {
         $Padding3 = Get-Padding -TotalWidth $bannerWidth -LeftIndentLength $Indent3.Length -RightIndentLength $Indent3.Length -Content $Content3 -ContentPadding $ContentPadding3
         
         # Left padding
-        Write-Host ($Indent3 + $Padding3[0]) -ForegroundColor $Theme.Success -NoNewline
+        Write-Host ($Indent3 + $Padding3[0]) -ForegroundColor $Theme.Accent -NoNewline
         # Content
         $PaddingSpaces3 = ' ' * $ContentPadding3
         Write-Host ($PaddingSpaces3 + $Content3 + $PaddingSpaces3) -ForegroundColor $Theme.Text -NoNewline
         # Right padding
-        Write-Host ($Padding3[1] + $Indent3) -ForegroundColor $Theme.Success
+        Write-Host ($Padding3[1] + $Indent3) -ForegroundColor $Theme.Accent
     }
 
     # Line 4: Indentation Level 3 (innermost)
     $Indent4 = $Indentations[3]
     $PaddingWidth4 = $bannerWidth - ($Indent4.Length * 2)
     $Line4Padding = $paddingSymbol * $PaddingWidth4
-    Write-Host ($Indent4 + $Line4Padding + $Indent4) -ForegroundColor $Theme.Success
+    Write-Host ($Indent4 + $Line4Padding + $Indent4) -ForegroundColor $Theme.Accent
 
     # Description Lines (centered)
     if ($Description) {

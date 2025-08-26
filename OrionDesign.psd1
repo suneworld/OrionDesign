@@ -9,7 +9,9 @@
     # Functions to export from this module
     FunctionsToExport = @(
         'Get-OrionMaxWidth',
+        'Get-OrionTheme',
         'Set-OrionMaxWidth',
+        'Set-OrionTheme',
         'Show-OrionDemo',
         'Write-Action',
         'Write-ActionResult',

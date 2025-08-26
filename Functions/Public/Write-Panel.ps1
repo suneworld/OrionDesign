@@ -37,12 +37,14 @@ The content to display in the panel (supports array of strings).
 Optional title for the panel.
 
 .PARAMETER Style
-The visual style of the panel. Valid values:
-- 'Box' - Full box with borders
-- 'Left' - Left border only
-- 'Top' - Top border with accent
-- 'Card' - Card-style with shadow
-- 'Minimal' - Minimal styling
+The visual style of the panel. Available styles:
+• Box: Complete panel with full borders on all sides and corner decorations
+• Left: Minimal panel with accent left border and clean, unobtrusive design
+• Top: Panel with prominent top border accent and subtitle-style formatting
+• Card: Modern card-style panel with subtle shadow effects and rounded appearance
+• Minimal: Ultra-clean panel with minimal styling and maximum content focus
+
+Valid values: Box, Left, Top, Card, Minimal
 
 .PARAMETER Type
 The type of panel for color theming. Valid values:

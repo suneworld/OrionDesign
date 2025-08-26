@@ -38,11 +38,13 @@ Array of objects or hashtables to display in the table.
 Array of column names to display (default: all properties).
 
 .PARAMETER Style
-The visual style of the table. Valid values:
-- 'Grid' - Full grid with borders
-- 'Simple' - Simple lines
-- 'Minimal' - Minimal styling
-- 'Modern' - Modern flat design
+The visual style of the table. Available styles:
+• Grid: Full grid table with complete borders around all cells and headers
+• Simple: Clean table with basic horizontal lines and minimal visual clutter
+• Minimal: Ultra-minimal table with subtle separators and maximum content focus
+• Modern: Contemporary flat design with clean lines and subtle accent colors
+
+Valid values: Grid, Simple, Minimal, Modern
 
 .PARAMETER Sort
 Column name to sort by.

@@ -37,11 +37,13 @@ The title of the information box.
 Hashtable of key-value pairs to display, or array of strings.
 
 .PARAMETER Style
-The visual style of the box. Valid values:
-- 'Classic' - Traditional box with borders
-- 'Modern' - Modern flat design
-- 'Simple' - Minimal styling
-- 'Accent' - Highlighted with accent colors
+The visual style of the box. Available styles:
+• Classic: Traditional box with decorative borders and formal presentation
+• Modern: Contemporary flat design with clean lines and subtle shadows
+• Simple: Minimal styling with basic borders and understated formatting
+• Accent: Highlighted presentation using theme accent colors for emphasis
+
+Valid values: Classic, Modern, Simple, Accent
 
 .PARAMETER Width
 Width of the information box (default: auto-calculate).

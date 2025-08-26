@@ -37,11 +37,13 @@ The title of the menu.
 Array of menu options to display.
 
 .PARAMETER Style
-The visual style of the menu. Valid values:
-- 'Simple' - Simple numbered list
-- 'Modern' - Modern styled with icons
-- 'Boxed' - Menu with border box
-- 'Compact' - Compact single-line style
+The visual style of the menu. Available styles:
+• Simple: Clean numbered list with minimal formatting and basic selection
+• Modern: Stylish menu with icons, accent colors and enhanced visual appeal
+• Boxed: Menu enclosed in decorative border with frame and padding
+• Compact: Space-efficient single-line style for limited display areas
+
+Valid values: Simple, Modern, Boxed, Compact
 
 .PARAMETER AllowEscape
 Allow users to press Escape to exit without selection.
