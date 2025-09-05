@@ -71,7 +71,7 @@ Write-Progress -CurrentValue 3 -MaxValue 5 -Style Blocks -Text "Processing files
 
 Displays block-style progress with custom text.
 #>
-function Write-Progress {
+function Write-ProgressNew {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][int]$CurrentValue,

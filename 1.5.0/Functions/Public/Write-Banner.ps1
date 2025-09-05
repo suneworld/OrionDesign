@@ -34,14 +34,14 @@ HLD INTEGRATION:
 Creates decorative banners for script headers with multiple design options.
 
 .DESCRIPTION
-The Write-Banner function displays decorative banners with script information including name, author, date, and description. Multiple design styles are available including Wings, Classic, Modern, Minimal, Geometric, and Diamond patterns.
+The Write-Banner function displays decorative banners with script information including name, author, date, and description. Multiple design styles are available including Wings, Classic, Modern, Minimal, Geometric, and Diamond patterns. The banner width can be specified for consistent centering with other script output.
 
 .PARAMETER Theme
 Optional hashtable containing color theme. Uses module default if not specified.
 Available themes can be set using Set-OrionTheme with these presets:
 
 Standard Themes: Default (Blue accent), Dark (Dark blue/gray), Light (Blue with white background)
-Nature Themes: Ocean (Blue/teal marine colors), Forest (Green woodland colors)  
+Nature Themes: Ocean (Blue/teal marine colors), Forest (Green woodland colors)
 Retro/Vintage Themes: OldSchool (Amber monochrome DOS-style), Vintage (Sepia warm tones), Retro80s (Magenta/cyan synthwave)
 Tech/Futuristic Themes: Matrix (Green hacker aesthetic), Cyberpunk (Neon cyan/purple)
 Artistic Themes: Sunset (Orange/purple gradients), Monochrome (Pure black/white contrast)
@@ -71,20 +71,23 @@ The design style for the banner. Available designs:
 
 Valid values: Wings, Classic, Modern, Minimal, Geometric, Diamond.
 
-.EXAMPLE
-Write-Banner -ScriptName "Data Processor" -Author "John Doe" -Design Wings
+.PARAMETER Width
+The width to use for centering the banner. If not specified, uses $script:OrionMaxWidth if set, otherwise the terminal width. This ensures banners are aligned with other script output.
 
-Creates a wings-style banner for a script called "Data Processor" by John Doe.
+.EXAMPLE
+Write-Banner -ScriptName "Data Processor" -Author "John Doe" -Design Wings -Width 80
+
+Creates a wings-style banner for a script called "Data Processor" by John Doe, centered to width 80.
 
 .EXAMPLE
 Write-Banner -ScriptName "System Monitor" -Description "Real-time system monitoring" -Design Diamond
 
-Creates a diamond-style banner with script name and description.
+Creates a diamond-style banner with script name and description, using the default width.
 
 .EXAMPLE
-Write-Banner -ScriptName "Backup Tool" -Author "Admin" -AuthorDate "2025-01-15" -Design Modern
+Write-Banner -ScriptName "Backup Tool" -Author "Admin" -AuthorDate "2025-01-15" -Design Modern -Width 100
 
-Creates a modern-style banner with full script information.
+Creates a modern-style banner with full script information, centered to width 100.
 
 .EXAMPLE
 Write-Banner -ScriptName "Security Scanner" -Design Classic
@@ -108,16 +111,16 @@ Write-Banner -ScriptName "Security Audit" -Author "IT Team" -Design Modern
 Sets Matrix theme (green hacker aesthetic) and creates a modern banner.
 
 .EXAMPLE
-Set-OrionTheme -Preset Sunset  
+Set-OrionTheme -Preset Sunset
 Write-Banner -ScriptName "Data Analysis" -Description "Monthly reporting tool" -Design Wings
 
 Uses Sunset theme (orange/purple) with wings design for an elegant banner.
 
 .EXAMPLE
 $customTheme = @{ Accent='Magenta'; Success='Green'; Warning='Yellow'; Error='Red'; Text='White'; Muted='Gray' }
-Write-Banner -Theme $customTheme -ScriptName "Custom Script" -Design Classic
+Write-Banner -Theme $customTheme -ScriptName "Custom Script" -Design Classic -Width 70
 
-Creates a banner using a custom color theme with classic design.
+Creates a banner using a custom color theme with classic design, centered to width 70.
 #>
 function Write-Banner {
     [CmdletBinding()]
@@ -127,7 +130,8 @@ function Write-Banner {
         [string]$Author = "",
         [string]$AuthorDate = "",
         [string]$Description = "",
-        [ValidateSet('Wings', 'Classic', 'Modern', 'Minimal', 'Geometric', 'Diamond')] [string]$Design = 'Wings'
+        [ValidateSet('Wings', 'Classic', 'Modern', 'Minimal', 'Geometric', 'Diamond')] [string]$Design = 'Wings',
+        [int]$Width = $null
     )
 
     # Default theme if not provided
@@ -145,9 +149,15 @@ function Write-Banner {
         if ($psISE) { $Theme.UseAnsi = $false }
     }
 
-    # Get terminal width
-    $terminalWidth = try { [Console]::WindowWidth } catch { 80 }
-    $maxWidth = $terminalWidth - 4
+    # Determine max width for centering
+    if ($Width) {
+        $maxWidth = $Width
+    } elseif ($script:OrionMaxWidth) {
+        $maxWidth = $script:OrionMaxWidth
+    } else {
+        $terminalWidth = try { [Console]::WindowWidth } catch { 80 }
+        $maxWidth = $terminalWidth - 4
+    }
 
     # Add spacing (removed Clear-Host as it's too aggressive)
     Write-Host
@@ -180,7 +190,7 @@ function Write-Banner {
 function Write-WingsDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
     
-    $bannerWidth = [Math]::Min(60, $MaxWidth)
+    $bannerWidth = $MaxWidth
     $centerPos = [Math]::Floor($bannerWidth / 2)
     $paddingSymbol = '█'
     
@@ -234,7 +244,7 @@ function Write-WingsDesign {
 function Write-ClassicDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
     
-    $bannerWidth = [Math]::Min(60, $MaxWidth)
+    $bannerWidth = $MaxWidth
     $border = '=' * $bannerWidth
     $paddingSymbol = '█'
     
@@ -281,7 +291,7 @@ function Write-ClassicDesign {
 function Write-ModernDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
     
-    $bannerWidth = [Math]::Min(70, $MaxWidth)
+    $bannerWidth = $MaxWidth
     
     # Modern header with gradient-like effect
     $chars = @('▓', '▒', '░')
@@ -324,7 +334,7 @@ function Write-MinimalDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
     
     # Simple header line
-    Write-Host ('─' * 40) -ForegroundColor $Theme.Muted
+    Write-Host ('─' * $MaxWidth) -ForegroundColor $Theme.Muted
     
     # Script name
     Write-Host $ScriptName.ToUpper() -ForegroundColor $Theme.Text
@@ -336,7 +346,7 @@ function Write-MinimalDesign {
     }
     
     # Simple footer line
-    Write-Host ('─' * 40) -ForegroundColor $Theme.Muted
+    Write-Host ('─' * $MaxWidth) -ForegroundColor $Theme.Muted
     
     # Description
     if ($Description) {
@@ -355,7 +365,7 @@ function Write-MinimalDesign {
 function Write-GeometricDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
     
-    $bannerWidth = [Math]::Min(60, $MaxWidth)
+    $bannerWidth = $MaxWidth
     
     # Geometric top pattern
     for ($i = 1; $i -le 5; $i++) {
@@ -401,11 +411,11 @@ function Write-GeometricDesign {
 function Write-DiamondDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
     
-    $bannerWidth = [Math]::Min(70, $MaxWidth)
-    $paddingSymbol = '#'  # Changed from '█' to '#'
+    $bannerWidth = $MaxWidth
+    $paddingSymbol = '═'
     $indentationIncrement = 4  # How much to indent each level
     
-    # Helper function to calculate padding (replicated from original)
+    # Helper function to calculate padding 
     function Get-Padding {
         param (
             [int]$TotalWidth,
@@ -449,7 +459,7 @@ function Write-DiamondDesign {
     # Line 2: Indentation Level 1 (script name)
     $Indent2 = $Indentations[1]
     $Content2 = $ScriptName
-    $ContentPadding2 = 2
+    $ContentPadding2 = 4
     $Padding2 = Get-Padding -TotalWidth $bannerWidth -LeftIndentLength $Indent2.Length -RightIndentLength $Indent2.Length -Content $Content2 -ContentPadding $ContentPadding2
     
     # Left padding
@@ -464,7 +474,7 @@ function Write-DiamondDesign {
     if ($Author -or $AuthorDate) {
         $Indent3 = $Indentations[2]
         $Content3 = if ($Author -and $AuthorDate) { "$Author - $AuthorDate" } elseif ($Author) { $Author } else { $AuthorDate }
-        $ContentPadding3 = 1
+        $ContentPadding3 = 3
         $Padding3 = Get-Padding -TotalWidth $bannerWidth -LeftIndentLength $Indent3.Length -RightIndentLength $Indent3.Length -Content $Content3 -ContentPadding $ContentPadding3
         
         # Left padding

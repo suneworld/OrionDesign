@@ -106,7 +106,7 @@ $publicPath = Join-Path $root 'Functions\Public'
 $publicFunctions = @()
 if (Test-Path $publicPath) {
     Get-ChildItem -Path $publicPath -Filter *.ps1 | ForEach-Object {
-        Write-Host "Loading public function:  $($_.BaseName)" -ForegroundColor Cyan
+        #Write-Host "Loading public function:  $($_.BaseName)" -ForegroundColor Cyan
         . $_.FullName
         $publicFunctions += $_.BaseName
     }
@@ -114,7 +114,7 @@ if (Test-Path $publicPath) {
 
 # --- Export only public functions ---
 if ($publicFunctions.Count -gt 0) {
-    Write-Host "Exporting functions: $($publicFunctions -join ', ')" -ForegroundColor Green
+    #Write-Host "Exporting functions: $($publicFunctions -join ', ')" -ForegroundColor Green
     Export-ModuleMember -Function $publicFunctions
 }
 else {

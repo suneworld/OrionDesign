@@ -26,13 +26,13 @@ HLD INTEGRATION:
 
 <#
 .SYNOPSIS
-Displays formatted action results with status, timing, and details.
+Displays formatted action results with status, timing, subtext, and details.
 
 .DESCRIPTION
-The Write-ActionResult function provides consistent formatting for displaying the results of actions, operations, or tasks. Shows status with appropriate icons and colors, execution time, and optional details or suggestions.
+The Write-ActionResult function provides consistent formatting for displaying the results of actions, operations, or tasks. Shows status with appropriate icons and colors, execution time, subtext, and optional details or suggestions. The main value (Action) is colored according to the status.
 
 .PARAMETER Action
-The name or description of the action that was performed.
+The name, value, or description of the action that was performed. If not specified, defaults to the value of Status.
 
 .PARAMETER Status
 The status of the action. Valid values:
@@ -58,46 +58,75 @@ Suggested next steps or remediation.
 .PARAMETER Indent
 Number of spaces to indent the result (useful for nested operations).
 
+.PARAMETER Subtext
+Additional subtext (such as "items", "users", "devices") to display after the status, in a muted color.
+
+.PARAMETER ShowIcon
+Switch to display the status icon. If not specified, defaults to false.
+
+.PARAMETER ShowStatus
+Switch to display the status text. If not specified, defaults to false.
+
 .EXAMPLE
-Write-ActionResult -Action "Deploy Database" -Status Success -Duration "00:02:15" -Details "142 tables updated"
+Write-ActionResult -Action "Deploy Database" -Status Success -Duration "00:02:15" -Details "142 tables updated" -ShowIcon -ShowStatus
 
-Displays a successful action with timing and details.
-
-.EXAMPLE
-Write-ActionResult -Action "Connect to API" -Status Failed -FailureReason "Connection timeout" -Suggestion "Check network settings"
-
-Displays a failed action with error and suggestion.
+Displays a successful action with timing and details, showing the icon and status.
 
 .EXAMPLE
-Write-ActionResult -Action "Validate Configuration" -Status Warning -Details "Some optional settings missing"
+Write-ActionResult -Action "Connect to API" -Status Failed -FailureReason "Connection timeout" -Suggestion "Check network settings" -ShowIcon -ShowStatus
 
-Displays a warning status with details.
+Displays a failed action with error and suggestion, showing the icon and status.
+
+.EXAMPLE
+Write-ActionResult -Action "Validate Configuration" -Status Warning -Details "Some optional settings missing" -Subtext "settings" -ShowIcon -ShowStatus
+
+Displays a warning status with details and subtext, showing the icon and status.
+
+.EXAMPLE
+Write-ActionResult 50 -Subtext "devices" -Status Success -ShowIcon -ShowStatus
+
+Displays the value 50 in the color of the status (e.g., green for success), with the subtext "devices" in muted color, showing the icon and status.
 #>
 function Write-ActionResult {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][string]$Action,
+        [string]$Action = $null,
         [ValidateSet('Success', 'Failed', 'Warning', 'Info', 'Running', 'Pending')] [string]$Status,
         [string]$Duration = "",
         [string]$Details = "",
         [string]$FailureReason = "",
         [string]$Suggestion = "",
-        [int]$Indent = 0
+        [int]$Indent = 0,
+        [string]$Subtext = "",
+        [switch]$ShowIcon,
+        [switch]$ShowStatus
     )
 
     # Default theme
     if (-not $script:Theme) {
         $script:Theme = @{
-            Accent   = 'Cyan'
-            Success  = 'Green'
-            Warning  = 'Yellow'
-            Error    = 'Red'
-            Text     = 'White'
-            Muted    = 'DarkGray'
-            Divider  = '─'
-            UseAnsi  = $true
+            Accent  = 'Cyan'
+            Success = 'Green'
+            Warning = 'Yellow'
+            Error   = 'Red'
+            Text    = 'White'
+            Muted   = 'DarkGray'
+            Divider = '─'
+            UseAnsi = $true
         }
         if ($psISE) { $script:Theme.UseAnsi = $false }
+    }
+
+    # Default Action to Status if not set
+    if (-not $Action) {
+        $Action = $Status
+    }
+    # Set default for switches if not provided
+    if (-not $PSBoundParameters.ContainsKey('ShowIcon')) {
+        $ShowIcon = $false
+    }
+    if (-not $PSBoundParameters.ContainsKey('ShowStatus')) {
+        $ShowStatus = $false
     }
 
     # Use global max width if not set
@@ -111,35 +140,47 @@ function Write-ActionResult {
     # Status icons and colors
     $statusInfo = switch ($Status) {
         'Success' { @{ Icon = "✅"; Color = $script:Theme.Success } }
-        'Failed'  { @{ Icon = "❌"; Color = $script:Theme.Error } }
+        'Failed' { @{ Icon = "❌"; Color = $script:Theme.Error } }
         'Warning' { @{ Icon = "⚠️ "; Color = $script:Theme.Warning } }
-        'Info'    { @{ Icon = "ℹ️ "; Color = $script:Theme.Accent } }
+        'Info' { @{ Icon = "ℹ️ "; Color = $script:Theme.Accent } }
         'Running' { @{ Icon = "🔄"; Color = $script:Theme.Accent } }
         'Pending' { @{ Icon = "⏳"; Color = $script:Theme.Muted } }
     }
 
     # Main result line
     Write-Host $indentStr -NoNewline
-    Write-Host $statusInfo.Icon -NoNewline
-    Write-Host " $Action" -ForegroundColor $script:Theme.Text -NoNewline
-    
-    # Duration if provided
-    if ($Duration) {
-        Write-Host " (" -ForegroundColor $script:Theme.Muted -NoNewline
-        Write-Host $Duration -ForegroundColor $statusInfo.Color -NoNewline
-        Write-Host ")" -ForegroundColor $script:Theme.Muted -NoNewline
+    if ($ShowIcon) {
+        Write-Host "$($statusInfo.Icon) " -NoNewline
     }
+    # Right-align Action (number) to 5 characters
+    $ActionStr = $Action.ToString().PadLeft(5)
+    Write-Host "$ActionStr" -ForegroundColor $script:Theme.Success -NoNewline
+    
     
     # Status
-    Write-Host " - " -ForegroundColor $script:Theme.Muted -NoNewline
-    Write-Host $Status.ToUpper() -ForegroundColor $statusInfo.Color
+    if ($ShowStatus) {
+        Write-Host " - " -ForegroundColor $script:Theme.Muted -NoNewline
+        Write-Host $Status.ToUpper() -ForegroundColor $statusInfo.Color -NoNewline
+    }
+    # Subtext if provided
+    if ($Subtext) {
+        Write-Host " $Subtext" -ForegroundColor $script:Theme.Muted -NoNewline
+    }
+    # Duration if provided
+    if ($Duration) {
+        Write-Host " in " -ForegroundColor $script:Theme.Muted -NoNewline
+        Write-Host "$(Format-TimeSpan $Duration)" -ForegroundColor $script:Theme.Muted -NoNewline
+    }
+
+    Write-Host 
 
     # Details if provided
     if ($Details) {
         # Truncate details if too long
         $displayDetails = if ($Details.Length -gt $maxContentWidth) {
             $Details.Substring(0, $maxContentWidth - 3) + "..."
-        } else {
+        }
+        else {
             $Details
         }
         Write-Host "$indentStr  📋 $displayDetails" -ForegroundColor $script:Theme.Text
@@ -150,7 +191,8 @@ function Write-ActionResult {
         # Truncate failure reason if too long
         $displayFailure = if ($FailureReason.Length -gt $maxContentWidth) {
             $FailureReason.Substring(0, $maxContentWidth - 3) + "..."
-        } else {
+        }
+        else {
             $FailureReason
         }
         Write-Host "$indentStr  💥 Error: $displayFailure" -ForegroundColor $script:Theme.Error
@@ -161,7 +203,8 @@ function Write-ActionResult {
         # Truncate suggestion if too long
         $displaySuggestion = if ($Suggestion.Length -gt $maxContentWidth) {
             $Suggestion.Substring(0, $maxContentWidth - 3) + "..."
-        } else {
+        }
+        else {
             $Suggestion
         }
         Write-Host "$indentStr  💡 Suggestion: $displaySuggestion" -ForegroundColor $script:Theme.Warning

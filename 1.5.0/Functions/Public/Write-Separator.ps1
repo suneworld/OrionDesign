@@ -161,6 +161,4 @@ function Write-Separator {
             }
         }
     }
-
-    Write-Host
 }
