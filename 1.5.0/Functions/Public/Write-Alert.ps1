@@ -118,8 +118,8 @@ function Write-Alert {
 
     Write-Host
 
-    # Calculate width
-    $maxWidth = 60
+    # Calculate width using global max width
+    $maxWidth = if ($script:OrionMaxWidth) { $script:OrionMaxWidth } else { 80 }
 
     # Top border
     $border = $alertInfo.Border * $maxWidth
@@ -127,11 +127,10 @@ function Write-Alert {
 
     # Title line if provided
     if ($Title) {
-        $titleLine = $alertInfo.Border + " " + $alertInfo.Icon + $Title.ToUpper() + " " + $alertInfo.Border
-        $padding = $maxWidth - $titleLine.Length + 2
-        if ($padding -gt 0) {
-            $titleLine += (" " * $padding) + $alertInfo.Border
-        }
+        $titleLine = $alertInfo.Border + " " + $alertInfo.Icon + $Title.ToUpper() + " "
+        $titleLineLength = $titleLine.Length + 1  # +1 for ending border
+        $padding = [Math]::Max(0, $maxWidth - $titleLineLength)
+        $titleLine += (" " * $padding) + $alertInfo.Border
         Write-Host $titleLine -ForegroundColor $alertInfo.Color
         
         # Separator line
@@ -140,7 +139,7 @@ function Write-Alert {
 
     # Message line
     $messageLine = $alertInfo.Border + " " + $alertInfo.Icon + $alertInfo.Label + ": " + $Message
-    $messageLength = $messageLine.Length - 2  # Subtract icon length for display calculation
+    $messageLength = $messageLine.Length + 1  # +1 for ending border
     
     if ($messageLength -gt $maxWidth - 2) {
         # Multi-line message
@@ -167,7 +166,7 @@ function Write-Alert {
         Write-Host $currentLine -ForegroundColor $alertInfo.Color
     } else {
         # Single line message
-        $padding = $maxWidth - $messageLine.Length
+        $padding = [Math]::Max(0, $maxWidth - $messageLength)
         $messageLine += (" " * $padding) + $alertInfo.Border
         Write-Host $messageLine -ForegroundColor $alertInfo.Color
     }
@@ -175,7 +174,8 @@ function Write-Alert {
     # Details if provided
     if ($Details) {
         $detailsLine = $alertInfo.Border + "   Details: " + $Details
-        $padding = $maxWidth - $detailsLine.Length
+        $detailsLineLength = $detailsLine.Length + 1  # +1 for ending border
+        $padding = [Math]::Max(0, $maxWidth - $detailsLineLength)
         $detailsLine += (" " * $padding) + $alertInfo.Border
         Write-Host $detailsLine -ForegroundColor $script:Theme.Text
     }

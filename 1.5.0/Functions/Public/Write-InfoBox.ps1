@@ -106,8 +106,10 @@ function Write-InfoBox {
     }
 
     if ($Width -eq 0) {
+        # Use global max width if available
+        $globalWidth = if ($script:OrionMaxWidth) { $script:OrionMaxWidth } else { 80 }
         $minWidth = [Math]::Max($Title.Length + 10, $maxKeyLength + $maxValueLength + 10)
-        $Width = [Math]::Max(40, [Math]::Min(100, $minWidth))
+        $Width = [Math]::Max(40, [Math]::Min($globalWidth, $minWidth))
     }
     
     # Ensure minimum width to prevent negative values
@@ -120,7 +122,7 @@ function Write-InfoBox {
             # Top border - ensure non-negative width
             Write-Host "┌─ " -ForegroundColor $script:Theme.Accent -NoNewline
             Write-Host $Title -ForegroundColor $script:Theme.Text -NoNewline
-            $borderLength = [Math]::Max(0, $Width - $Title.Length - 4)
+            $borderLength = [Math]::Max(0, $Width - $Title.Length - 5)
             Write-Host (" " + "─" * $borderLength + "┐") -ForegroundColor $script:Theme.Accent
 
             # Content
@@ -134,12 +136,14 @@ function Write-InfoBox {
                     Write-Host " : " -ForegroundColor $script:Theme.Muted -NoNewline
                     Write-Host $value -ForegroundColor $script:Theme.Text -NoNewline
                     
-                    $padding = [Math]::Max(0, $Width - 4 - $maxKeyLength - 3 - $value.Length)
+                    $contentLength = 2 + $maxKeyLength + 3 + $value.Length + 1  # │ + key + : + value + │
+                    $padding = [Math]::Max(0, $Width - $contentLength)
                     Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
                 } else {
                     Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
                     Write-Host $line -ForegroundColor $script:Theme.Text -NoNewline
-                    $padding = [Math]::Max(0, $Width - 3 - $line.Length)
+                    $contentLength = 2 + $line.Length + 1  # │ + line + │
+                    $padding = [Math]::Max(0, $Width - $contentLength)
                     Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
                 }
             }
@@ -197,7 +201,8 @@ function Write-InfoBox {
 
         'Accent' {
             # Accent title bar
-            $titleBar = " $Title " + (" " * ($Width - $Title.Length - 2))
+            $titleBarLength = [Math]::Max(0, $Width - $Title.Length - 2)
+            $titleBar = " $Title " + (" " * $titleBarLength)
             Write-Host $titleBar -BackgroundColor $script:Theme.Accent -ForegroundColor Black
 
             # Content with accent bullets
