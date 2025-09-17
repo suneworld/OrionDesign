@@ -208,8 +208,14 @@ function Write-Question {
                         $validInput = $false
                     } elseif ($Default) {
                         $userInput = $Default
+                    } else {
+                        # No input and no default, but not required - allow empty
+                        return $null
                     }
-                } else {
+                }
+                
+                # Validate the number (whether from input or default)
+                if (-not [string]::IsNullOrWhiteSpace($userInput)) {
                     $number = 0
                     if (-not [double]::TryParse($userInput, [ref]$number)) {
                         Write-Host "  ❌ Please enter a valid number" -ForegroundColor $script:Theme.Error
@@ -228,14 +234,18 @@ function Write-Question {
         }
 
         # Apply custom validation if provided and input is valid so far
-        if ($validInput -and $Validation -and ![string]::IsNullOrWhiteSpace($userInput)) {
+        if ($validInput -and $Validation -and $userInput -ne $null -and $userInput -ne "") {
             try {
+                # Debug output (remove after fixing)
+                Write-Host "  [DEBUG] Validating value: '$userInput' (Type: $($userInput.GetType().Name))" -ForegroundColor DarkGray
                 $validationResult = & $Validation $userInput
+                Write-Host "  [DEBUG] Validation result: $validationResult" -ForegroundColor DarkGray
                 if (-not $validationResult) {
                     Write-Host "  ❌ $ValidationMessage" -ForegroundColor $script:Theme.Error
                     $validInput = $false
                 }
             } catch {
+                Write-Host "  [DEBUG] Validation error: $($_.Exception.Message)" -ForegroundColor DarkRed
                 Write-Host "  ❌ $ValidationMessage" -ForegroundColor $script:Theme.Error
                 $validInput = $false
             }

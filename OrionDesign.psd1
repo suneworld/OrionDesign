@@ -13,16 +13,14 @@
         'Set-OrionMaxWidth',
         'Set-OrionTheme',
         'Show-OrionDemo',
-        'Show-OrionDemo2',
+        'Show-OrionDemoInteractiveFunctions',
+        'Show-OrionDemoThemes',
         'Write-Action',
         'Write-ActionResult',
         'Write-ActionStatus',
         'Write-Alert',
         'Write-Banner', 
         'Write-Chart',
-        'Write-CodeBlock',
-        'Write-Comparison',
-        'Write-Dashboard',
         'Write-Header',
         'Write-InfoBox',
         'Write-Menu',
@@ -30,8 +28,6 @@
         'Write-Progress',
         'Write-Question',
         'Write-Separator',
-        'Write-Steps',
-        'Write-Table',
-        'Write-Timeline'
+        'Write-Steps'
     )
 }
