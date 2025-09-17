@@ -121,7 +121,6 @@ HLD INTEGRATION:
     Write-Progress -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Bar -ShowPercentage
         
         
-        
     Write-Host "`n🔢 Write-Steps Examples:" -ForegroundColor Cyan
     $deploySteps = @(
         "Validate configuration files",
@@ -130,10 +129,9 @@ HLD INTEGRATION:
         "Update database schema",
         "Start services and verify"
     )
-    Write-Steps -Steps $deploySteps -CurrentStep 2
     Write-Steps -Steps $deploySteps -CurrentStep 3
-    Write-Steps -Steps $deploySteps -CurrentStep 5
-    
+
+
     # Section 3: Data Presentation Functions
     Write-Separator -Text "📊 Data Presentation Functions" -Style Double
 
