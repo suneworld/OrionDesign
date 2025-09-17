@@ -130,8 +130,8 @@ HLD INTEGRATION:
         Write-InfoBox -Title "$ThemeName Theme" -Content "This InfoBox demonstrates how the $ThemeName theme affects content presentation with its unique color palette." -Style Modern
         
         # Progress bars
-        Write-Progress -CurrentValue 75 -MaxValue 100 -Text "$ThemeName Progress" -Style Bar -ShowPercentage
-        Write-Progress -CurrentValue 60 -MaxValue 100 -Text "$ThemeName Modern" -Style Modern -ShowPercentage
+        Write-ProgressBar -CurrentValue 75 -MaxValue 100 -Text "$ThemeName Progress" -Style Bar -ShowPercentage
+        Write-ProgressBar -CurrentValue 60 -MaxValue 100 -Text "$ThemeName Modern" -Style Modern -ShowPercentage
         
         # ActionResult
         Write-ActionResult -Action "$ThemeName Theme Test" -Status Success -Details "Theme applied successfully with all components"

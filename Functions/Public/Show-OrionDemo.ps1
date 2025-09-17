@@ -195,36 +195,36 @@ HLD INTEGRATION:
     Demo-Separator "Write-ActionResult -Status Info"
     Write-ActionResult -Action "Deploy Application (action)" -Status Info -Details "Deployed to production environment in 2.3 seconds (details)"
         
-    Demo-Separator "Write-Progress -Style Bar"
-    Write-Progress -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Bar -ShowPercentage
-    Write-Progress -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Bar -ShowPercentage
-    Write-Progress -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Bar -ShowPercentage  
-    Write-Progress -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Bar -ShowPercentage
+    Demo-Separator "Write-ProgressBar -Style Bar"
+    Write-ProgressBar -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Bar -ShowPercentage
+    Write-ProgressBar -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Bar -ShowPercentage
+    Write-ProgressBar -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Bar -ShowPercentage  
+    Write-ProgressBar -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Bar -ShowPercentage
         
 
-    Demo-Separator "Write-Progress -Style Blocks"
-    Write-Progress -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Blocks -ShowPercentage
-    Write-Progress -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Blocks -ShowPercentage
-    Write-Progress -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Blocks -ShowPercentage
-    Write-Progress -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Blocks -ShowPercentage
+    Demo-Separator "Write-ProgressBar -Style Blocks"
+    Write-ProgressBar -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Blocks -ShowPercentage
+    Write-ProgressBar -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Blocks -ShowPercentage
+    Write-ProgressBar -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Blocks -ShowPercentage
+    Write-ProgressBar -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Blocks -ShowPercentage
 
-    Demo-Separator "Write-Progress -Style Dots"
-    Write-Progress -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Dots -ShowPercentage
-    Write-Progress -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Dots -ShowPercentage
-    Write-Progress -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Dots -ShowPercentage
-    Write-Progress -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Dots -ShowPercentage
+    Demo-Separator "Write-ProgressBar -Style Dots"
+    Write-ProgressBar -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Dots -ShowPercentage
+    Write-ProgressBar -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Dots -ShowPercentage
+    Write-ProgressBar -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Dots -ShowPercentage
+    Write-ProgressBar -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Dots -ShowPercentage
 
-    Demo-Separator "Write-Progress -Style Modern"
-    Write-Progress -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Modern -ShowPercentage
-    Write-Progress -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Modern -ShowPercentage
-    Write-Progress -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Modern -ShowPercentage
-    Write-Progress -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Modern -ShowPercentage
+    Demo-Separator "Write-ProgressBar -Style Modern"
+    Write-ProgressBar -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Modern -ShowPercentage
+    Write-ProgressBar -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Modern -ShowPercentage
+    Write-ProgressBar -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Modern -ShowPercentage
+    Write-ProgressBar -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Modern -ShowPercentage
 
-    Demo-Separator "Write-Progress -Style Spinner"
-    Write-Progress -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Spinner -ShowPercentage
-    Write-Progress -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Spinner -ShowPercentage
-    Write-Progress -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Spinner -ShowPercentage
-    Write-Progress -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Spinner -ShowPercentage
+    Demo-Separator "Write-ProgressBar -Style Spinner"
+    Write-ProgressBar -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Spinner -ShowPercentage
+    Write-ProgressBar -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Spinner -ShowPercentage
+    Write-ProgressBar -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Spinner -ShowPercentage
+    Write-ProgressBar -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Spinner -ShowPercentage
 
     $deploySteps = @(
         "Validate configuration files",

@@ -25,7 +25,7 @@
         'Write-InfoBox',
         'Write-Menu',
         'Write-Panel',
-        'Write-Progress',
+        'Write-ProgressBar',
         'Write-Question',
         'Write-Separator',
         'Write-Steps'

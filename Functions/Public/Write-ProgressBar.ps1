@@ -1,6 +1,6 @@
 <#
 ================================================================================
-ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Progress Function
+ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-ProgressBar Function
 ================================================================================
 Author:        Sune Alexandersen Narud  
 Date:          August 22, 2025
@@ -15,7 +15,7 @@ with bar charts, blocks, and percentage displays.
 
 HLD INTEGRATION:
 ┌─ STATUS & RESULTS ─┐    ┌─ PROGRESS TYPES ─┐    ┌─ OUTPUT ─┐
-│ Write-Progress     │◄──►│ Bar/Blocks/Dots   │───►│ Visual   │
+│ Write-ProgressBar  │◄──►│ Bar/Blocks/Dots   │───►│ Visual   │
 │ • Current/Max      │    │ Percentage Show   │    │ Progress │
 │ • Visual Styles    │    │ Text Labels       │    │ Real-time│
 │ • Customizable     │    │ Color Coding      │    │ Updates  │
@@ -28,7 +28,7 @@ HLD INTEGRATION:
 Creates styled progress indicators and bars.
 
 .DESCRIPTION
-The Write-Progress function displays various types of progress indicators with customizable styling and animations.
+The Write-ProgressBar function displays various types of progress indicators with customizable styling and animations.
 
 .PARAMETER CurrentValue
 Current progress value.
@@ -62,16 +62,16 @@ Color for the progress indicator.
 Clear the current line before writing.
 
 .EXAMPLE
-Write-Progress -CurrentValue 75 -MaxValue 100 -Style Bar -ShowPercentage
+Write-ProgressBar -CurrentValue 75 -MaxValue 100 -Style Bar -ShowPercentage
 
 Displays a 75% complete progress bar with percentage.
 
 .EXAMPLE
-Write-Progress -CurrentValue 3 -MaxValue 5 -Style Blocks -Text "Processing files"
+Write-ProgressBar -CurrentValue 3 -MaxValue 5 -Style Blocks -Text "Processing files"
 
 Displays block-style progress with custom text.
 #>
-function Write-Progress {
+function Write-ProgressBar {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][int]$CurrentValue,
