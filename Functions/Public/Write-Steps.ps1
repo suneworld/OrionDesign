@@ -112,11 +112,11 @@ function Write-Steps {
 
         # Status styling
         $statusInfo = switch ($stepStatus) {
-            'Complete' { @{ Icon = "✅"; Color = $script:Theme.Success; Prefix = "[DONE]" } }
-            'Current'  { @{ Icon = "🔄"; Color = $script:Theme.Accent; Prefix = "[ACTIVE]" } }
-            'Failed'   { @{ Icon = "❌"; Color = $script:Theme.Error; Prefix = "[FAILED]" } }
-            'Pending'  { @{ Icon = "⏳"; Color = $script:Theme.Muted; Prefix = "[PENDING]" } }
-            default    { @{ Icon = "📋"; Color = $script:Theme.Text; Prefix = "" } }
+            'Complete' { @{ Icon = "✅ "; Color = $script:Theme.Success; Prefix = "[DONE]" } }
+            'Current'  { @{ Icon = "🔄 "; Color = $script:Theme.Accent; Prefix = "[ACTIVE]" } }
+            'Failed'   { @{ Icon = "❌ "; Color = $script:Theme.Error; Prefix = "[FAILED]" } }
+            'Pending'  { @{ Icon = "⏳ "; Color = $script:Theme.Muted; Prefix = "[PENDING]" } }
+            default    { @{ Icon = "📋 "; Color = $script:Theme.Text; Prefix = "" } }
         }
 
         switch ($Style) {

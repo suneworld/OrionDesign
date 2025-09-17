@@ -11,14 +11,14 @@ Dependencies:  OrionDesign Theme System
 FUNCTION PURPOSE:
 Creates attention-grabbing alert messages with type-specific styling.
 Critical information display component providing prominent notifications
-with emoji icons and color-coded borders for different alert types.
+with clean, professional color-coded borders for different alert types.
 
 HLD INTEGRATION:
 ┌─ INFORMATION ─┐    ┌─ ALERT TYPES ─┐    ┌─ OUTPUT ─┐
 │ Write-Alert   │◄──►│ Warning/Error │───►│ Prominent│
 │ • Type-based  │    │ Info/Success  │    │ Colored  │
-│ • Emoji Icons │    │ Color Coded   │    │ Bordered │
-│ • Prominent   │    │ Visual Impact │    │ Alerts   │
+│ • Clean Design│    │ Color Coded   │    │ Bordered │
+│ • Prominent   │    │ Professional  │    │ Alerts   │
 └───────────────┘    └───────────────┘    └──────────┘
 ================================================================================
 #>
@@ -28,7 +28,7 @@ HLD INTEGRATION:
 Displays styled alert messages with different severity levels and optional actions.
 
 .DESCRIPTION
-The Write-Alert function creates visually distinctive alert messages for different types of notifications. Supports various alert types with appropriate styling, icons, and optional interactive actions.
+The Write-Alert function creates visually distinctive alert messages for different types of notifications. Features clean, professional styling with color-coded borders and optional interactive actions.
 
 .PARAMETER Message
 The alert message to display.
@@ -101,13 +101,13 @@ function Write-Alert {
         if ($psISE) { $script:Theme.UseAnsi = $false }
     }
 
-    # Alert styling based on type
+    # Alert styling based on type - clean design without icons
     $alertInfo = switch ($Type) {
-        'Success'  { @{ Icon = "✅"; Color = $script:Theme.Success; Border = "═"; Label = "SUCCESS" } }
-        'Warning'  { @{ Icon = "⚠️ "; Color = $script:Theme.Warning; Border = "═"; Label = "WARNING" } }
-        'Error'    { @{ Icon = "❌"; Color = $script:Theme.Error; Border = "═"; Label = "ERROR" } }
-        'Info'     { @{ Icon = "ℹ️ "; Color = $script:Theme.Accent; Border = "─"; Label = "INFO" } }
-        'Critical' { @{ Icon = "🚨"; Color = $script:Theme.Error; Border = "█"; Label = "CRITICAL" } }
+        'Success'  { @{ Color = $script:Theme.Success; Border = "═"; Label = "SUCCESS" } }
+        'Warning'  { @{ Color = $script:Theme.Warning; Border = "═"; Label = "WARNING" } }
+        'Error'    { @{ Color = $script:Theme.Error; Border = "═"; Label = "ERROR" } }
+        'Info'     { @{ Color = $script:Theme.Accent; Border = "─"; Label = "INFO" } }
+        'Critical' { @{ Color = $script:Theme.Error; Border = "█"; Label = "CRITICAL" } }
     }
 
     # Override for critical flag
@@ -127,7 +127,7 @@ function Write-Alert {
 
     # Title line if provided
     if ($Title) {
-        $titleLine = $alertInfo.Border + " " + $alertInfo.Icon + $Title.ToUpper() + " "
+        $titleLine = $alertInfo.Border + " " + $Title.ToUpper() + " "
         $titleLineLength = $titleLine.Length + 1  # +1 for ending border
         $padding = [Math]::Max(0, $maxWidth - $titleLineLength)
         $titleLine += (" " * $padding) + $alertInfo.Border
@@ -137,19 +137,19 @@ function Write-Alert {
         Write-Host $border -ForegroundColor $alertInfo.Color
     }
 
-    # Message line
-    $messageLine = $alertInfo.Border + " " + $alertInfo.Icon + $alertInfo.Label + ": " + $Message
+    # Message line - clean design without icons
+    $messageLine = $alertInfo.Border + " " + $alertInfo.Label + ": " + $Message + " "
     $messageLength = $messageLine.Length + 1  # +1 for ending border
     
-    if ($messageLength -gt $maxWidth - 2) {
+    if ($messageLength -gt $maxWidth) {
         # Multi-line message
         $words = $Message -split ' '
-        $currentLine = $alertInfo.Border + " " + $alertInfo.Icon + $alertInfo.Label + ": "
+        $currentLine = $alertInfo.Border + " " + $alertInfo.Label + ": "
         
         foreach ($word in $words) {
-            if (($currentLine + $word).Length -gt $maxWidth - 2) {
+            if (($currentLine + $word + " ").Length -gt $maxWidth - 1) {
                 # Finish current line
-                $padding = $maxWidth - $currentLine.Length
+                $padding = [Math]::Max(0, $maxWidth - $currentLine.Length - 1)
                 $currentLine += (" " * $padding) + $alertInfo.Border
                 Write-Host $currentLine -ForegroundColor $alertInfo.Color
                 
@@ -161,7 +161,7 @@ function Write-Alert {
         }
         
         # Finish last line
-        $padding = $maxWidth - $currentLine.Length
+        $padding = [Math]::Max(0, $maxWidth - $currentLine.Length - 1)
         $currentLine += (" " * $padding) + $alertInfo.Border
         Write-Host $currentLine -ForegroundColor $alertInfo.Color
     } else {

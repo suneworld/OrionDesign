@@ -9,7 +9,7 @@ Category:      Interactive Display
 Dependencies:  OrionDesign Theme System
 
 FUNCTION PURPOSE:
-Completes action status lines with colored results and icons.
+Completes action status lines with colored results and clean text formatting.
 Second part of two-function pattern for real-time status reporting,
 designed to follow Write-Action calls for complete status line output.
 
@@ -17,7 +17,7 @@ HLD INTEGRATION:
 ┌─ STATUS COMPLETION ─┐    ┌─ RESULT DISPLAY ─┐    ┌─ OUTPUT ─┐
 │ Write-ActionStatus  │◄──►│ Right-aligned    │───►│ Status   │
 │ • Status Text       │    │ Color Coding     │    │ Line     │
-│ • Status Icons      │    │ Icon Mapping     │    │ Complete │
+│ • Clean Design      │    │ Professional     │    │ Complete │
 │ • Auto Detection    │    │ Pattern Match    │    │ Display  │
 └─────────────────────┘    └──────────────────┘    └──────────┘
 ================================================================================
@@ -25,11 +25,11 @@ HLD INTEGRATION:
 
 <#
 .SYNOPSIS
-Completes action status lines with colored results and status icons.
+Completes action status lines with colored results and clean text formatting.
 
 .DESCRIPTION
 The Write-ActionStatus function completes status lines started with Write-Action.
-It displays the result with appropriate colors and icons based on the status type
+It displays the result with appropriate colors based on the status type
 or automatic pattern detection. The output includes a newline to complete the line.
 
 .PARAMETER Text
@@ -37,12 +37,12 @@ The status text to display.
 
 .PARAMETER Status
 The status type for color coding. Valid values:
-- 'Success' - Green with checkmark
-- 'Failed' - Red with X 
-- 'Warning' - Yellow with warning icon
-- 'Info' - Cyan with info icon
-- 'Running' - Blue with spinner
-- 'Pending' - Yellow with clock
+- 'Success' - Green text
+- 'Failed' - Red text
+- 'Warning' - Yellow text
+- 'Info' - Cyan text
+- 'Running' - Blue text
+- 'Pending' - Yellow text
 
 .PARAMETER Color
 Override color for the status text (overrides Status parameter).
@@ -51,25 +51,25 @@ Override color for the status text (overrides Status parameter).
 The width to pad the status text to. Defaults to 15 characters.
 
 .PARAMETER NoIcon
-Suppress the status icon, showing only colored text.
+Legacy parameter - maintained for compatibility (no longer used as icons are removed).
 
 .EXAMPLE
 Write-Action "Connecting to database"
 Write-ActionStatus "Connected" -Status Success
 
-Displays: "Connecting to database                    ✅ Connected"
+Displays: "Connecting to database                       Connected"
 
 .EXAMPLE
 Write-Action "Processing file"
 Write-ActionStatus "File not found" -Status Failed
 
-Shows: "Processing file                             ❌ File not found"
+Shows: "Processing file                          File not found"
 
 .EXAMPLE
 Write-Action "Checking service"
 Write-ActionStatus "125 users" 
 
-Auto-detects success pattern: "Checking service                     ✅ 125 users"
+Auto-detects success pattern: "Checking service                      125 users"
 
 .NOTES
 This function automatically detects success/failure patterns if no Status is specified.
@@ -83,7 +83,7 @@ function Write-ActionStatus {
         [ValidateSet('Success', 'Failed', 'Warning', 'Info', 'Running', 'Pending')]
         [string]$Status = "",
         [string]$Color = "",
-        [int]$Width = 15,
+        [int]$Width = 0,
         [switch]$NoIcon
     )
 
@@ -122,9 +122,8 @@ function Write-ActionStatus {
         }
     }
 
-    # Determine color and icon
+    # Determine color - clean design without icons
     $statusColor = $script:Theme.Text
-    $icon = ""
 
     if ($Color) {
         $statusColor = $Color
@@ -132,35 +131,43 @@ function Write-ActionStatus {
         switch ($Status) {
             'Success' { 
                 $statusColor = $script:Theme.Success
-                $icon = if (-not $NoIcon) { "✅ " } else { "" }
             }
             'Failed' { 
                 $statusColor = $script:Theme.Error
-                $icon = if (-not $NoIcon) { "❌ " } else { "" }
             }
             'Warning' { 
                 $statusColor = $script:Theme.Warning
-                $icon = if (-not $NoIcon) { "⚠️  " } else { "" }
             }
             'Info' { 
                 $statusColor = $script:Theme.Accent
-                $icon = if (-not $NoIcon) { "ℹ️  " } else { "" }
             }
             'Running' { 
                 $statusColor = $script:Theme.Accent
-                $icon = if (-not $NoIcon) { "🔄 " } else { "" }
             }
             'Pending' { 
                 $statusColor = $script:Theme.Warning
-                $icon = if (-not $NoIcon) { "⏳ " } else { "" }
             }
         }
     }
 
-    # Format the status text with proper padding
-    $displayText = $icon + $Text
+    # Calculate appropriate width for status text
+    if ($Width -eq 0) {
+        if ($script:OrionMaxWidth) {
+            # Use the space reserved by Write-Action (25 chars)
+            $Width = 25  # This should match the statusReserve in Write-Action
+        } else {
+            $Width = 20  # More generous fallback for when no global width is set
+        }
+    }
+
+    # Format the status text with proper padding - clean design without icons
+    $displayText = $Text
     if ($displayText.Length -gt $Width) {
-        $displayText = $displayText.Substring(0, $Width - 2) + ".."
+        # Only truncate if absolutely necessary, prefer showing full text
+        if ($displayText.Length -gt ($Width + 5)) {  # Allow some overflow before truncating
+            $displayText = $displayText.Substring(0, $Width - 2) + ".."
+        }
+        # If only slightly over, don't truncate - just show the full text
     } else {
         $displayText = $displayText.PadLeft($Width)
     }

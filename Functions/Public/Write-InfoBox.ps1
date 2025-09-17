@@ -68,8 +68,31 @@ function Write-InfoBox {
         [Parameter(Mandatory)][string]$Title,
         [Parameter(Mandatory)]$Content,
         [ValidateSet('Classic', 'Modern', 'Simple', 'Accent')] [string]$Style = 'Classic',
-        [int]$Width = 0
+        [int]$Width = 0,
+        [switch]$WrapContent  # Enable word wrapping for long content lines
     )
+
+    # Helper function for word wrapping
+    function Wrap-Text {
+        param([string]$Text, [int]$MaxWidth)
+        if ($Text.Length -le $MaxWidth -or $MaxWidth -le 0) { return @($Text) }
+        
+        $words = $Text -split '\s+'
+        $lines = @()
+        $currentLine = ""
+        
+        foreach ($word in $words) {
+            $testLine = if ($currentLine) { "$currentLine $word" } else { $word }
+            if ($testLine.Length -le $MaxWidth) {
+                $currentLine = $testLine
+            } else {
+                if ($currentLine) { $lines += $currentLine }
+                $currentLine = $word
+            }
+        }
+        if ($currentLine) { $lines += $currentLine }
+        return $lines
+    }
 
     # Default theme
     if (-not $script:Theme) {
@@ -86,9 +109,10 @@ function Write-InfoBox {
         if ($psISE) { $script:Theme.UseAnsi = $false }
     }
 
-    # Calculate width
+    # Calculate width with proper content analysis
     $maxKeyLength = 0
     $maxValueLength = 0
+    $maxContentWidth = 0
     $contentLines = @()
 
     if ($Content -is [hashtable]) {
@@ -97,19 +121,36 @@ function Write-InfoBox {
             $contentLines += "$key`: $value"
             if ($key.Length -gt $maxKeyLength) { $maxKeyLength = $key.Length }
             if ($value.ToString().Length -gt $maxValueLength) { $maxValueLength = $value.ToString().Length }
+            # Calculate total line width for hashtable content
+            $totalLineWidth = $key.Length + 3 + $value.ToString().Length  # key + " : " + value
+            if ($totalLineWidth -gt $maxContentWidth) { $maxContentWidth = $totalLineWidth }
         }
     } else {
         $contentLines = $Content
         foreach ($line in $contentLines) {
             if ($line.Length -gt $maxValueLength) { $maxValueLength = $line.Length }
+            # For simple content, the line length IS the content width
+            if ($line.Length -gt $maxContentWidth) { $maxContentWidth = $line.Length }
         }
     }
 
     if ($Width -eq 0) {
         # Use global max width if available
         $globalWidth = if ($script:OrionMaxWidth) { $script:OrionMaxWidth } else { 80 }
-        $minWidth = [Math]::Max($Title.Length + 10, $maxKeyLength + $maxValueLength + 10)
+        
+        # Calculate minimum width based on actual content requirements
+        $titleWidthReq = $Title.Length + 10  # Title + decorative elements
+        $contentWidthReq = $maxContentWidth + 4  # Content + border chars (│ + space + content + space + │)
+        $minWidth = [Math]::Max($titleWidthReq, $contentWidthReq)
+        
+        # Respect global width while ensuring content fits
         $Width = [Math]::Max(40, [Math]::Min($globalWidth, $minWidth))
+        
+        # If content still doesn't fit within global limit, expand to accommodate it
+        if ($minWidth -gt $globalWidth) {
+            $Width = $minWidth
+            Write-Verbose "Content width ($minWidth) exceeds global limit ($globalWidth), expanding to fit content"
+        }
     }
     
     # Ensure minimum width to prevent negative values
@@ -131,20 +172,61 @@ function Write-InfoBox {
                     $key = $matches[1]
                     $value = $matches[2]
                     
-                    Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
-                    Write-Host $key.PadRight($maxKeyLength) -ForegroundColor $script:Theme.Accent -NoNewline
-                    Write-Host " : " -ForegroundColor $script:Theme.Muted -NoNewline
-                    Write-Host $value -ForegroundColor $script:Theme.Text -NoNewline
-                    
-                    $contentLength = 2 + $maxKeyLength + 3 + $value.Length + 1  # │ + key + : + value + │
-                    $padding = [Math]::Max(0, $Width - $contentLength)
-                    Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
+                    if ($WrapContent -and $value.Length -gt ($Width - $maxKeyLength - 8)) {
+                        # Wrap long values
+                        $maxValueWidth = $Width - $maxKeyLength - 8
+                        $wrappedLines = Wrap-Text -Text $value -MaxWidth $maxValueWidth
+                        
+                        # First line with key
+                        Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
+                        Write-Host $key.PadRight($maxKeyLength) -ForegroundColor $script:Theme.Accent -NoNewline
+                        Write-Host " : " -ForegroundColor $script:Theme.Muted -NoNewline
+                        Write-Host $wrappedLines[0] -ForegroundColor $script:Theme.Text -NoNewline
+                        
+                        $contentLength = 2 + $maxKeyLength + 3 + $wrappedLines[0].Length + 1
+                        $padding = [Math]::Max(0, $Width - $contentLength)
+                        Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
+                        
+                        # Additional wrapped lines
+                        for ($i = 1; $i -lt $wrappedLines.Count; $i++) {
+                            Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
+                            Write-Host (" " * ($maxKeyLength + 3)) -NoNewline
+                            Write-Host $wrappedLines[$i] -ForegroundColor $script:Theme.Text -NoNewline
+                            
+                            $contentLength = 2 + $maxKeyLength + 3 + $wrappedLines[$i].Length + 1
+                            $padding = [Math]::Max(0, $Width - $contentLength)
+                            Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
+                        }
+                    } else {
+                        # Normal single-line display
+                        Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
+                        Write-Host $key.PadRight($maxKeyLength) -ForegroundColor $script:Theme.Accent -NoNewline
+                        Write-Host " : " -ForegroundColor $script:Theme.Muted -NoNewline
+                        Write-Host $value -ForegroundColor $script:Theme.Text -NoNewline
+                        
+                        $contentLength = 2 + $maxKeyLength + 3 + $value.Length + 1
+                        $padding = [Math]::Max(0, $Width - $contentLength)
+                        Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
+                    }
                 } else {
-                    Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
-                    Write-Host $line -ForegroundColor $script:Theme.Text -NoNewline
-                    $contentLength = 2 + $line.Length + 1  # │ + line + │
-                    $padding = [Math]::Max(0, $Width - $contentLength)
-                    Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
+                    if ($WrapContent -and $line.Length -gt ($Width - 4)) {
+                        # Wrap long simple content
+                        $wrappedLines = Wrap-Text -Text $line -MaxWidth ($Width - 4)
+                        foreach ($wrappedLine in $wrappedLines) {
+                            Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
+                            Write-Host $wrappedLine -ForegroundColor $script:Theme.Text -NoNewline
+                            $contentLength = 2 + $wrappedLine.Length + 1
+                            $padding = [Math]::Max(0, $Width - $contentLength)
+                            Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
+                        }
+                    } else {
+                        # Normal single-line display
+                        Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
+                        Write-Host $line -ForegroundColor $script:Theme.Text -NoNewline
+                        $contentLength = 2 + $line.Length + 1
+                        $padding = [Math]::Max(0, $Width - $contentLength)
+                        Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
+                    }
                 }
             }
 
@@ -200,10 +282,10 @@ function Write-InfoBox {
         }
 
         'Accent' {
-            # Accent title bar
-            $titleBarLength = [Math]::Max(0, $Width - $Title.Length - 2)
-            $titleBar = " $Title " + (" " * $titleBarLength)
-            Write-Host $titleBar -BackgroundColor $script:Theme.Accent -ForegroundColor Black
+            # Accent title - highlight only the title text, not full width
+            Write-Host " " -NoNewline
+            Write-Host $Title -BackgroundColor $script:Theme.Accent -ForegroundColor Black -NoNewline
+            Write-Host " " # Just a space after the title
 
             # Content with accent bullets
             foreach ($line in $contentLines) {

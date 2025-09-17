@@ -75,15 +75,26 @@ function Write-Action {
         if ($psISE) { $script:Theme.UseAnsi = $false }
     }
 
-    # Calculate width
+    # Calculate width with proper global width respect
     if ($Width -eq 0) {
-        $Width = if ($script:OrionMaxWidth) { $script:OrionMaxWidth - 20 } else { 50 }
+        if ($script:OrionMaxWidth) {
+            # Reserve generous space for status (25 chars: " ✅ Status message text")
+            $statusReserve = 25
+            $Width = [Math]::Max(30, $script:OrionMaxWidth - $statusReserve)
+        } else {
+            # Fallback when no global width is set
+            $Width = 50
+        }
+    } else {
+        # When width is explicitly provided, still respect global limits
+        if ($script:OrionMaxWidth) {
+            $maxAllowedWidth = $script:OrionMaxWidth - 20  # Reserve generous space for status
+            $Width = [Math]::Min($Width, $maxAllowedWidth)
+        }
     }
 
-    # Apply global max width if set
-    if ($script:OrionMaxWidth -and $Width -gt ($script:OrionMaxWidth - 15)) {
-        $Width = $script:OrionMaxWidth - 15
-    }
+    # Ensure minimum usable width
+    $Width = [Math]::Max($Width, 25)
 
     # Truncate or pad text to desired width
     if ($Text.Length -gt $Width) {
