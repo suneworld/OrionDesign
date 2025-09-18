@@ -23,7 +23,7 @@ Write-Host ""
 
 for ($i = 0; $i -le 100; $i += 5) {
     Write-Host "`rProgress: " -NoNewline
-    OrionDesign\\Write-ProgressBar -CurrentValue $i -MaxValue 100 -Style Bar -ShowPercentage -Clear
+    Write-ProgressBar -CurrentValue $i -MaxValue 100 -Style Bar -ShowPercentage -Clear
     Start-Sleep -Milliseconds 150
 }
 Write-Host ""
@@ -37,7 +37,7 @@ Write-Host ""
 $items = @("Initialize system", "Load configuration", "Connect database", "Process data", "Generate report")
 for ($i = 0; $i -lt $items.Count; $i++) {
     Write-Host "`rTask: " -NoNewline
-    OrionDesign\\Write-ProgressBar -CurrentValue ($i + 1) -MaxValue $items.Count -Style Modern -ShowPercentage -Text $items[$i] -Clear
+    Write-ProgressBar -CurrentValue ($i + 1) -MaxValue $items.Count -Style Modern -ShowPercentage -Text $items[$i] -Clear
     Start-Sleep -Milliseconds 1000
 }
 Write-Host ""
@@ -52,13 +52,13 @@ $progress = 60
 $max = 100
 
 Write-Host "Bar Style:     " -NoNewline
-OrionDesign\\Write-ProgressBar -CurrentValue $progress -MaxValue $max -Style Bar -ShowPercentage
+Write-ProgressBar -CurrentValue $progress -MaxValue $max -Style Bar -ShowPercentage
 
 Write-Host "Blocks Style:  " -NoNewline  
-OrionDesign\\Write-ProgressBar -CurrentValue $progress -MaxValue $max -Style Blocks -ShowPercentage
+Write-ProgressBar -CurrentValue $progress -MaxValue $max -Style Blocks -ShowPercentage
 
 Write-Host "Modern Style:  " -NoNewline
-OrionDesign\\Write-ProgressBar -CurrentValue $progress -MaxValue $max -Style Modern -ShowPercentage
+Write-ProgressBar -CurrentValue $progress -MaxValue $max -Style Modern -ShowPercentage
 
 Write-Host ""
 
@@ -73,4 +73,4 @@ Write-Host "• -Clear: Clear line for smooth animation" -ForegroundColor White
 Write-Host ""
 
 Write-Host "Example Usage:" -ForegroundColor Cyan
-Write-Host "OrionDesign\\Write-ProgressBar -CurrentValue 50 -MaxValue 100 -Style Bar -ShowPercentage" -ForegroundColor Gray
+Write-Host "Write-ProgressBar -CurrentValue 50 -MaxValue 100 -Style Bar -ShowPercentage" -ForegroundColor Gray
