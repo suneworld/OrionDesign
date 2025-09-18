@@ -55,7 +55,7 @@ Write-Host "  • Set-OrionMaxWidth -Reset - Reset to default (100)" -Foreground
 
 Write-Host "`n📋 Functions That Respect Max Width:" -ForegroundColor Cyan
 @(
-    "Write-ActionResult", "Write-Separator", "Write-Table", 
+    "Write-ActionResult ", "Write-Separator", "Write-Table", 
     "Write-Dashboard", "Write-Banner", "Write-Panel"
 ) | ForEach-Object { Write-Host "  • $_" -ForegroundColor White }
 

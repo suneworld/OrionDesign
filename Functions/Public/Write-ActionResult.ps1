@@ -67,6 +67,9 @@ Switch to display the status icon. If not specified, defaults to false.
 .PARAMETER ShowStatus
 Switch to display the status text. If not specified, defaults to false.
 
+.PARAMETER NoNewLine
+Switch to prevent automatic newline after the main result. When used, Details, FailureReason, and Suggestion are not displayed to keep output on single line.
+
 .EXAMPLE
 Write-ActionResult -Action "Deploy Database" -Status Success -Duration "00:02:15" -Details "142 tables updated" -ShowIcon -ShowStatus
 
@@ -86,12 +89,17 @@ Displays a warning status with details and subtext, showing the icon and status.
 Write-ActionResult 50 -Subtext "devices" -Status Success -ShowIcon -ShowStatus
 
 Displays the value 50 in the color of the status (e.g., green for success), with the subtext "devices" in muted color, showing the icon and status.
+
+.EXAMPLE
+Write-ActionResult -Action "50" -Status Success -Subtext "users" -ShowIcon -NoNewLine; Write-Host " processed successfully!" -ForegroundColor Green
+
+Displays the action result on the same line and continues with additional text.
 #>
 function Write-ActionResult {
     [CmdletBinding()]
     param(
         [string]$Action = $null,
-        [ValidateSet('Success', 'Failed', 'Warning', 'Info', 'Running', 'Pending')] [string]$Status,
+        [ValidateSet('Success', 'Failed', 'Warning', 'Info', 'Running', 'Pending')] [string]$Status = 'Info',
         [string]$Duration = "",
         [string]$Details = "",
         [string]$FailureReason = "",
@@ -99,7 +107,8 @@ function Write-ActionResult {
         [int]$Indent = 0,
         [string]$Subtext = "",
         [switch]$ShowIcon,
-        [switch]$ShowStatus
+        [switch]$ShowStatus,
+        [switch]$NoNewLine
     )
 
     # Default theme
@@ -145,6 +154,12 @@ function Write-ActionResult {
         'Info' { @{ Icon = "ℹ️ "; Color = $script:Theme.Accent } }
         'Running' { @{ Icon = "🔄"; Color = $script:Theme.Accent } }
         'Pending' { @{ Icon = "⏳"; Color = $script:Theme.Muted } }
+        default { @{ Icon = "📋"; Color = $script:Theme.Text } }
+    }
+    
+    # Ensure we have a valid color (fallback to Text if null)
+    if (-not $statusInfo.Color) {
+        $statusInfo.Color = $script:Theme.Text
     }
 
     # Main result line
@@ -152,9 +167,8 @@ function Write-ActionResult {
     if ($ShowIcon) {
         Write-Host "$($statusInfo.Icon) " -NoNewline
     }
-    # Right-align Action (number) to 5 characters
-    $ActionStr = $Action.ToString().PadLeft(5)
-    Write-Host "$ActionStr" -ForegroundColor $script:Theme.Success -NoNewline
+    # Display Action in the color of the status
+    Write-Host "$Action" -ForegroundColor $statusInfo.Color -NoNewline
     
     
     # Status
@@ -169,44 +183,50 @@ function Write-ActionResult {
     # Duration if provided
     if ($Duration) {
         Write-Host " in " -ForegroundColor $script:Theme.Muted -NoNewline
-        Write-Host "$(Format-TimeSpan $Duration)" -ForegroundColor $script:Theme.Muted -NoNewline
+        Write-Host "$Duration" -ForegroundColor $script:Theme.Muted -NoNewline
     }
 
-    Write-Host 
-
-    # Details if provided
-    if ($Details) {
-        # Truncate details if too long
-        $displayDetails = if ($Details.Length -gt $maxContentWidth) {
-            $Details.Substring(0, $maxContentWidth - 3) + "..."
-        }
-        else {
-            $Details
-        }
-        Write-Host "$indentStr  📋 $displayDetails" -ForegroundColor $script:Theme.Text
+    # End main line (with or without newline based on switch)
+    if (-not $NoNewLine) {
+        Write-Host 
     }
 
-    # Error if provided
-    if ($FailureReason) {
-        # Truncate failure reason if too long
-        $displayFailure = if ($FailureReason.Length -gt $maxContentWidth) {
-            $FailureReason.Substring(0, $maxContentWidth - 3) + "..."
+    # Only show additional details if we're allowing newlines
+    if (-not $NoNewLine) {
+        # Details if provided
+        if ($Details) {
+            # Truncate details if too long
+            $displayDetails = if ($Details.Length -gt $maxContentWidth) {
+                $Details.Substring(0, $maxContentWidth - 3) + "..."
+            }
+            else {
+                $Details
+            }
+            Write-Host "$indentStr  📋 $displayDetails" -ForegroundColor $script:Theme.Text
         }
-        else {
-            $FailureReason
-        }
-        Write-Host "$indentStr  💥 Error: $displayFailure" -ForegroundColor $script:Theme.Error
-    }
 
-    # Suggestion if provided
-    if ($Suggestion) {
-        # Truncate suggestion if too long
-        $displaySuggestion = if ($Suggestion.Length -gt $maxContentWidth) {
-            $Suggestion.Substring(0, $maxContentWidth - 3) + "..."
+        # Error if provided
+        if ($FailureReason) {
+            # Truncate failure reason if too long
+            $displayFailure = if ($FailureReason.Length -gt $maxContentWidth) {
+                $FailureReason.Substring(0, $maxContentWidth - 3) + "..."
+            }
+            else {
+                $FailureReason
+            }
+            Write-Host "$indentStr  💥 Error: $displayFailure" -ForegroundColor $script:Theme.Error
         }
-        else {
-            $Suggestion
+
+        # Suggestion if provided
+        if ($Suggestion) {
+            # Truncate suggestion if too long
+            $displaySuggestion = if ($Suggestion.Length -gt $maxContentWidth) {
+                $Suggestion.Substring(0, $maxContentWidth - 3) + "..."
+            }
+            else {
+                $Suggestion
+            }
+            Write-Host "$indentStr  💡 Suggestion: $displaySuggestion" -ForegroundColor $script:Theme.Warning
         }
-        Write-Host "$indentStr  💡 Suggestion: $displaySuggestion" -ForegroundColor $script:Theme.Warning
     }
 }
