@@ -25,7 +25,7 @@ HLD INTEGRATION:
 
 # OrionDesign Global Max Width Demonstration
 
-Write-Banner -ScriptName "OrionDesign Max Width Demo" -Author "GitHub Copilot" -Design Modern -Description "Demonstrating global width controls"
+Write-Banner -ScriptName "OrionDesign Max Width Demo" -Author "Sune A Narudt" -Design Modern -Description "Demonstrating global width controls"
 
 Write-Host "`n🎯 Current Configuration:" -ForegroundColor Cyan
 Write-Host "Default max width: $(Get-OrionMaxWidth) characters" -ForegroundColor White

@@ -3,6 +3,7 @@ Import-Module "C:\Users\snarud\OneDrive - TOMRA\Powershell\Modules\OrionDesign" 
 
 # Set theme
 Set-OrionMaxWidth -Width 100
-Set-OrionTheme -Preset Dark
+Set-OrionTheme -Preset Cyberpunk
 
 Show-OrionDemo
+

@@ -26,7 +26,7 @@ HLD INTEGRATION:
 # OrionDesign Module - Comprehensive Help Documentation
 
 Write-Host "`n" -NoNewline
-Write-Banner -ScriptName "OrionDesign Help Documentation" -Author "GitHub Copilot" -Design Diamond -Description "Complete function reference and examples"
+Write-Banner -ScriptName "OrionDesign Help Documentation" -Author "Sune A Narudt" -Design Diamond -Description "Complete function reference and examples"
 
 Write-Host "`n📚 Available Functions:" -ForegroundColor Cyan
 Write-Host "=" * 50 -ForegroundColor DarkCyan

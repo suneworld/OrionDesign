@@ -38,13 +38,12 @@ Maximum progress value.
 
 .PARAMETER Style
 The visual style of the progress bar. Available styles:
-• Bar: Traditional horizontal progress bar with filled/empty segments
-• Blocks: Block-style progress using square characters for visual segments
+• Bar: Traditional horizontal progress bar with filled/empty segments and precise fractional progress
 • Dots: Animated dots that pulse and rotate to show ongoing activity
-• Spinner: Spinning indicator with rotating characters for active processes
+• Spinner: Spinning indicator with rotating characters for active processes  
 • Modern: Modern flat design with clean lines and subtle gradients
 
-Valid values: Bar, Blocks, Dots, Spinner, Modern
+Valid values: Bar, Dots, Spinner, Modern
 
 .PARAMETER Width
 Width of the progress bar.
@@ -67,16 +66,16 @@ Write-ProgressBar -CurrentValue 75 -MaxValue 100 -Style Bar -ShowPercentage
 Displays a 75% complete progress bar with percentage.
 
 .EXAMPLE
-Write-ProgressBar -CurrentValue 3 -MaxValue 5 -Style Blocks -Text "Processing files"
+Write-ProgressBar -CurrentValue 3 -MaxValue 5 -Style Modern -Text "Processing files"
 
-Displays block-style progress with custom text.
+Displays modern-style progress with custom text.
 #>
 function Write-ProgressBar {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)][int]$CurrentValue,
+        [Parameter(Mandatory)][double]$CurrentValue,
         [Parameter(Mandatory)][int]$MaxValue,
-        [ValidateSet('Bar', 'Blocks', 'Dots', 'Spinner', 'Modern')] [string]$Style = 'Bar',
+        [ValidateSet('Bar', 'Dots', 'Spinner', 'Modern')] [string]$Style = 'Bar',
         [int]$Width = 40,
         [switch]$ShowPercentage,
         [string]$Text = "",
@@ -113,13 +112,25 @@ function Write-ProgressBar {
         'Bar' {
             Write-Host "[" -ForegroundColor $script:Theme.Muted -NoNewline
             
-            # Filled portion
-            for ($i = 0; $i -lt $filledWidth; $i++) {
+            # Enhanced with fractional progress from former Blocks style
+            $blockChars = @("▏","▎","▍","▌","▋","▊","▉","█")
+            $fullBlocks = [Math]::Floor($filledWidth)
+            $partialBlock = ($filledWidth - $fullBlocks) * 8
+            
+            # Full filled blocks
+            for ($i = 0; $i -lt $fullBlocks; $i++) {
                 Write-Host "█" -ForegroundColor $Color -NoNewline
             }
             
+            # Partial block for precise progress
+            if ($partialBlock -gt 0 -and $fullBlocks -lt $Width) {
+                $charIndex = [Math]::Floor($partialBlock)
+                Write-Host $blockChars[$charIndex] -ForegroundColor $Color -NoNewline
+                $fullBlocks++
+            }
+            
             # Empty portion
-            for ($i = $filledWidth; $i -lt $Width; $i++) {
+            for ($i = $fullBlocks; $i -lt $Width; $i++) {
                 Write-Host "░" -ForegroundColor $script:Theme.Muted -NoNewline
             }
             
@@ -134,36 +145,7 @@ function Write-ProgressBar {
             }
         }
 
-        'Blocks' {
-            $blockChars = @("▏","▎","▍","▌","▋","▊","▉","█")
-            $fullBlocks = [Math]::Floor($filledWidth)
-            $partialBlock = ($filledWidth - $fullBlocks) * 8
-            
-            # Full blocks
-            for ($i = 0; $i -lt $fullBlocks; $i++) {
-                Write-Host "█" -ForegroundColor $Color -NoNewline
-            }
-            
-            # Partial block
-            if ($partialBlock -gt 0 -and $fullBlocks -lt $Width) {
-                $charIndex = [Math]::Floor($partialBlock)
-                Write-Host $blockChars[$charIndex] -ForegroundColor $Color -NoNewline
-                $fullBlocks++
-            }
-            
-            # Empty blocks
-            for ($i = $fullBlocks; $i -lt $Width; $i++) {
-                Write-Host "░" -ForegroundColor $script:Theme.Muted -NoNewline
-            }
-            
-            if ($ShowPercentage) {
-                Write-Host " $percentage%" -ForegroundColor $script:Theme.Text -NoNewline
-            }
-            
-            if ($Text) {
-                Write-Host " $Text" -ForegroundColor $script:Theme.Text -NoNewline
-            }
-        }
+
 
         'Dots' {
             $dots = ""

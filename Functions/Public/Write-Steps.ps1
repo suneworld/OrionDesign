@@ -19,7 +19,7 @@ HLD INTEGRATION:
 │ • Step Sequence    │    │ Current Step   │    │ Visual   │
 │ • Progress Track   │    │ Color Coding   │    │ Steps    │
 │ • Current Hilite   │    │ Status Icons   │    │ Sequence │
-└───────────────────┘    └────────────────┘    └──────────┘
+└────────────────────┘    └────────────────┘    └──────────┘
 ================================================================================
 #>
 
@@ -144,12 +144,13 @@ function Write-Steps {
             
             'Checklist' {
                 $checkbox = switch ($stepStatus) {
-                    'Complete' { "☑️ " }
-                    'Failed'   { "❌ " }
+#                    'Complete' { "☑️ 🗹 " }
+                    'Complete' { "🗹" }
+                    'Failed'   { "❌" }
                     default    { "☐ " }
                 }
                 Write-Host "  $checkbox" -NoNewline
-                Write-Host $stepText -ForegroundColor $statusInfo.Color
+                Write-Host " $stepText" -ForegroundColor $statusInfo.Color
             }
         }
 
@@ -159,7 +160,7 @@ function Write-Steps {
             $continue = Write-Question -Text "Continue to next step?" -Type YesNo -Default Yes
             if (-not $continue) {
                 Write-Host "❌ Process stopped by user" -ForegroundColor $script:Theme.Warning
-                return $false
+                return
             }
         }
     }
@@ -182,5 +183,4 @@ function Write-Steps {
     }
 
     Write-Host
-    return $true
 }

@@ -71,11 +71,10 @@ HLD INTEGRATION:
         )
         Write-Host
         Write-Host
-        Write-Host
-        Write-Host
         Write-Host "════════════════════════════════════════════════════════════════════════════════════════════════════" -ForegroundColor DarkGray
         Write-Host "         $Text " -ForegroundColor DarkGray
         Write-Host "════════════════════════════════════════════════════════════════════════════════════════════════════" -ForegroundColor DarkGray
+        Write-Host
     }
 
     # Demo header
@@ -155,32 +154,32 @@ HLD INTEGRATION:
 
     Demo-Separator "Write-Action + Write-ActionStatus (Success)"
     Write-Action "Connecting to database"
-    Start-Sleep -Milliseconds 500  # Simulate work
+    Start-Sleep -Milliseconds 100  # Simulate work
     Write-ActionStatus "Connected successfully" -Status Success
 
     Demo-Separator "Write-Action + Write-ActionStatus (Failed)"
     Write-Action "Loading configuration file"
-    Start-Sleep -Milliseconds 300  # Simulate work
+    Start-Sleep -Milliseconds 100  # Simulate work
     Write-ActionStatus "File not found" -Status Failed
 
     Demo-Separator "Write-Action + Write-ActionStatus (Warning)"
     Write-Action "Checking disk space"
-    Start-Sleep -Milliseconds 400  # Simulate work
+    Start-Sleep -Milliseconds 100  # Simulate work
     Write-ActionStatus "Low disk space warning" -Status Warning
 
     Demo-Separator "Write-Action + Write-ActionStatus (Auto-detection)"
     Write-Action "Processing users"
-    Start-Sleep -Milliseconds 600  # Simulate work
+    Start-Sleep -Milliseconds 100  # Simulate work
     Write-ActionStatus "125 users processed" # Auto-detects as Success
 
     Demo-Separator "Write-Action + Write-ActionStatus (Custom Width)"
     Write-Action "Very long action description that demonstrates width control" -Width 40
-    Start-Sleep -Milliseconds 350  # Simulate work
+    Start-Sleep -Milliseconds 100  # Simulate work
     Write-ActionStatus "Completed" -Status Success
 
     Demo-Separator "Write-Action + Write-ActionStatus (No Icon)"
     Write-Action "Silent operation"
-    Start-Sleep -Milliseconds 250  # Simulate work
+    Start-Sleep -Milliseconds 100  # Simulate work
     Write-ActionStatus "Operation completed" -Status Success -NoIcon
 
     Demo-Separator "Write-ActionResult -Status Success"
@@ -201,13 +200,6 @@ HLD INTEGRATION:
     Write-ProgressBar -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Bar -ShowPercentage  
     Write-ProgressBar -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Bar -ShowPercentage
         
-
-    Demo-Separator "Write-ProgressBar -Style Blocks"
-    Write-ProgressBar -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Blocks -ShowPercentage
-    Write-ProgressBar -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Blocks -ShowPercentage
-    Write-ProgressBar -CurrentValue 67 -MaxValue 100 -Text "Copying Files" -Style Blocks -ShowPercentage
-    Write-ProgressBar -CurrentValue 90 -MaxValue 100 -Text "Compressing Data" -Style Blocks -ShowPercentage
-
     Demo-Separator "Write-ProgressBar -Style Dots"
     Write-ProgressBar -CurrentValue 25 -MaxValue 100 -Text "Installing Updates" -Style Dots -ShowPercentage
     Write-ProgressBar -CurrentValue 50 -MaxValue 100 -Text "Downloading Packages" -Style Dots -ShowPercentage
