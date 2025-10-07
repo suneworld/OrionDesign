@@ -113,7 +113,7 @@ function Write-Question {
         $userInput = ""
 
         # Display the question
-        Write-Host "❓ " -ForegroundColor $script:Theme.Accent -NoNewline
+        Write-Host
         Write-Host $Text -ForegroundColor $script:Theme.Text -NoNewline
 
         # Add type-specific prompts
