@@ -4,7 +4,7 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Menu Function
 ================================================================================
 Author:        Sune Alexandersen Narud  
 Date:          August 22, 2025
-Module:        OrionDesign v1.5.0
+Module:        OrionDesign v1.6.0
 Category:      Interactive Elements
 Dependencies:  OrionDesign Theme System
 

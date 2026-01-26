@@ -64,18 +64,46 @@ Set-OrionMaxWidth -Reset
 
 ### 🎨 Design Themes
 
-#### Available Styles
-- **Modern**: Clean lines with emojis
-- **Classic**: Traditional borders  
-- **Minimal**: Simple and understated
-- **Bold**: High contrast and emphasis
+#### Theme System
+OrionDesign includes a comprehensive theme system with 13 preset themes across 6 categories:
 
-#### Color Schemes
-- **Default**: Blue and white
-- **Success**: Green tones
-- **Warning**: Yellow/orange
-- **Error**: Red tones
-- **Info**: Cyan/blue
+```powershell
+# Apply a theme
+Set-OrionTheme -Preset HighContrast
+
+# View current theme
+Get-OrionTheme
+
+# See all themes in action
+Show-OrionDemo -Demo Themes
+```
+
+#### Available Themes
+
+**Standard Themes:**
+- `Default` - Standard cyan/green/yellow/red theme
+- `Dark` - Dark theme with muted colors
+- `Light` - Light theme with darker colors
+
+**Nature Themes:**
+- `Ocean` - Blue-based aquatic theme with wave dividers
+- `Forest` - Green-based nature theme with tree-like elements
+
+**Retro/Vintage Themes:**
+- `OldSchool` - Classic amber terminal (DOS/Unix era)
+- `Vintage` - Warm sepia/amber nostalgic feel
+- `Retro80s` - Synthwave magenta/cyan neon pastels
+
+**Tech/Futuristic Themes:**
+- `Matrix` - Green-on-black digital rain aesthetic
+- `Cyberpunk` - Futuristic cyan/purple tech aesthetic
+
+**Artistic Themes:**
+- `Sunset` - Orange/magenta warm evening colors
+- `Monochrome` - Grayscale theme for high contrast
+
+**Accessibility Themes:**
+- `HighContrast` - Maximum contrast theme for accessibility (white on black)
 
 ### 📏 Width-Aware Functions
 
@@ -115,8 +143,11 @@ Get-Help Write-Table -Parameter Data
 # Show all available functions
 Get-Command -Module OrionDesign
 
-# View function examples
-Show-OrionDesignHelp
+# View demos
+Show-OrionDemo                      # Basic demo
+Show-OrionDemo -Demo Themes         # Theme showcase
+Show-OrionDemo -Demo Interactive    # Interactive demo
+Show-OrionDemo -Demo All            # Comprehensive demo
 ```
 
 ### 🚀 Quick Start Examples
@@ -149,4 +180,4 @@ Set-OrionMaxWidth -Reset
 
 ---
 
-**OrionDesign v1.5.0** | PowerShell UI Framework | 19 Functions | Global Configuration | ANSI Support
+**OrionDesign v1.6.0** | PowerShell UI Framework | 19 Functions | 13 Themes | Global Configuration | ANSI Support

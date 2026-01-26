@@ -4,7 +4,7 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Banner Function
 ================================================================================
 Author:        Sune Alexandersen Narud  
 Date:          August 22, 2025
-Module:        OrionDesign v1.5.0
+Module:        OrionDesign v1.6.0
 Category:      Information Display
 Dependencies:  OrionD    # Left padding
     Write-Host ($Indent2 + $Padding2[0]) -ForegroundColor $Theme.Accent -NoNewline

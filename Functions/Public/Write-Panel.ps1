@@ -4,7 +4,7 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Panel Function
 ================================================================================
 Author:        Sune Alexandersen Narud  
 Date:          August 22, 2025
-Module:        OrionDesign v1.5.0
+Module:        OrionDesign v1.6.0
 Category:      Layout & Formatting
 Dependencies:  OrionDesign Theme System
 

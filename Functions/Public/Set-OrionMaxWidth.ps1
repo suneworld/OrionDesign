@@ -4,7 +4,7 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK | Set-OrionMaxWidth Function
 ================================================================================
 Author:        Sune Alexandersen Narud  
 Date:          August 22, 2025
-Module:        OrionDesign v1.5.0
+Module:        OrionDesign v1.6.0
 Category:      Global Configuration
 Dependencies:  OrionDesign Global Variables
 
@@ -61,9 +61,9 @@ function Set-OrionMaxWidth {
     
     if ($Reset) {
         $script:OrionMaxWidth = 100
-        Write-Host "📏 OrionDesign max width reset to default: 100 characters" -ForegroundColor Green
+        Write-Verbose "📏 OrionDesign max width reset to default: 100 characters"
     } else {
         $script:OrionMaxWidth = $Width
-        Write-Host "📏 OrionDesign max width set to: $Width characters" -ForegroundColor Green
+        Write-Verbose "📏 OrionDesign max width set to: $Width characters"
     }
 }

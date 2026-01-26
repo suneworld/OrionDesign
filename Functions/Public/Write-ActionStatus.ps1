@@ -3,8 +3,8 @@
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-ActionStatus Function
 ================================================================================
 Author:        Sune Alexandersen Narud  
-Date:          August 22, 2025
-Module:        OrionDesign v1.5.0
+Date:          January 26, 2026
+Module:        OrionDesign v1.6.0
 Category:      Interactive Display
 Dependencies:  OrionDesign Theme System
 
@@ -12,6 +12,7 @@ FUNCTION PURPOSE:
 Completes action status lines with colored results and clean text formatting.
 Second part of two-function pattern for real-time status reporting,
 designed to follow Write-Action calls for complete status line output.
+Automatically handles overflow by moving status to a new line when needed.
 
 HLD INTEGRATION:
 ┌─ STATUS COMPLETION ─┐    ┌─ RESULT DISPLAY ─┐    ┌─ OUTPUT ─┐
@@ -19,6 +20,7 @@ HLD INTEGRATION:
 │ • Status Text       │    │ Color Coding     │    │ Line     │
 │ • Clean Design      │    │ Professional     │    │ Complete │
 │ • Auto Detection    │    │ Pattern Match    │    │ Display  │
+│ • Overflow Handling │    │ Smart Line Break │    │ Adaptive │
 └─────────────────────┘    └──────────────────┘    └──────────┘
 ================================================================================
 #>
@@ -31,6 +33,10 @@ Completes action status lines with colored results and clean text formatting.
 The Write-ActionStatus function completes status lines started with Write-Action.
 It displays the result with appropriate colors based on the status type
 or automatic pattern detection. The output includes a newline to complete the line.
+
+If the combined length of the action text and status text would exceed the
+configured max width (OrionMaxWidth), the status is automatically moved to
+a new line and right-aligned to the full width for clean, readable output.
 
 .PARAMETER Text
 The status text to display.
@@ -48,7 +54,7 @@ The status type for color coding. Valid values:
 Override color for the status text (overrides Status parameter).
 
 .PARAMETER Width
-The width to pad the status text to. Defaults to 15 characters.
+The width to pad the status text to. Defaults to 50 characters.
 
 .PARAMETER NoIcon
 Legacy parameter - maintained for compatibility (no longer used as icons are removed).
@@ -71,10 +77,21 @@ Write-ActionStatus "125 users"
 
 Auto-detects success pattern: "Checking service                      125 users"
 
+.EXAMPLE
+Write-Action "This is a very long action description"
+Write-ActionStatus "This is a very long status that causes overflow" -Status Success
+
+When combined text exceeds max width, automatically outputs:
+  This is a very long action description
+                       This is a very long status that causes overflow
+
 .NOTES
 This function automatically detects success/failure patterns if no Status is specified.
 Patterns like "OK", "users", "devices", "activated" are treated as success.
 "Fail", "Error", "Not found" patterns are treated as failures.
+
+Overflow handling: When combined action + status text exceeds OrionMaxWidth,
+the status is moved to a new line and right-aligned to the full width.
 #>
 function Write-ActionStatus {
     [CmdletBinding()]
@@ -150,28 +167,35 @@ function Write-ActionStatus {
         }
     }
 
-    # Calculate appropriate width for status text
-    if ($Width -eq 0) {
-        if ($script:OrionMaxWidth) {
-            # Use the space reserved by Write-Action (25 chars)
-            $Width = 25  # This should match the statusReserve in Write-Action
-        } else {
-            $Width = 20  # More generous fallback for when no global width is set
-        }
-    }
-
-    # Format the status text with proper padding - clean design without icons
-    $displayText = $Text
-    if ($displayText.Length -gt $Width) {
-        # Only truncate if absolutely necessary, prefer showing full text
-        if ($displayText.Length -gt ($Width + 5)) {  # Allow some overflow before truncating
-            $displayText = $displayText.Substring(0, $Width - 2) + ".."
-        }
-        # If only slightly over, don't truncate - just show the full text
+    # Get the max width to use
+    $maxWidth = if ($script:OrionMaxWidth) { $script:OrionMaxWidth } else { 100 }
+    
+    # Check if combined action + status text would exceed max width
+    $actionLength = if ($script:LastActionTextLength) { $script:LastActionTextLength } else { 0 }
+    $combinedLength = $actionLength + $Text.Length + 1  # +1 for at least one space
+    
+    if ($combinedLength -gt $maxWidth -and $actionLength -gt 0) {
+        # Overflow: output newline first, then right-align status to full max width
+        Write-Host ""  # Complete the previous line
+        $displayText = $Text.PadLeft($maxWidth)
+        Write-Host $displayText -ForegroundColor $statusColor
     } else {
-        $displayText = $displayText.PadLeft($Width)
-    }
+        # Normal case: calculate width for status text
+        if ($Width -eq 0) {
+            if ($script:OrionMaxWidth) {
+                # Use the space reserved by Write-Action (50 chars)
+                $Width = 50  # This should match the statusReserve in Write-Action
+            } else {
+                $Width = 50  # Generous fallback for longer status messages
+            }
+        }
 
-    # Output with newline to complete the line
-    Write-Host $displayText -ForegroundColor $statusColor
+        # Format the status text with proper padding - clean design without icons
+        # PadLeft ensures all status text ENDS at the same column (right-aligned)
+        # No truncation - always show full text
+        $displayText = $Text.PadLeft($Width)
+
+        # Output with newline to complete the line
+        Write-Host $displayText -ForegroundColor $statusColor
+    }
 }

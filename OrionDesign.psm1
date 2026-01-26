@@ -4,8 +4,8 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK
 ================================================================================
 
 Author:        Sune Alexandersen Narud
-Date:          August 22, 2025
-Version:       1.5.0
+Date:          January 26, 2026
+Version:       1.6.0
 
 HIGH LEVEL DESIGN (HLD):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -31,7 +31,7 @@ ARCHITECTURE:
 │ FORMATTING      │ CONFIGURATION   │                                     │
 ├─────────────────┼─────────────────┼─────────────────────────────────────┤
 │ Write-Separator │ Get-OrionMax    │ Show-OrionDemo                      │
-│ Write-Panel     │ Set-OrionMax    │ Show-OrionDesignHelp                │
+│ Write-Panel     │ Set-OrionMax    │   -Demo Basic/Themes/Interactive/All│
 │ Write-CodeBlock │ $script:Theme   │                                     │
 └─────────────────┴─────────────────┴─────────────────────────────────────┘
 
@@ -96,7 +96,7 @@ if ($psISE) {
 $privatePath = Join-Path $root 'Functions\Private'
 if (Test-Path $privatePath) {
     Get-ChildItem -Path $privatePath -Filter *.ps1 | ForEach-Object {
-        Write-Host "Loading private function: $($_.BaseName)" -ForegroundColor DarkGray
+        Write-Verbose "Loading private function: $($_.BaseName)"
         . $_.FullName
     }
 }
@@ -106,7 +106,7 @@ $publicPath = Join-Path $root 'Functions\Public'
 $publicFunctions = @()
 if (Test-Path $publicPath) {
     Get-ChildItem -Path $publicPath -Filter *.ps1 | ForEach-Object {
-        #Write-Host "Loading public function:  $($_.BaseName)" -ForegroundColor Cyan
+        Write-Verbose "Loading public function: $($_.BaseName)"
         . $_.FullName
         $publicFunctions += $_.BaseName
     }
@@ -114,7 +114,7 @@ if (Test-Path $publicPath) {
 
 # --- Export only public functions ---
 if ($publicFunctions.Count -gt 0) {
-    #Write-Host "Exporting functions: $($publicFunctions -join ', ')" -ForegroundColor Green
+    Write-Verbose "Exporting functions: $($publicFunctions -join ', ')"
     Export-ModuleMember -Function $publicFunctions
 }
 else {

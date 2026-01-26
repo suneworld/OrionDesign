@@ -4,7 +4,7 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK | Set-OrionTheme Function
 ================================================================================
 Author:        Sune Alexandersen Narud  
 Date:          August 22, 2025
-Module:        OrionDesign v1.5.0
+Module:        OrionDesign v1.6.0
 Category:      Configuration
 Dependencies:  OrionDesign Theme System
 
@@ -66,6 +66,9 @@ ARTISTIC THEMES:
 - 'Sunset' - Orange/magenta warm evening colors
 - 'Monochrome' - Grayscale theme for high contrast
 
+ACCESSIBILITY THEMES:
+- 'HighContrast' - Maximum contrast theme for accessibility (white on black)
+
 .EXAMPLE
 Set-OrionTheme -Preset Dark
 
@@ -104,12 +107,17 @@ Applies a custom theme configuration.
 Set-OrionTheme -Preset Ocean
 
 Applies the ocean theme with blue accents.
+
+.EXAMPLE
+Set-OrionTheme -Preset HighContrast
+
+Applies the high-contrast theme optimized for accessibility with maximum contrast.
 #>
 function Set-OrionTheme {
     [CmdletBinding()]
     param(
         [hashtable]$Theme,
-        [ValidateSet('Default', 'Dark', 'Light', 'Ocean', 'Forest', 'Sunset', 'Monochrome', 'OldSchool', 'Matrix', 'Retro80s', 'Cyberpunk', 'Vintage')]
+        [ValidateSet('Default', 'Dark', 'Light', 'Ocean', 'Forest', 'Sunset', 'Monochrome', 'HighContrast', 'OldSchool', 'Matrix', 'Retro80s', 'Cyberpunk', 'Vintage')]
         [string]$Preset
     )
 
@@ -199,6 +207,18 @@ function Set-OrionTheme {
                     UseAnsi  = $true
                 }
             }
+            'HighContrast' {
+                $Theme = @{
+                    Accent   = 'White'
+                    Success  = 'White'
+                    Warning  = 'White'
+                    Error    = 'White'
+                    Text     = 'White'
+                    Muted    = 'White'
+                    Divider  = '█'
+                    UseAnsi  = $true
+                }
+            }
             'OldSchool' {
                 $Theme = @{
                     Accent   = 'Yellow'
@@ -272,18 +292,12 @@ function Set-OrionTheme {
     # Apply the theme
     $script:Theme = $Theme.Clone()
 
-    Write-Host "✅ Theme applied successfully!" -ForegroundColor $script:Theme.Success
-    Write-Host "Current theme colors:" -ForegroundColor $script:Theme.Text
-    Write-Host "  Accent: " -NoNewline -ForegroundColor $script:Theme.Text
-    Write-Host "■■■" -ForegroundColor $script:Theme.Accent
-    Write-Host "  Success: " -NoNewline -ForegroundColor $script:Theme.Text  
-    Write-Host "■■■" -ForegroundColor $script:Theme.Success
-    Write-Host "  Warning: " -NoNewline -ForegroundColor $script:Theme.Text
-    Write-Host "■■■" -ForegroundColor $script:Theme.Warning
-    Write-Host "  Error: " -NoNewline -ForegroundColor $script:Theme.Text
-    Write-Host "■■■" -ForegroundColor $script:Theme.Error
-    Write-Host "  Text: " -NoNewline -ForegroundColor $script:Theme.Text
-    Write-Host "■■■" -ForegroundColor $script:Theme.Text
-    Write-Host "  Muted: " -NoNewline -ForegroundColor $script:Theme.Text
-    Write-Host "■■■" -ForegroundColor $script:Theme.Muted
+    Write-Verbose "✅ Theme applied successfully!"
+    Write-Verbose "Current theme colors:"
+    Write-Verbose "  Accent: $($script:Theme.Accent)"
+    Write-Verbose "  Success: $($script:Theme.Success)"
+    Write-Verbose "  Warning: $($script:Theme.Warning)"
+    Write-Verbose "  Error: $($script:Theme.Error)"
+    Write-Verbose "  Text: $($script:Theme.Text)"
+    Write-Verbose "  Muted: $($script:Theme.Muted)"
 }
