@@ -4,6 +4,8 @@
 
 A comprehensive collection of PowerShell functions for creating beautiful terminal user interfaces with consistent styling and configurable global settings.
 
+Created and maintained by Sune Alexandersen Narud
+
 ### 📦 Installation
 ```powershell
 Import-Module .\OrionDesign.psd1
