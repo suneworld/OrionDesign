@@ -36,12 +36,14 @@ Set-OrionMaxWidth -Reset
 | `Write-Alert`   | Attention-grabbing alerts              | `Write-Alert -Message "Warning!" -Type Warning`      |
 
 #### Status & Results  
-| Function             | Purpose                     | Example                                                |
-|----------------------|-----------------------------|--------------------------------------------------------|
-| `Write-ActionResult` | Action outcomes with status | `Write-ActionResult -Action "Deploy" -Status Success`  |
-| `Write-Progress`     | Task progress indicators    | `Write-Progress -TaskName "Installing" -Percentage 75` |
-| `Write-Steps`        | Step-by-step processes      | `Write-Steps -Steps @("Step 1", "Step 2")`             |
-| `Write-Timeline`     | Chronological events        | `Write-Timeline -Events @{...}`                        |
+| Function             | Purpose                         | Example                                                |
+|----------------------|---------------------------------|--------------------------------------------------------|
+| `Write-Action`       | Action text (no newline)        | `Write-Action "Processing files"`                      |
+| `Write-ActionStatus` | Status with auto right-align    | `Write-ActionStatus "Done" -Status Success`            |
+| `Write-ActionResult` | Action outcomes with status     | `Write-ActionResult -Action "Deploy" -Status Success`  |
+| `Write-Progress`     | Task progress indicators        | `Write-Progress -TaskName "Installing" -Percentage 75` |
+| `Write-Steps`        | Step-by-step processes          | `Write-Steps -Steps @("Step 1", "Step 2")`             |
+| `Write-Timeline`     | Chronological events            | `Write-Timeline -Events @{...}`                        |
 
 #### Data Presentation
 | Function           | Purpose                  | Example                                                     |
@@ -63,6 +65,11 @@ Set-OrionMaxWidth -Reset
 | `Write-Separator` | Section dividers   | `Write-Separator -Text "Section" -Style Double`            |
 | `Write-Panel`     | Content containers | `Write-Panel -Title "Info" -Content "Details"`             |
 | `Write-CodeBlock` | Code snippets      | `Write-CodeBlock -Code "Get-Process" -Language PowerShell` |
+
+#### Utility Functions
+| Function              | Purpose                         | Example                                           |
+|-----------------------|---------------------------------|---------------------------------------------------|
+| `Export-OrionHelpers` | Bundle functions for portability | `Export-OrionHelpers -ScriptPath ".\MyScript.ps1"` |
 
 ### 🎨 Design Themes
 
@@ -110,12 +117,49 @@ Show-OrionDemo -Demo Themes
 ### 📏 Width-Aware Functions
 
 The following functions automatically respect the global max width setting:
+- `Write-Action` / `Write-ActionStatus` - Auto right-alignment to max width
 - `Write-ActionResult` - Truncates long details
 - `Write-Separator` - Adjusts separator length  
 - `Write-Table` - Responsive column widths
 - `Write-Dashboard` - Scales headers and content
 - `Write-Banner` - Adjusts border width
 - `Write-Panel` - Wraps content appropriately
+
+### ⚡ Real-Time Status Pattern (v2.0.0)
+
+The `Write-Action` / `Write-ActionStatus` pair provides elegant real-time status reporting with automatic alignment:
+
+```powershell
+# Basic usage - status auto right-aligns to OrionMaxWidth
+Write-Action "Connecting to database"
+Write-ActionStatus "Connected" -Status Success
+# Output: Connecting to database                                         Connected
+
+# Multiple steps with consistent alignment
+Write-Action "Loading configuration"
+Write-ActionStatus "OK" -Status Success
+Write-Action "Validating credentials"
+Write-ActionStatus "Valid" -Status Success
+Write-Action "Fetching user data"
+Write-ActionStatus "125 users" -Status Success
+
+# Auto-detection of status (no -Status needed)
+Write-Action "Processing items"
+Write-ActionStatus "42 items processed"  # Auto-detects as Success
+
+# Overflow handling - when text is too long, status moves to new line
+Write-Action "This is a very long action description"
+Write-ActionStatus "This is also a long status" -Status Success
+# Output:
+#   This is a very long action description
+#                              This is also a long status
+```
+
+**Key Features:**
+- No fixed width - action text displays naturally
+- Status automatically right-aligns to OrionMaxWidth
+- Intelligent overflow handling when combined text exceeds width
+- Auto-detection of Success/Failed/Warning patterns
 
 ### 🔧 Advanced Features
 
@@ -180,6 +224,35 @@ Write-Separator -Text "Narrow Layout" -Style Double
 Set-OrionMaxWidth -Reset
 ```
 
+### 📦 Making Scripts Portable (v2.0.0)
+
+The `Export-OrionHelpers` function allows you to bundle OrionDesign functions directly into your script's project folder, making scripts portable without requiring the module to be installed.
+
+```powershell
+# Analyze a script and create a self-contained helper file
+Export-OrionHelpers -ScriptPath "C:\Scripts\MyScript.ps1"
+
+# Output to a specific directory
+Export-OrionHelpers -ScriptPath ".\Deploy.ps1" -OutputPath ".\lib"
+
+# Preview what would be exported without making changes
+Export-OrionHelpers -ScriptPath ".\MyScript.ps1" -WhatIf
+
+# Keep the Import-Module line (don't comment it out)
+Export-OrionHelpers -ScriptPath ".\MyScript.ps1" -CommentOutImport:$false
+```
+
+**What it does:**
+1. Analyzes your script to find all OrionDesign function calls
+2. Resolves dependencies (including private helper functions)
+3. Creates `OrionDesign-Helpers.ps1` with all required functions
+4. Comments out the `Import-Module OrionDesign` line in your script
+
+**After export, add this line to your script:**
+```powershell
+. "$PSScriptRoot\OrionDesign-Helpers.ps1"
+```
+
 ---
 
-**OrionDesign v1.6.0** | PowerShell UI Framework | 19 Functions | 13 Themes | Global Configuration | ANSI Support
+**OrionDesign v2.0.0** | PowerShell UI Framework | 20 Functions | 13 Themes | Global Configuration | ANSI Support

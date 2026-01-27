@@ -8,6 +8,7 @@
     
     # Functions to export from this module
     FunctionsToExport = @(
+        'Export-OrionHelpers',
         'Get-OrionMaxWidth',
         'Get-OrionTheme',
         'Set-OrionMaxWidth',
