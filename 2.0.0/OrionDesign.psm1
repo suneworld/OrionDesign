@@ -27,12 +27,12 @@ ARCHITECTURE:
 │ Write-Alert     │ Write-Timeline  │ Write-Dashboard │                 │
 └─────────────────┴─────────────────┴─────────────────┴─────────────────┘
 ┌─────────────────┬─────────────────┬─────────────────────────────────────┐
-│ LAYOUT &        │ GLOBAL          │ DEMONSTRATION                       │
+│ LAYOUT &        │ GLOBAL          │ DEMONSTRATION & UTILITIES           │
 │ FORMATTING      │ CONFIGURATION   │                                     │
 ├─────────────────┼─────────────────┼─────────────────────────────────────┤
 │ Write-Separator │ Get-OrionMax    │ Show-OrionDemo                      │
 │ Write-Panel     │ Set-OrionMax    │   -Demo Basic/Themes/Interactive/All│
-│ Write-CodeBlock │ $script:Theme   │                                     │
+│ Write-CodeBlock │ $script:Theme   │ Export-OrionHelpers (Portability)   │
 └─────────────────┴─────────────────┴─────────────────────────────────────┘
 
 CORE FEATURES:
