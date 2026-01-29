@@ -89,8 +89,7 @@ The helper file includes all necessary private functions that public functions d
 function Export-OrionHelpers {
     [CmdletBinding(SupportsShouldProcess)]
     param(
-        [Parameter(Mandatory, Position = 0)]
-        [ValidateScript({ Test-Path $_ -PathType Leaf })]
+        [Parameter(Position = 0)]
         [string]$ScriptPath,
 
         [Parameter(Position = 1)]
@@ -100,6 +99,77 @@ function Export-OrionHelpers {
 
         [bool]$IncludeTheme = $true
     )
+
+    # If no ScriptPath provided, show interactive file selection
+    if (-not $ScriptPath) {
+        $currentDir = Get-Location
+        $ps1Files = Get-ChildItem -Path $currentDir -Filter "*.ps1" -File -ErrorAction SilentlyContinue | 
+                    Where-Object { $_.Name -ne "OrionDesign-Helpers.ps1" }
+        
+        if ($ps1Files.Count -eq 0) {
+            Write-Host ""
+            Write-Host "  ⚠️  No PowerShell scripts (.ps1) found in current directory" -ForegroundColor Yellow
+            Write-Host "     Directory: $currentDir" -ForegroundColor Gray
+            Write-Host ""
+            Write-Host "  Usage: Export-OrionHelpers -ScriptPath <path-to-script>" -ForegroundColor Cyan
+            Write-Host ""
+            return
+        }
+
+        Write-Host ""
+        Write-Host "  OrionDesign Helper Export" -ForegroundColor Cyan
+        Write-Host "  ═════════════════════════════════════════════════════════════" -ForegroundColor DarkGray
+        Write-Host "  Select a PowerShell script to scan for OrionDesign functions:" -ForegroundColor White
+        Write-Host ""
+
+        $index = 1
+        $fileList = @()
+        foreach ($file in $ps1Files) {
+            $fileList += $file
+            $sizeKB = [math]::Round($file.Length / 1KB, 1)
+            Write-Host "    [$index] " -NoNewline -ForegroundColor Yellow
+            Write-Host $file.Name -NoNewline -ForegroundColor Green
+            Write-Host " ($sizeKB KB)" -ForegroundColor DarkGray
+            $index++
+        }
+        
+        Write-Host ""
+        Write-Host "    [0] " -NoNewline -ForegroundColor Yellow
+        Write-Host "Cancel" -ForegroundColor Red
+        Write-Host ""
+        Write-Host "  ─────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
+
+        $selection = Read-Host "  Enter selection (1-$($ps1Files.Count))"
+        
+        if ($selection -eq "0" -or [string]::IsNullOrWhiteSpace($selection)) {
+            Write-Host ""
+            Write-Host "  ❌ Operation cancelled." -ForegroundColor Red
+            Write-Host ""
+            return
+        }
+
+        $selectedIndex = 0
+        if (-not [int]::TryParse($selection, [ref]$selectedIndex) -or $selectedIndex -lt 1 -or $selectedIndex -gt $ps1Files.Count) {
+            Write-Host ""
+            Write-Host "  ❌ Invalid selection. Please enter a number between 1 and $($ps1Files.Count)" -ForegroundColor Red
+            Write-Host ""
+            return
+        }
+
+        $ScriptPath = $fileList[$selectedIndex - 1].FullName
+        Write-Host ""
+        Write-Host "  ✅ Selected: " -NoNewline -ForegroundColor Green
+        Write-Host $fileList[$selectedIndex - 1].Name -ForegroundColor White
+        Write-Host ""
+    }
+
+    # Validate the script path exists
+    if (-not (Test-Path $ScriptPath -PathType Leaf)) {
+        Write-Host ""
+        Write-Host "  ❌ File not found: $ScriptPath" -ForegroundColor Red
+        Write-Host ""
+        return
+    }
 
     # Resolve full paths
     $ScriptPath = Resolve-Path $ScriptPath | Select-Object -ExpandProperty Path
@@ -122,12 +192,18 @@ function Export-OrionHelpers {
     $privatePath = Join-Path $modulePath "Functions\Private"
 
     # Get all available OrionDesign functions
-    $publicFunctions = Get-ChildItem -Path $publicPath -Filter "*.ps1" -ErrorAction SilentlyContinue
+    $publicFunctions = Get-ChildItem -Path $publicPath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
+                       Where-Object { $_.BaseName -ne "Export-OrionHelpers" }
     $privateFunctions = Get-ChildItem -Path $privatePath -Filter "*.ps1" -ErrorAction SilentlyContinue
 
+    $publicFuncNames = $publicFunctions | ForEach-Object { $_.BaseName }
+    $privateFuncNames = $privateFunctions | ForEach-Object { $_.BaseName }
+    $totalPublicAvailable = $publicFuncNames.Count
+    $totalPrivateAvailable = $privateFuncNames.Count
+
     $allFunctionNames = @()
-    $allFunctionNames += $publicFunctions | ForEach-Object { $_.BaseName }
-    $allFunctionNames += $privateFunctions | ForEach-Object { $_.BaseName }
+    $allFunctionNames += $publicFuncNames
+    $allFunctionNames += $privateFuncNames
 
     # Read the target script
     $scriptContent = Get-Content -Path $ScriptPath -Raw
@@ -180,6 +256,10 @@ function Export-OrionHelpers {
 
     $requiredPrivate = $requiredPrivate | Sort-Object -Unique
 
+    # Calculate usage statistics
+    $usedPublicCount = ($usedFunctions | Where-Object { $_ -in $publicFuncNames }).Count
+    $usagePercent = [math]::Round(($usedPublicCount / $totalPublicAvailable) * 100, 0)
+
     # Display what will be exported
     Write-Host ""
     Write-Host "OrionDesign Export Analysis" -ForegroundColor Cyan
@@ -188,6 +268,20 @@ function Export-OrionHelpers {
     Write-Host $scriptName -ForegroundColor White
     Write-Host "  Output:        " -NoNewline -ForegroundColor Gray
     Write-Host (Join-Path $OutputPath "OrionDesign-Helpers.ps1") -ForegroundColor White
+    Write-Host ""
+    Write-Host "  Coverage:      " -NoNewline -ForegroundColor Gray
+    Write-Host "$usedPublicCount" -NoNewline -ForegroundColor Cyan
+    Write-Host " of " -NoNewline -ForegroundColor Gray
+    Write-Host "$totalPublicAvailable" -NoNewline -ForegroundColor White
+    Write-Host " public functions used (" -NoNewline -ForegroundColor Gray
+    if ($usagePercent -ge 50) {
+        Write-Host "$usagePercent%" -NoNewline -ForegroundColor Green
+    } elseif ($usagePercent -ge 25) {
+        Write-Host "$usagePercent%" -NoNewline -ForegroundColor Yellow
+    } else {
+        Write-Host "$usagePercent%" -NoNewline -ForegroundColor DarkGray
+    }
+    Write-Host ")" -ForegroundColor Gray
     Write-Host ""
     Write-Host "  Public Functions ($($usedFunctions.Count)):" -ForegroundColor Yellow
     foreach ($func in $usedFunctions) {
@@ -325,7 +419,7 @@ if (-not `$script:OrionMaxWidth) {
         Write-Host $helperFilePath -ForegroundColor White
     }
 
-    # Comment out the Import-Module line in the original script
+    # Comment out the Import-Module line and add dot-source line
     if ($CommentOutImport) {
         $importPatterns = @(
             'Import-Module\s+OrionDesign',
@@ -336,13 +430,15 @@ if (-not `$script:OrionMaxWidth) {
 
         $modified = $false
         $newContent = $scriptContent
+        $dotSourceLine = '. "$PSScriptRoot\OrionDesign-Helpers.ps1"'
 
         foreach ($pattern in $importPatterns) {
             if ($newContent -match "(?m)^(\s*)($pattern.*)$") {
                 $fullMatch = $Matches[0]
                 $indent = $Matches[1]
                 if ($fullMatch -notmatch '^\s*#') {
-                    $replacement = "$indent# $($Matches[2]) # Commented by Export-OrionHelpers"
+                    # Comment out old line and add dot-source line
+                    $replacement = "$indent# $($Matches[2]) # Commented by Export-OrionHelpers`n$indent$dotSourceLine"
                     $newContent = $newContent -replace [regex]::Escape($fullMatch), $replacement
                     $modified = $true
                 }
@@ -350,24 +446,23 @@ if (-not `$script:OrionMaxWidth) {
         }
 
         if ($modified) {
-            if ($PSCmdlet.ShouldProcess($ScriptPath, "Comment out Import-Module")) {
+            if ($PSCmdlet.ShouldProcess($ScriptPath, "Comment out Import-Module and add dot-source")) {
                 Set-Content -Path $ScriptPath -Value $newContent -Encoding UTF8 -NoNewline
-                Write-Host "✅ Commented out Import-Module in: " -NoNewline -ForegroundColor Green
+                Write-Host "✅ Updated: " -NoNewline -ForegroundColor Green
                 Write-Host $scriptName -ForegroundColor White
+                Write-Host "   • Commented out Import-Module OrionDesign" -ForegroundColor Gray
+                Write-Host "   • Added: $dotSourceLine" -ForegroundColor Gray
             }
         } else {
             Write-Host "ℹ️  No Import-Module OrionDesign line found to comment out" -ForegroundColor Yellow
+            Write-Host "   Add this line manually: $dotSourceLine" -ForegroundColor Yellow
         }
     }
 
-    # Show usage instructions
+    # Show completion message
     Write-Host ""
-    Write-Host "Usage Instructions:" -ForegroundColor Cyan
+    Write-Host "✅ Export complete!" -ForegroundColor Green
     Write-Host "───────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
-    Write-Host "  Add this line at the top of your script:" -ForegroundColor Gray
-    Write-Host ""
-    Write-Host '  . "$PSScriptRoot\OrionDesign-Helpers.ps1"' -ForegroundColor Yellow
-    Write-Host ""
     Write-Host "  The script is now portable and doesn't require OrionDesign module." -ForegroundColor Gray
     Write-Host "───────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
     Write-Host ""
