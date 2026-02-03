@@ -4,7 +4,7 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Action Function
 ================================================================================
 Author:        Sune Alexandersen Narud  
 Date:          January 27, 2026
-Module:        OrionDesign v2.0.0
+Module:        OrionDesign v2.1.1
 Category:      Interactive Display
 Dependencies:  OrionDesign Theme System, Global Width Configuration
 
