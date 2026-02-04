@@ -147,9 +147,10 @@ function Write-Separator {
             }
         } else {
             # Left-aligned text
-            $prefixLength = 3  # "─── "
+            $prefixLength = 3  # "═══"
             $textLength = $Text.Length
-            $suffixLength = $Length - $prefixLength - $textLength - 1
+            $spacesCount = 2  # Space before and after text: " Text "
+            $suffixLength = $Length - $prefixLength - $textLength - $spacesCount
             
             if ($suffixLength -gt 0) {
                 Write-Host ($sepChar * $prefixLength) -ForegroundColor $sepColor -NoNewline

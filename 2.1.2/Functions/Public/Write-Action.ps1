@@ -9,51 +9,67 @@ Category:      Interactive Display
 Dependencies:  OrionDesign Theme System, Global Width Configuration
 
 FUNCTION PURPOSE:
-Writes an action description with two modes:
+Writes an action description with three modes:
 1. Standard mode: No newline, pairs with Write-ActionResult for status completion
 2. Complete mode (-Complete): Standalone output with optional icons, status, duration
+3. Right-aligned mode (-RightAlign): Standalone right-aligned text (implies -Complete)
+
+THEME INTEGRATION:
+Uses theme 'Action' color for standard mode text (defaults to Text color if not set).
+Supports all theme colors for status-based coloring in Complete mode.
 
 HLD INTEGRATION:
 ┌─ ACTION MODES ──────┐    ┌─ ACTION DISPLAY ─┐    ┌─ OUTPUT ─┐
 │ Standard Mode       │◄──►│ Left-aligned     │───►│ Action   │
-│ • Pairs w/ Result   │    │ No Padding       │    │ Line     │
+│ • Pairs w/ Result   │    │ With margins     │    │ Line     │
 │ • No Newline        │    │ Color Support    │    │ Partial  │
 ├─────────────────────┤    ├──────────────────┤    ├──────────┤
 │ Complete Mode       │◄──►│ Standalone       │───►│ Full     │
 │ • Icons & Status    │    │ Rich Details     │    │ Result   │
 │ • Duration/Subtext  │    │ Multi-line       │    │ Block    │
+├─────────────────────┤    ├──────────────────┤    ├──────────┤
+│ RightAlign Mode     │◄──►│ Right-aligned    │───►│ Single   │
+│ • Implies Complete  │    │ With margins     │    │ Line     │
 └─────────────────────┘    └──────────────────┘    └──────────┘
 ================================================================================
 #>
 
 <#
 .SYNOPSIS
-Writes an action description, either preparing for Write-ActionResult or as a complete standalone result.
+Writes an action description, either preparing for Write-ActionResult, as a complete standalone result, or right-aligned.
 
 .DESCRIPTION
-The Write-Action function has two modes:
+The Write-Action function has three modes:
 
 STANDARD MODE (default):
 Displays an action description left-aligned without a newline.
 Designed to pair with Write-ActionResult for real-time status lines.
-The text length is stored for Write-ActionResult to calculate right-alignment.
+The text length and right margin are stored for Write-ActionResult to calculate alignment.
+Uses theme 'Action' color (or falls back to 'Text' color).
 
 COMPLETE MODE (-Complete):
 Displays a standalone result with optional icons, status colors, duration, 
 subtext, and additional details. Use this for summarized action outcomes.
 
+RIGHT-ALIGNED MODE (-RightAlign):
+Displays text right-aligned to OrionMaxWidth with margins.
+Automatically implies -Complete mode. Useful for standalone right-aligned output.
+
 .PARAMETER Text
 The action description to display.
 
 .PARAMETER Color
-The color for the action text. Defaults to theme text color.
+The color for the action text. Defaults to theme 'Action' color.
 In Complete mode with -Status, the text is colored by status instead.
 
 .PARAMETER Indent
-Switch to enable indentation. When specified, indents the text by IndentSize spaces (default 2).
+Number of spaces for left margin (and right margin for Write-ActionResult alignment).
+Defaults to 1. Use -Indent 0 for no indentation.
 
-.PARAMETER IndentSize
-Number of spaces to indent when -Indent is specified. Defaults to 2.
+.PARAMETER RightAlign
+Switch to right-align the text to OrionMaxWidth.
+Automatically implies -Complete mode (outputs with newline).
+Uses Indent value as both left reference and right margin.
 
 .PARAMETER Complete
 Switch to enable Complete mode. Outputs a standalone result with newline and optional rich details.
@@ -93,49 +109,70 @@ Switch to enable Complete mode. Outputs a standalone result with newline and opt
 
 .EXAMPLE
 Write-Action "Connecting to database"
-Write-ActionResult "Connected" -Status Success
+Write-ActionResult "Connected"
 
-Standard mode - displays with automatic right-alignment:
-  Connecting to database                                             Connected
+Standard mode - displays with automatic right-alignment and margins:
+ Connecting to database                                             Connected 
+
+.EXAMPLE
+Write-Action "Loading configuration" -Indent 0
+Write-ActionResult "OK!"
+
+Standard mode with no indentation:
+Loading configuration                                                      OK!
 
 .EXAMPLE
 Write-Action "Deploy Database" -Complete -Status Success -Duration "00:02:15" -ShowIcon
 
 Complete mode - standalone result with icon and duration:
-  ✅ Deploy Database in 00:02:15
+ ✅ Deploy Database in 00:02:15
 
 .EXAMPLE
 Write-Action "142" -Complete -Status Success -Subtext "tables updated" -ShowIcon
 
 Complete mode with subtext:
-  ✅ 142 tables updated
+ ✅ 142 tables updated
 
 .EXAMPLE
 Write-Action "Connect to API" -Complete -Status Failed -FailureReason "Connection timeout" -Suggestion "Check network" -ShowIcon
 
 Complete mode with failure details:
-  ❌ Connect to API
-     💥 Error: Connection timeout
-     💡 Suggestion: Check network
+ ❌ Connect to API
+    💥 Error: Connection timeout
+    💡 Suggestion: Check network
 
 .EXAMPLE
-Write-Action "Processing" -Indent
-Write-ActionResult "Done" -Status Success
+Write-Action "Processing" -Indent 4
+Write-ActionResult "Done"
 
-Standard mode with indentation:
+Standard mode with 4-space indentation:
     Processing                                                           Done
+
+.EXAMPLE
+Write-Action "Completed successfully" -RightAlign
+
+Right-aligned mode (implies Complete):
+                                                       Completed successfully 
 
 .NOTES
 Standard mode: Pairs with Write-ActionResult for real-time status reporting.
+  - Uses theme 'Action' color for text
+  - Stores text length and right margin for Write-ActionResult alignment
+  - Default indent of 1 space (use -Indent 0 for no margin)
+
 Complete mode: Use for standalone action summaries with rich formatting.
+
+Right-aligned mode: Use -RightAlign for standalone right-aligned text.
+  - Automatically implies -Complete mode
+  - Respects Indent value as right margin
 #>
 function Write-Action {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$Text,
         [string]$Color = "",
-        [switch]$Indent,
-        [int]$IndentSize = 2,
+        [int]$Indent = 1,
+        [switch]$RightAlign,
         [switch]$Complete,
         
         # Complete mode parameters
@@ -160,17 +197,24 @@ function Write-Action {
             Error   = 'Red'
             Text    = 'White'
             Muted   = 'DarkGray'
+            Action  = 'White'
+            Result  = 'Cyan'
             UseAnsi = $true
         }
         if ($psISE) { $script:Theme.UseAnsi = $false }
     }
 
     # Build indentation string
-    $indentString = if ($Indent -and $IndentSize -gt 0) { ' ' * $IndentSize } else { '' }
+    $indentString = if ($Indent -gt 0) { ' ' * $Indent } else { '' }
 
     # Use global max width if not set
     if (-not $script:OrionMaxWidth) {
         $script:OrionMaxWidth = 100
+    }
+
+    # RightAlign implies Complete mode
+    if ($RightAlign) {
+        $Complete = $true
     }
 
     if ($Complete) {
@@ -197,6 +241,19 @@ function Write-Action {
 
         # Determine text color
         $textColor = if ($Color) { $Color } elseif ($Status) { $statusInfo.Color } else { $script:Theme.Text }
+
+        # Handle RightAlign in Complete mode
+        if ($RightAlign) {
+            # Right-align: calculate padding to push text to the right with margin
+            $rightMargin = $Indent
+            $totalLength = $Text.Length + $rightMargin
+            $padding = $script:OrionMaxWidth - $totalLength
+            if ($padding -gt 0) {
+                Write-Host (" " * $padding) -NoNewline
+            }
+            Write-Host "$Text" -ForegroundColor $textColor
+            return
+        }
 
         # Main result line
         Write-Host $indentString -NoNewline
@@ -255,10 +312,14 @@ function Write-Action {
         # ===== STANDARD MODE =====
         # No newline, pairs with Write-ActionResult
         
-        $textColor = if ($Color) { $Color } else { $script:Theme.Text }
+        # Use Action color for descriptions (falls back to Text if Action not defined)
+        $actionColor = if ($script:Theme.Action) { $script:Theme.Action } else { $script:Theme.Text }
+        $textColor = if ($Color) { $Color } else { $actionColor }
 
         # Store the actual text length (including indent) for Write-ActionResult to calculate alignment
         $script:LastActionTextLength = $indentString.Length + $Text.Length
+        # Store right margin (same as left indent) for Write-ActionResult
+        $script:LastActionRightMargin = $Indent
 
         # Output without newline
         Write-Host "$indentString$Text" -NoNewline -ForegroundColor $textColor

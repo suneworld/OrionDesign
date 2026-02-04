@@ -33,11 +33,13 @@ You can either provide a custom theme hashtable or use one of the predefined the
 .PARAMETER Theme
 A hashtable containing theme configuration. Should include:
 - Accent: Color for highlights and accents
-- Success: Color for success states
+- Success: Color for explicit success states (e.g., -Status Success)
 - Warning: Color for warning states  
 - Error: Color for error states
 - Text: Default text color
 - Muted: Color for secondary text
+- Action: Color for Write-Action descriptions (left side)
+- Result: Color for Write-ActionResult output (right side, uses Accent-based color)
 - Divider: Character for dividers
 - UseAnsi: Boolean for ANSI support
 
@@ -131,6 +133,8 @@ function Set-OrionTheme {
                     Error    = 'Red'
                     Text     = 'White'
                     Muted    = 'DarkGray'
+                    Action   = 'White'
+                    Result   = 'Cyan'
                     Divider  = '─'
                     UseAnsi  = $true
                 }
@@ -143,6 +147,8 @@ function Set-OrionTheme {
                     Error    = 'DarkRed'
                     Text     = 'Gray'
                     Muted    = 'DarkGray'
+                    Action   = 'Gray'
+                    Result   = 'DarkCyan'
                     Divider  = '─'
                     UseAnsi  = $true
                 }
@@ -155,6 +161,8 @@ function Set-OrionTheme {
                     Error    = 'DarkRed'
                     Text     = 'Black'
                     Muted    = 'DarkGray'
+                    Action   = 'Black'
+                    Result   = 'DarkBlue'
                     Divider  = '─'
                     UseAnsi  = $true
                 }
@@ -167,6 +175,8 @@ function Set-OrionTheme {
                     Error    = 'Red'
                     Text     = 'White'
                     Muted    = 'DarkBlue'
+                    Action   = 'White'
+                    Result   = 'Blue'
                     Divider  = '~'
                     UseAnsi  = $true
                 }
@@ -174,11 +184,13 @@ function Set-OrionTheme {
             'Forest' {
                 $Theme = @{
                     Accent   = 'Green'
-                    Success  = 'DarkGreen'
+                    Success  = 'Cyan'
                     Warning  = 'Yellow'
                     Error    = 'Red'
                     Text     = 'White'
                     Muted    = 'DarkGreen'
+                    Action   = 'White'
+                    Result   = 'Green'
                     Divider  = '│'
                     UseAnsi  = $true
                 }
@@ -191,6 +203,8 @@ function Set-OrionTheme {
                     Error    = 'DarkRed'
                     Text     = 'Yellow'
                     Muted    = 'DarkMagenta'
+                    Action   = 'Yellow'
+                    Result   = 'Magenta'
                     Divider  = '═'
                     UseAnsi  = $true
                 }
@@ -200,9 +214,11 @@ function Set-OrionTheme {
                     Accent   = 'White'
                     Success  = 'Gray'
                     Warning  = 'DarkGray'
-                    Error    = 'White'
+                    Error    = 'Red'
                     Text     = 'Gray'
                     Muted    = 'DarkGray'
+                    Action   = 'Gray'
+                    Result   = 'White'
                     Divider  = '─'
                     UseAnsi  = $true
                 }
@@ -215,6 +231,8 @@ function Set-OrionTheme {
                     Error    = 'White'
                     Text     = 'White'
                     Muted    = 'White'
+                    Action   = 'White'
+                    Result   = 'White'
                     Divider  = '█'
                     UseAnsi  = $true
                 }
@@ -223,10 +241,12 @@ function Set-OrionTheme {
                 $Theme = @{
                     Accent   = 'Yellow'
                     Success  = 'Green'
-                    Warning  = 'Yellow'
+                    Warning  = 'DarkYellow'
                     Error    = 'Red'
                     Text     = 'White'
                     Muted    = 'DarkYellow'
+                    Action   = 'DarkYellow'
+                    Result   = 'Yellow'
                     Divider  = '='
                     UseAnsi  = $true
                 }
@@ -234,11 +254,13 @@ function Set-OrionTheme {
             'Matrix' {
                 $Theme = @{
                     Accent   = 'Green'
-                    Success  = 'DarkGreen'
+                    Success  = 'Cyan'
                     Warning  = 'Yellow'
                     Error    = 'Red'
                     Text     = 'Green'
                     Muted    = 'DarkGreen'
+                    Action   = 'DarkGreen'
+                    Result   = 'Green'
                     Divider  = '|'
                     UseAnsi  = $true
                 }
@@ -251,6 +273,8 @@ function Set-OrionTheme {
                     Error    = 'Red'
                     Text     = 'White'
                     Muted    = 'DarkMagenta'
+                    Action   = 'White'
+                    Result   = 'Magenta'
                     Divider  = '~'
                     UseAnsi  = $true
                 }
@@ -263,6 +287,8 @@ function Set-OrionTheme {
                     Error    = 'DarkRed'
                     Text     = 'Cyan'
                     Muted    = 'DarkCyan'
+                    Action   = 'DarkCyan'
+                    Result   = 'Cyan'
                     Divider  = '▓'
                     UseAnsi  = $true
                 }
@@ -271,10 +297,12 @@ function Set-OrionTheme {
                 $Theme = @{
                     Accent   = 'DarkYellow'
                     Success  = 'DarkGreen'
-                    Warning  = 'DarkYellow'
+                    Warning  = 'Yellow'
                     Error    = 'DarkRed'
                     Text     = 'DarkYellow'
                     Muted    = 'DarkGray'
+                    Action   = 'Gray'
+                    Result   = 'DarkYellow'
                     Divider  = '·'
                     UseAnsi  = $true
                 }
