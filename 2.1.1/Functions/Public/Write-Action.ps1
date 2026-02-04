@@ -45,7 +45,10 @@ The action description to display.
 The color for the action text. Defaults to theme text color.
 
 .PARAMETER Indent
-Number of spaces to indent the action text (useful for nested operations).
+Switch to enable indentation. When specified, indents the text by IndentSize spaces (default 2).
+
+.PARAMETER IndentSize
+Number of spaces to indent when -Indent is specified. Defaults to 2.
 
 .PARAMETER Complete
 When specified, outputs with a newline instead of waiting for Write-ActionStatus completion.
@@ -87,7 +90,8 @@ function Write-Action {
     param(
         [Parameter(Mandatory)][string]$Text,
         [string]$Color = "",
-        [int]$Indent = 0,
+        [switch]$Indent,
+        [int]$IndentSize = 2,
         [switch]$Complete
     )
 
@@ -103,8 +107,8 @@ function Write-Action {
     # Determine color
     $textColor = if ($Color) { $Color } else { $script:Theme.Text }
 
-    # Build indentation string
-    $indentString = if ($Indent -gt 0) { ' ' * $Indent } else { '' }
+    # Build indentation string: only indent if -Indent switch is specified
+    $indentString = if ($Indent -and $IndentSize -gt 0) { ' ' * $IndentSize } else { '' }
 
     # Store the actual text length (including indent) for Write-ActionStatus to calculate alignment
     $script:LastActionTextLength = $indentString.Length + $Text.Length
