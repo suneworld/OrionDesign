@@ -4,7 +4,7 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-MenuLine Function
 ================================================================================
 Author:        Sune Alexandersen Narud  
 Date:          February 5, 2026
-Module:        OrionDesign v2.1.4
+Module:        OrionDesign v3.0.0
 Category:      Interactive Display
 Dependencies:  OrionDesign Theme System, Global Width Configuration
 
@@ -23,15 +23,15 @@ LAYOUT STRUCTURE:
 ┌────────────────────────────────────────────────────────────────────────────┐
 │ [Indent] [Number]. [Title]                            [SuffixNumber] [Suffix] │
 │    ↑         ↑        ↑                                     ↑            ↑       │
-│  Margin   Accent   Text                                  Result      Result    │
-│  (1 sp)   Color    Color                                 Color       Color     │
+│  Margin   Accent   Text                                  Accent       Text     │
+│  (1 sp)   Color    Color                                 Color        Color    │
 └────────────────────────────────────────────────────────────────────────────┘
 
 HLD INTEGRATION:
 ┌─ MENU LINE ─────────┐    ┌─ LINE DISPLAY ──┐    ┌─ OUTPUT ─┐
 │ Write-MenuLine      │◄──►│ Left: Number+   │───►│ Single   │
-│ • MenuNumber        │    │       Title     │    │ Styled   │
-│ • MenuTitle         │    │ Right: Suffix+  │    │ Menu     │
+│ • MenuNumber        │    │       Text      │    │ Styled   │
+│ • Text              │    │ Right: Suffix+  │    │ Menu     │
 │ • SuffixNumber      │    │        Number   │    │ Line     │
 │ • Suffix            │    │ Width-aware     │    │          │
 └─────────────────────┘    └─────────────────┘    └──────────┘
@@ -39,8 +39,9 @@ HLD INTEGRATION:
 THEME INTEGRATION:
 • MenuNumber uses theme 'Accent' color (Cyan in Default theme)
 • Period "." uses theme 'Muted' color for subtle separation
-• MenuTitle uses theme 'Text' color (White in Default theme)
-• SuffixNumber and Suffix use theme 'Result' color (Accent-based)
+• Text uses theme 'Text' color (White in Default theme)
+• SuffixNumber uses theme 'Accent' color (matches MenuNumber)
+• Suffix uses theme 'Text' color (matches Text)
 • All colors can be overridden via parameters
 
 WIDTH & ALIGNMENT:
@@ -58,7 +59,7 @@ Writes a single styled menu line with optional right-aligned suffix.
 .DESCRIPTION
 The Write-MenuLine function outputs a single menu line with a number and title
 on the left, and an optional suffix with number on the right (right-aligned).
-If SuffixNumber is 0 or empty, only the MenuNumber and MenuTitle are displayed.
+If SuffixNumber is 0 or empty, only the MenuNumber and Text are displayed.
 
 This function is designed for building custom menus where you need more control
 than Write-Menu provides. It respects OrionMaxWidth for alignment and uses
@@ -66,16 +67,17 @@ theme colors for consistent styling across your application.
 
 OUTPUT FORMAT:
  When SuffixNumber is provided and non-zero:
-   [Indent][Number]. [Title]                         [SuffixNumber] [Suffix]
+   [Indent][Number]. [Text]                          [SuffixNumber] [Suffix]
 
  When SuffixNumber is 0 or empty:
-   [Indent][Number]. [Title]
+   [Indent][Number]. [Text]
 
 THEME COLORS USED:
  - MenuNumber: Accent color (cyan by default)
  - Period (.): Muted color (dark gray)
- - MenuTitle: Text color (white by default)  
- - SuffixNumber/Suffix: Result color (accent-based, cyan by default)
+ - Text: Text color (white by default)  
+ - SuffixNumber: Accent color (matches MenuNumber)
+ - Suffix: Text color (matches Text)
 
 ALIGNMENT:
  - Left margin: Controlled by -Indent (default 1 space)
@@ -87,8 +89,8 @@ The menu option number or identifier displayed on the left side.
 Can be a number (1, 2, 3) or text (A, B, X).
 Displayed in the theme's Accent color.
 
-.PARAMETER MenuTitle  
-The menu option title or description displayed after the number.
+.PARAMETER Text  
+The menu option text or description displayed after the number.
 This is the main text the user sees for the menu option.
 Displayed in the theme's Text color.
 
@@ -96,13 +98,13 @@ Displayed in the theme's Text color.
 Optional count or number to display on the right side.
 If this is 0, empty, or not provided, no suffix is displayed.
 Useful for showing item counts, statistics, or status numbers.
-Displayed in the theme's Result color.
+Displayed in the theme's Accent color (matches MenuNumber).
 
 .PARAMETER Suffix
 Optional text label displayed after SuffixNumber on the right.
 Typically a unit or description like "users", "items", "pending".
 Only displayed if SuffixNumber is provided and non-zero.
-Displayed in the theme's Result color.
+Displayed in the theme's Text color (matches Text).
 
 .PARAMETER Indent
 Number of spaces for left margin (and right margin for symmetry).
@@ -112,22 +114,22 @@ Set to 0 for no indentation.
 .PARAMETER Muted
 Switch to display the entire menu line in the theme's Muted color.
 Useful for indicating disabled, unavailable, or inactive menu options.
-When enabled, overrides all color settings (MenuNumberColor, MenuTitleColor, SuffixColor).
+When enabled, overrides all color settings (MenuNumberColor, TextColor, SuffixColor).
 
 .PARAMETER MenuNumberColor
 Override color for the MenuNumber.
 Accepts any valid PowerShell console color.
 Defaults to theme Accent color if not specified.
 
-.PARAMETER MenuTitleColor
-Override color for the MenuTitle.
+.PARAMETER TextColor
+Override color for the Text.
 Accepts any valid PowerShell console color.
 Defaults to theme Text color if not specified.
 
 .PARAMETER SuffixColor
 Override color for both SuffixNumber and Suffix text.
 Accepts any valid PowerShell console color.
-Defaults to theme Result color if not specified.
+Defaults to Accent for SuffixNumber and Text for Suffix if not specified.
 
 .INPUTS
 None. You cannot pipe objects to Write-MenuLine.
@@ -136,31 +138,31 @@ None. You cannot pipe objects to Write-MenuLine.
 None. Write-MenuLine writes directly to the host console.
 
 .EXAMPLE
-Write-MenuLine -MenuNumber 1 -MenuTitle "View Users"
+Write-MenuLine -MenuNumber 1 -Text "View Users"
 
 Outputs a simple menu line without suffix:
  1. View Users
 
 .EXAMPLE
-Write-MenuLine -MenuNumber 1 -MenuTitle "View Users" -SuffixNumber 142 -Suffix "users"
+Write-MenuLine -MenuNumber 1 -Text "View Users" -SuffixNumber 142 -Suffix "users"
 
 Outputs a menu line with right-aligned count:
  1. View Users                                                        142 users
 
 .EXAMPLE
-Write-MenuLine -MenuNumber 2 -MenuTitle "Pending Approvals" -SuffixNumber 5 -Suffix "pending"
+Write-MenuLine -MenuNumber 2 -Text "Pending Approvals" -SuffixNumber 5 -Suffix "pending"
 
 Outputs:
  2. Pending Approvals                                                 5 pending
 
 .EXAMPLE
-Write-MenuLine -MenuNumber 3 -MenuTitle "Archived Items" -SuffixNumber 0
+Write-MenuLine -MenuNumber 3 -Text "Archived Items" -SuffixNumber 0
 
 When SuffixNumber is 0, no suffix is displayed:
  3. Archived Items
 
 .EXAMPLE
-Write-MenuLine -MenuNumber "X" -MenuTitle "Exit" -MenuTitleColor "DarkGray"
+Write-MenuLine -MenuNumber "X" -Text "Exit" -TextColor "DarkGray"
 
 Using a letter instead of number, with custom color:
  X. Exit
@@ -175,9 +177,9 @@ $menuItems = @(
 
 Write-Separator -Text "User Management" -Style Double
 foreach ($item in $menuItems) {
-    Write-MenuLine -MenuNumber $item.Num -MenuTitle $item.Title -SuffixNumber $item.Count
+    Write-MenuLine -MenuNumber $item.Num -Text $item.Title -SuffixNumber $item.Count
 }
-Write-MenuLine -MenuNumber "X" -MenuTitle "Exit" -MenuTitleColor DarkGray
+Write-MenuLine -MenuNumber "X" -Text "Exit" -TextColor DarkGray
 
 Outputs:
 ═══ User Management ═══════════════════════════════════════════════════════════════
@@ -189,15 +191,15 @@ Outputs:
 .EXAMPLE
 # Using with different themes
 Set-OrionTheme -Preset Matrix
-Write-MenuLine -MenuNumber 1 -MenuTitle "Decrypt Files" -SuffixNumber 50 -Suffix "files"
+Write-MenuLine -MenuNumber 1 -Text "Decrypt Files" -SuffixNumber 50 -Suffix "files"
 
 With Matrix theme, colors change to green/dark green aesthetic.
 
 .EXAMPLE
 # Custom indentation
-Write-MenuLine -MenuNumber 1 -MenuTitle "Main Option" -Indent 0
-Write-MenuLine -MenuNumber "1a" -MenuTitle "Sub Option" -Indent 4
-Write-MenuLine -MenuNumber "1b" -MenuTitle "Sub Option" -Indent 4
+Write-MenuLine -MenuNumber 1 -Text "Main Option" -Indent 0
+Write-MenuLine -MenuNumber "1a" -Text "Sub Option" -Indent 4
+Write-MenuLine -MenuNumber "1b" -Text "Sub Option" -Indent 4
 
 Creates hierarchical menu structure:
 1. Main Option
@@ -206,9 +208,9 @@ Creates hierarchical menu structure:
 
 .EXAMPLE
 # Using -Muted for disabled/unavailable options
-Write-MenuLine -MenuNumber 1 -MenuTitle "Available Option" -SuffixNumber 10 -Suffix "items"
-Write-MenuLine -MenuNumber 2 -MenuTitle "Disabled Option" -SuffixNumber 0 -Muted
-Write-MenuLine -MenuNumber 3 -MenuTitle "Another Available" -SuffixNumber 5 -Suffix "items"
+Write-MenuLine -MenuNumber 1 -Text "Available Option" -SuffixNumber 10 -Suffix "items"
+Write-MenuLine -MenuNumber 2 -Text "Disabled Option" -SuffixNumber 0 -Muted
+Write-MenuLine -MenuNumber 3 -Text "Another Available" -SuffixNumber 5 -Suffix "items"
 
 The muted line appears in dark gray, indicating it's unavailable:
  1. Available Option                                                   10 items
@@ -233,10 +235,9 @@ Uses the same margin system as Write-Action/Write-ActionResult:
 
 THEME CONSISTENCY:
 All colors are pulled from the current theme:
-- Accent: MenuNumber (eye-catching for selection)
+- Accent: MenuNumber and SuffixNumber (eye-catching for numbers)
 - Muted: Period separator (subtle, non-distracting)
-- Text: MenuTitle (primary readable content)
-- Result: Suffix (accent-based, draws attention to counts)
+- Text: Text and Suffix (primary readable content)
 
 See Get-OrionTheme and Set-OrionTheme for theme customization.
 
@@ -256,13 +257,13 @@ function Write-MenuLine {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory)][string]$MenuNumber,
-        [Parameter(Mandatory)][string]$MenuTitle,
+        [Parameter(Mandatory)][string]$Text,
         [string]$SuffixNumber = "",
         [string]$Suffix = "",
         [int]$Indent = 1,
         [switch]$Muted,
         [string]$MenuNumberColor = "",
-        [string]$MenuTitleColor = "",
+        [string]$TextColor = "",
         [string]$SuffixColor = ""
     )
 
@@ -291,21 +292,23 @@ function Write-MenuLine {
     # If -Muted is enabled, override all colors with Muted
     if ($Muted) {
         $numColor = $script:Theme.Muted
-        $titleColor = $script:Theme.Muted
+        $textColor = $script:Theme.Muted
         $suffixNumColor = $script:Theme.Muted
         $suffixTxtColor = $script:Theme.Muted
     } else {
         $numColor = if ($MenuNumberColor) { $MenuNumberColor } else { $script:Theme.Accent }
-        $titleColor = if ($MenuTitleColor) { $MenuTitleColor } else { $script:Theme.Text }
-        $suffixNumColor = $script:Theme.Accent
-        $suffixTxtColor = $script:Theme.Text
+        $textColor = if ($TextColor) { $TextColor } else { $script:Theme.Text }
+        # SuffixNumber shares color with MenuNumber (Accent)
+        # Suffix shares color with Text
+        $suffixNumColor = if ($SuffixColor) { $SuffixColor } else { $script:Theme.Accent }
+        $suffixTxtColor = if ($SuffixColor) { $SuffixColor } else { $script:Theme.Text }
     }
 
     # Build indentation string
     $indentString = if ($Indent -gt 0) { ' ' * $Indent } else { '' }
 
-    # Build left side: "  1. Menu Title"
-    $leftText = "$MenuNumber. $MenuTitle"
+    # Build left side: "  1. Menu Text"
+    $leftText = "$MenuNumber. $Text"
     $leftLength = $indentString.Length + $leftText.Length
 
     # Calculate effective width (respecting margins like Write-ActionResult)
@@ -321,7 +324,7 @@ function Write-MenuLine {
     # Output the line
     Write-Host $indentString -NoNewline
     Write-Host "$MenuNumber. " -ForegroundColor $numColor -NoNewline
-    Write-Host $MenuTitle -ForegroundColor $titleColor -NoNewline
+    Write-Host $Text -ForegroundColor $textColor -NoNewline
 
     if ($hasSuffix) {
         # Build suffix text for length calculation
