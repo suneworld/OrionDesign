@@ -1,6 +1,6 @@
 ﻿@{
     RootModule        = 'OrionDesign.psm1'
-    ModuleVersion     = '2.1.4'  # Added Write-MenuLine with -Muted parameter for disabled menu options
+    ModuleVersion     = '3.0.0'
     GUID              = '7e6a0c07-1b71-4e11-8d7c-123456789abc'
     Author            = 'Sune Alexandersen Narud'
     Description       = 'Orion Design Framework – Beautiful PowerShell UI functions with global configuration'
