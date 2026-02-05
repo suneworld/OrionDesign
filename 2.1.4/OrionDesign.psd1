@@ -1,6 +1,6 @@
 ﻿@{
     RootModule        = 'OrionDesign.psm1'
-    ModuleVersion     = '2.1.2'  # Consolidated: Write-ActionStatus renamed to Write-ActionResult, old Write-ActionResult merged into Write-Action -Complete
+    ModuleVersion     = '2.1.4'  # Added Write-MenuLine with -Muted parameter for disabled menu options
     GUID              = '7e6a0c07-1b71-4e11-8d7c-123456789abc'
     Author            = 'Sune Alexandersen Narud'
     Description       = 'Orion Design Framework – Beautiful PowerShell UI functions with global configuration'
@@ -22,6 +22,7 @@
         'Write-Header',
         'Write-InfoBox',
         'Write-Menu',
+        'Write-MenuLine',
         'Write-Panel',
         'Write-ProgressBar',
         'Write-Question',

@@ -4,8 +4,8 @@ ORION DESIGN - POWERSHELL UI FRAMEWORK
 ================================================================================
 
 Author:        Sune Alexandersen Narud
-Date:          January 27, 2026
-Version:       2.0.0
+Date:          February 5, 2026
+Version:       2.1.4
 
 HIGH LEVEL DESIGN (HLD):
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
@@ -83,6 +83,8 @@ $script:Theme = @{
     Error    = 'Red'
     Text     = 'White'
     Muted    = 'DarkGray'
+    Action   = 'White'
+    Result   = 'Cyan'
     Divider  = '─'
     UseAnsi  = $true
 }

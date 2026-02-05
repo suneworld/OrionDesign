@@ -54,12 +54,15 @@ Set-OrionMaxWidth -Reset
 | `Write-Dashboard`  | Multi-metric dashboards  | `Write-Dashboard -Title "Stats" -Metrics @{...}`            |
 
 #### Interactive Elements
-| Function         | Purpose         | Example                                          |
-|------------------|-----------------|--------------------------------------------------|
-| `Write-Menu`     | Selection menus | `Write-Menu -Title "Options" -Options @("A", "B")` |
-| `Write-Question` | User prompts    | `Write-Question -Prompt "Continue?" -Type YesNo` |
+| Function         | Purpose               | Example                                            |
+|------------------|-----------------------|----------------------------------------------------|
+| `Write-Menu`     | Selection menus       | `Write-Menu -Title "Options" -Options @("A", "B")` |
+| `Write-MenuLine` | Custom menu line      | `Write-MenuLine -MenuNumber 1 -MenuTitle "Option"` |
+| `Write-Question` | User prompts          | `Write-Question -Prompt "Continue?" -Type YesNo`   |
 
 > **Note:** `Write-Menu` automatically includes an Exit option (X) as the last item in every menu.
+
+> **New in v2.1.4:** `Write-MenuLine` provides single-line menu output with optional right-aligned suffix and `-Muted` parameter for disabled options.
 
 #### Layout & Formatting
 | Function          | Purpose            | Example                                                    |
@@ -127,7 +130,7 @@ The following functions automatically respect the global max width setting:
 - `Write-Banner` - Adjusts border width
 - `Write-Panel` - Wraps content appropriately
 
-### ⚡ Real-Time Status Pattern (v2.1.2)
+### ⚡ Real-Time Status Pattern (v2.1.4)
 
 The `Write-Action` / `Write-ActionResult` pair provides elegant real-time status reporting with automatic alignment:
 
@@ -274,4 +277,4 @@ Export-OrionHelpers -ScriptPath ".\MyScript.ps1" -CommentOutImport:$false
 
 ---
 
-**OrionDesign v2.1.2** | PowerShell UI Framework | 19 Functions | 13 Themes | Global Configuration | ANSI Support
+**OrionDesign v2.1.4** | PowerShell UI Framework | 20 Functions | 13 Themes | Global Configuration | ANSI Support
