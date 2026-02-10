@@ -40,6 +40,7 @@ A hashtable containing theme configuration. Should include:
 - Muted: Color for secondary text
 - Action: Color for Write-Action descriptions (left side)
 - Result: Color for Write-ActionResult output (right side, uses Accent-based color)
+- Question: Color for Write-Question prompts
 - Divider: Character for dividers
 - UseAnsi: Boolean for ANSI support
 
@@ -127,6 +128,7 @@ function Set-OrionTheme {
         switch ($Preset) {
             'Default' {
                 $Theme = @{
+                    Name     = 'Default'
                     Accent   = 'Cyan'
                     Success  = 'Green'
                     Warning  = 'Yellow'
@@ -135,12 +137,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkGray'
                     Action   = 'White'
                     Result   = 'Cyan'
+                    Question = 'Yellow'
                     Divider  = '─'
                     UseAnsi  = $true
                 }
             }
             'Dark' {
                 $Theme = @{
+                    Name     = 'Dark'
                     Accent   = 'DarkCyan'
                     Success  = 'DarkGreen'
                     Warning  = 'DarkYellow'
@@ -149,12 +153,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkGray'
                     Action   = 'Gray'
                     Result   = 'DarkCyan'
+                    Question = 'DarkYellow'
                     Divider  = '─'
                     UseAnsi  = $true
                 }
             }
             'Light' {
                 $Theme = @{
+                    Name     = 'Light'
                     Accent   = 'DarkBlue'
                     Success  = 'DarkGreen'
                     Warning  = 'DarkYellow'
@@ -163,12 +169,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkGray'
                     Action   = 'Black'
                     Result   = 'DarkBlue'
+                    Question = 'DarkYellow'
                     Divider  = '─'
                     UseAnsi  = $true
                 }
             }
             'Ocean' {
                 $Theme = @{
+                    Name     = 'Ocean'
                     Accent   = 'Blue'
                     Success  = 'Cyan'
                     Warning  = 'Yellow'
@@ -177,12 +185,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkBlue'
                     Action   = 'White'
                     Result   = 'Blue'
+                    Question = 'Cyan'
                     Divider  = '~'
                     UseAnsi  = $true
                 }
             }
             'Forest' {
                 $Theme = @{
+                    Name     = 'Forest'
                     Accent   = 'Green'
                     Success  = 'Cyan'
                     Warning  = 'Yellow'
@@ -191,12 +201,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkGreen'
                     Action   = 'White'
                     Result   = 'Green'
+                    Question = 'Yellow'
                     Divider  = '│'
                     UseAnsi  = $true
                 }
             }
             'Sunset' {
                 $Theme = @{
+                    Name     = 'Sunset'
                     Accent   = 'Magenta'
                     Success  = 'Green'
                     Warning  = 'DarkYellow'
@@ -205,12 +217,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkMagenta'
                     Action   = 'Yellow'
                     Result   = 'Magenta'
+                    Question = 'White'
                     Divider  = '═'
                     UseAnsi  = $true
                 }
             }
             'Monochrome' {
                 $Theme = @{
+                    Name     = 'Monochrome'
                     Accent   = 'White'
                     Success  = 'Gray'
                     Warning  = 'DarkGray'
@@ -219,12 +233,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkGray'
                     Action   = 'Gray'
                     Result   = 'White'
+                    Question = 'White'
                     Divider  = '─'
                     UseAnsi  = $true
                 }
             }
             'HighContrast' {
                 $Theme = @{
+                    Name     = 'HighContrast'
                     Accent   = 'White'
                     Success  = 'White'
                     Warning  = 'White'
@@ -233,12 +249,14 @@ function Set-OrionTheme {
                     Muted    = 'White'
                     Action   = 'White'
                     Result   = 'White'
+                    Question = 'White'
                     Divider  = '█'
                     UseAnsi  = $true
                 }
             }
             'OldSchool' {
                 $Theme = @{
+                    Name     = 'OldSchool'
                     Accent   = 'Yellow'
                     Success  = 'Green'
                     Warning  = 'DarkYellow'
@@ -247,12 +265,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkYellow'
                     Action   = 'DarkYellow'
                     Result   = 'Yellow'
+                    Question = 'Yellow'
                     Divider  = '='
                     UseAnsi  = $true
                 }
             }
             'Matrix' {
                 $Theme = @{
+                    Name     = 'Matrix'
                     Accent   = 'Green'
                     Success  = 'Cyan'
                     Warning  = 'Yellow'
@@ -261,12 +281,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkGray'
                     Action   = 'DarkGreen'
                     Result   = 'Green'
+                    Question = 'Green'
                     Divider  = '|'
                     UseAnsi  = $true
                 }
             }
             'Retro80s' {
                 $Theme = @{
+                    Name     = 'Retro80s'
                     Accent   = 'Magenta'
                     Success  = 'Cyan'
                     Warning  = 'Yellow'
@@ -275,12 +297,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkMagenta'
                     Action   = 'White'
                     Result   = 'Magenta'
+                    Question = 'Cyan'
                     Divider  = '~'
                     UseAnsi  = $true
                 }
             }
             'Cyberpunk' {
                 $Theme = @{
+                    Name     = 'Cyberpunk'
                     Accent   = 'Cyan'
                     Success  = 'Green'
                     Warning  = 'DarkYellow'
@@ -289,12 +313,14 @@ function Set-OrionTheme {
                     Muted    = 'DarkCyan'
                     Action   = 'White'
                     Result   = 'Cyan'
+                    Question = 'Magenta'
                     Divider  = '▓'
                     UseAnsi  = $true
                 }
             }
             'Vintage' {
                 $Theme = @{
+                    Name     = 'Vintage'
                     Accent   = 'DarkYellow'
                     Success  = 'DarkGreen'
                     Warning  = 'Yellow'
@@ -303,6 +329,7 @@ function Set-OrionTheme {
                     Muted    = 'DarkGray'
                     Action   = 'Gray'
                     Result   = 'DarkYellow'
+                    Question = 'Yellow'
                     Divider  = '·'
                     UseAnsi  = $true
                 }
@@ -312,6 +339,11 @@ function Set-OrionTheme {
 
     if (-not $Theme) {
         throw "Either -Theme or -Preset parameter must be specified"
+    }
+
+    # Default name to 'Custom' if not specified
+    if (-not $Theme.Name) {
+        $Theme.Name = 'Custom'
     }
 
     # Disable ANSI in PowerShell ISE

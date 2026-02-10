@@ -13,16 +13,17 @@ Retrieves the current OrionDesign theme configuration.
 Provides access to theme colors and settings for inspection or modification.
 
 THEME PROPERTIES:
-- Accent:  Color for highlights and accents
-- Success: Color for explicit success states (-Status Success)
-- Warning: Color for warning states
-- Error:   Color for error states
-- Text:    Default text color
-- Muted:   Color for secondary/dimmed text
-- Action:  Color for Write-Action descriptions
-- Result:  Color for Write-ActionResult (auto-detected success)
-- Divider: Character for separator lines
-- UseAnsi: Boolean for ANSI support
+- Accent:   Color for highlights and accents
+- Success:  Color for explicit success states (-Status Success)
+- Warning:  Color for warning states
+- Error:    Color for error states
+- Text:     Default text color
+- Muted:    Color for secondary/dimmed text
+- Action:   Color for Write-Action descriptions
+- Result:   Color for Write-ActionResult (auto-detected success)
+- Question: Color for Write-Question prompts
+- Divider:  Character for separator lines
+- UseAnsi:  Boolean for ANSI support
 
 HLD INTEGRATION:
 ┌─ THEME ACCESS ──┐    ┌─ CONFIGURATION ──┐    ┌─ OUTPUT ─┐
@@ -54,6 +55,7 @@ Theme properties include:
 - Text, Muted: Text colors
 - Action: Color for Write-Action descriptions
 - Result: Color for Write-ActionResult output (uses Accent for theme consistency)
+- Question: Color for Write-Question prompts
 - Divider: Character for separators
 - UseAnsi: ANSI escape code support
 
@@ -87,6 +89,7 @@ function Get-OrionTheme {
     # Initialize theme if not set
     if (-not $script:Theme) {
         $script:Theme = @{
+            Name     = 'Default'
             Accent   = 'Cyan'
             Success  = 'Green'
             Warning  = 'Yellow'
@@ -95,6 +98,7 @@ function Get-OrionTheme {
             Muted    = 'DarkGray'
             Action   = 'White'       # Color for Write-Action descriptions
             Result   = 'Cyan'        # Default color for Write-ActionResult (uses Accent for visibility)
+            Question = 'Yellow'      # Color for Write-Question prompts
             Divider  = '─'
             UseAnsi  = $true
         }
