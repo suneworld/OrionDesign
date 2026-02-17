@@ -50,7 +50,10 @@ Length of the separator (default: terminal width).
 Custom character for 'Custom' style.
 
 .PARAMETER Color
-Color of the separator (uses theme colors).
+Color of the separator. Accepts either:
+- Semantic theme colors: Accent, Success, Warning, Error, Text, Muted
+- Direct console colors: Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta, 
+  DarkYellow, Gray, DarkGray, Blue, Green, Cyan, Red, Magenta, Yellow, White
 
 .PARAMETER Center
 Centers the text in the separator.
@@ -77,7 +80,7 @@ function Write-Separator {
         [ValidateSet('Single', 'Double', 'Thick', 'Dotted', 'Custom')] [string]$Style = 'Single',
         [int]$Length = 0,
         [string]$Character = "-",
-        [ValidateSet('Accent', 'Success', 'Warning', 'Error', 'Text', 'Muted')] [string]$Color = 'Accent',
+        [string]$Color = 'Accent',
         [switch]$Center
     )
 
@@ -120,8 +123,14 @@ function Write-Separator {
         'Custom' { $Character }
     }
 
-    # Get color from theme
-    $sepColor = $script:Theme[$Color]
+    # Get color - support both semantic theme colors and direct console colors
+    $themeColors = @('Accent', 'Success', 'Warning', 'Error', 'Text', 'Muted')
+    if ($themeColors -contains $Color) {
+        $sepColor = $script:Theme[$Color]
+    } else {
+        # Try to use as direct console color
+        $sepColor = $Color
+    }
 
     Write-Host
 
