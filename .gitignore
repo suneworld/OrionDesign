@@ -1,0 +1,10 @@
+# VS Code workspace files (local editor config, not part of the module)
+*.code-workspace
+.vscode/
+
+# PowerShell test output
+TestResults/
+
+# Temp files
+*.tmp
+*.bak
