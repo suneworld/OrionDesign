@@ -6,6 +6,10 @@
 
 Created and maintained by Sune Alexandersen Narud
 
+[![PSGallery](https://img.shields.io/powershellgallery/v/OrionDesign?label=PSGallery&color=blue)](https://www.powershellgallery.com/packages/OrionDesign)
+[![Downloads](https://img.shields.io/powershellgallery/dt/OrionDesign)](https://www.powershellgallery.com/packages/OrionDesign)
+[![GitHub](https://img.shields.io/badge/GitHub-suneworld%2FOrionDesign-lightgrey?logo=github)](https://github.com/suneworld/OrionDesign)
+
 ---
 
 ## 🆕 What's New in v3.1.0
@@ -23,6 +27,15 @@ Set-OrionTheme -Demo   # All 13 available presets
 ```
 
 ### 📦 Installation
+
+**From PowerShell Gallery** (recommended):
+```powershell
+Install-Module -Name OrionDesign
+# or with PSResourceGet:
+Install-PSResource -Name OrionDesign
+```
+
+**From source** (clone the [GitHub repo](https://github.com/suneworld/OrionDesign)):
 ```powershell
 Import-Module .\OrionDesign.psd1
 ```
@@ -323,3 +336,5 @@ Export-OrionHelpers -ScriptPath ".\MyScript.ps1" -CommentOutImport:$false
 ---
 
 **OrionDesign v3.1.0** | PowerShell UI Framework | 21 Functions | 13 Themes | Global Configuration | ANSI Support | -Demo on every function
+
+🔗 [PSGallery](https://www.powershellgallery.com/packages/OrionDesign) · [GitHub](https://github.com/suneworld/OrionDesign)
