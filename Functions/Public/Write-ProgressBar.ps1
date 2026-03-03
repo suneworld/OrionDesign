@@ -71,17 +71,60 @@ Write-ProgressBar -CurrentValue 3 -MaxValue 5 -Style Modern -Text "Processing fi
 Displays modern-style progress with custom text.
 #>
 function Write-ProgressBar {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][double]$CurrentValue,
-        [Parameter(Mandatory)][int]$MaxValue,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][double]$CurrentValue,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 1)][int]$MaxValue,
         [ValidateSet('Bar', 'Dots', 'Spinner', 'Modern')] [string]$Style = 'Bar',
         [int]$Width = 40,
         [switch]$ShowPercentage,
         [string]$Text = "",
         [string]$Color = "",
-        [switch]$Clear
+        [switch]$Clear,
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-ProgressBar Demo' -ForegroundColor Cyan
+        Write-Host '  ======================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        $examples = @(
+            @{ Style='Bar';     Value=65; Text='Uploading files' },
+            @{ Style='Modern';  Value=40; Text='Processing data' },
+            @{ Style='Dots';    Value=80; Text='Connecting' },
+            @{ Style='Spinner'; Value=55; Text='Waiting for response' }
+        )
+        foreach ($ex in $examples) {
+            Write-Host "  [Style: $($ex.Style)]" -ForegroundColor Yellow
+            Write-Host ''
+            & $renderCodeBlock @("Write-ProgressBar -CurrentValue $($ex.Value) -MaxValue 100 -Style $($ex.Style) -Text '$($ex.Text)' -ShowPercentage")
+            Write-ProgressBar -CurrentValue $ex.Value -MaxValue 100 -Style $ex.Style -Text $ex.Text -ShowPercentage
+            Write-Host ''
+            Write-Host ''
+        }
+
+        return
+    }
 
     # Default theme
     if (-not $script:Theme) {

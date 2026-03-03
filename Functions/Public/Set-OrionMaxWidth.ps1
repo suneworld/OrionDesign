@@ -56,9 +56,30 @@ function Set-OrionMaxWidth {
     param(
         [ValidateRange(50, 200)]
         [int]$Width = 100,
-        [switch]$Reset
+        [switch]$Reset,
+
+        [switch]$Demo
     )
-    
+
+    if ($Demo) {
+        Write-Host ''
+        Write-Host '  Set-OrionMaxWidth Demo' -ForegroundColor Cyan
+        Write-Host '  ======================' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  Controls the maximum output width for all OrionDesign functions.' -ForegroundColor DarkGray
+        $current = if ($script:OrionMaxWidth) { $script:OrionMaxWidth } else { 100 }
+        Write-Host "  Current value: " -NoNewline
+        Write-Host $current -ForegroundColor Cyan
+        Write-Host '  Valid range:   50 - 200 characters (default: 100)' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  Usage examples:' -ForegroundColor DarkGray
+        Write-Host '    Set-OrionMaxWidth -Width 120   # Set to 120 characters' -ForegroundColor Green
+        Write-Host '    Set-OrionMaxWidth -Width 80    # Set to 80 characters (compact)' -ForegroundColor Green
+        Write-Host '    Set-OrionMaxWidth -Reset       # Reset to default (100)' -ForegroundColor Green
+        Write-Host ''
+        return
+    }
+
     if ($Reset) {
         $script:OrionMaxWidth = 100
         Write-Verbose "📏 OrionDesign max width reset to default: 100 characters"

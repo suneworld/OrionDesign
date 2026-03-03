@@ -69,14 +69,55 @@ Write-Steps @(
 Displays steps with status indicators.
 #>
 function Write-Steps {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][array]$Steps,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][array]$Steps,
         [ValidateSet('Numbered', 'Arrows', 'Progress', 'Checklist')] [string]$Style = 'Numbered',
         [switch]$Interactive,
         [int]$CurrentStep = 0,
-        [array]$CompletedSteps = @()
+        [array]$CompletedSteps = @(),
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        $demoSteps = @('Connect to server', 'Backup database', 'Apply updates', 'Verify changes')
+
+        Write-Host ''
+        Write-Host '  Write-Steps Demo' -ForegroundColor Cyan
+        Write-Host '  ================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        foreach ($style in @('Numbered', 'Arrows', 'Checklist', 'Progress')) {
+            Write-Host "  [Style: $style]" -ForegroundColor Yellow
+            Write-Host ''
+            & $renderCodeBlock @(
+                "`$steps = @('Connect to server', 'Backup database', 'Apply updates', 'Verify changes')",
+                "Write-Steps `$steps -Style $style -CurrentStep 2 -CompletedSteps @(1)"
+            )
+            Write-Steps $demoSteps -Style $style -CurrentStep 2 -CompletedSteps @(1)
+            Write-Host ''
+        }
+
+        return
+    }
 
     # Default theme
     if (-not $script:Theme) {

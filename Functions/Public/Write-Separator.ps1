@@ -81,8 +81,55 @@ function Write-Separator {
         [int]$Length = 0,
         [string]$Character = "-",
         [string]$Color = 'Accent',
-        [switch]$Center
+        [switch]$Center,
+
+        [Parameter()]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-Separator Demo' -ForegroundColor Cyan
+        Write-Host '  ====================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        $styles = @(
+            @{ Style='Single'; Text='Section One' },
+            @{ Style='Double'; Text='Phase 2' },
+            @{ Style='Thick';  Text='' },
+            @{ Style='Dotted'; Text='Optional Details' }
+        )
+        foreach ($s in $styles) {
+            Write-Host "  [Style: $($s.Style)]" -ForegroundColor Yellow
+            Write-Host ''
+            $textPart = if ($s.Text) { " -Text '$($s.Text)'" } else { '' }
+            & $renderCodeBlock @("Write-Separator$textPart -Style $($s.Style)")
+            if ($s.Text) {
+                Write-Separator -Text $s.Text -Style $s.Style
+            } else {
+                Write-Separator -Style $s.Style
+            }
+            Write-Host ''
+        }
+
+        return
+    }
 
     # Default theme
     if (-not $script:Theme) {

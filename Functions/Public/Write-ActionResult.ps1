@@ -126,13 +126,58 @@ Theme colors used:
 - Pending: theme.Warning
 #>
 function Write-ActionResult {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][string]$Text,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][string]$Text,
         [ValidateSet('Success', 'Failed', 'Warning', 'Info', 'Running', 'Pending')]
         [string]$Status = "",
-        [string]$Color = ""
+        [string]$Color = "",
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-ActionResult Demo' -ForegroundColor Cyan
+        Write-Host '  =======================' -ForegroundColor DarkGray
+        Write-Host '  Write-ActionResult always follows Write-Action on the same line.' -ForegroundColor DarkGray
+        Write-Host '  Status color is auto-detected from result text unless -Status is specified.' -ForegroundColor DarkGray
+        Write-Host ''
+
+        & $renderCodeBlock @('Write-Action "Syncing files"', 'Write-ActionResult "Done"  # auto: Success')
+        Write-Action -Text 'Syncing files'; Write-ActionResult -Text 'Done'
+
+        & $renderCodeBlock @('Write-Action "Checking service"', 'Write-ActionResult "Running"  # auto: Success')
+        Write-Action -Text 'Checking service'; Write-ActionResult -Text 'Running'
+
+        & $renderCodeBlock @('Write-Action "Reading config"', 'Write-ActionResult "File not found"  # auto: Failed')
+        Write-Action -Text 'Reading config'; Write-ActionResult -Text 'File not found'
+
+        & $renderCodeBlock @('Write-Action "Fetching token"', 'Write-ActionResult "Request timeout"  # auto: Warning')
+        Write-Action -Text 'Fetching token'; Write-ActionResult -Text 'Request timeout'
+
+        & $renderCodeBlock @('Write-Action "Queuing task"', 'Write-ActionResult "Pending" -Status Pending')
+        Write-Action -Text 'Queuing task'; Write-ActionResult -Text 'Pending' -Status Pending
+
+        return
+    }
 
     # Use theme colors if available
     if (-not $script:Theme) {

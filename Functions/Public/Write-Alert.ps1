@@ -75,16 +75,56 @@ Write-Alert -Message "Service stopped unexpectedly" -Type Error -Critical -Detai
 Displays a critical error alert with additional details.
 #>
 function Write-Alert {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][string]$Message,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][string]$Message,
         [ValidateSet('Success', 'Warning', 'Error', 'Info', 'Critical')] [string]$Type = 'Info',
         [string]$Title = "",
         [string]$Action = "",
         [ValidateSet('YesNo', 'Continue', 'Custom')] [string]$ActionType = 'YesNo',
         [string]$Details = "",
-        [switch]$Critical
+        [switch]$Critical,
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-Alert Demo' -ForegroundColor Cyan
+        Write-Host '  ================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        & $renderCodeBlock @("Write-Alert -Message 'Backup completed successfully' -Type Success")
+        Write-Alert -Message 'Backup completed successfully' -Type Success
+
+        & $renderCodeBlock @("Write-Alert -Message 'Disk space is running low (15% remaining)' -Type Warning")
+        Write-Alert -Message 'Disk space is running low (15% remaining)' -Type Warning
+
+        & $renderCodeBlock @("Write-Alert -Message 'Service stopped unexpectedly' -Type Error -Critical")
+        Write-Alert -Message 'Service stopped unexpectedly' -Type Error -Critical
+
+        & $renderCodeBlock @("Write-Alert -Message 'Deployment pipeline started' -Type Info")
+        Write-Alert -Message 'Deployment pipeline started' -Type Info
+
+        return
+    }
 
     # Default theme
     if (-not $script:Theme) {

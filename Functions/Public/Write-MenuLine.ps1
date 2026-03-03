@@ -254,18 +254,67 @@ Write-ActionResult
 Set-OrionTheme
 #>
 function Write-MenuLine {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][string]$MenuNumber,
-        [Parameter(Mandatory)][string]$Text,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][string]$MenuNumber,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 1)][string]$Text,
         [string]$SuffixNumber = "",
         [string]$Suffix = "",
         [int]$Indent = 1,
         [switch]$Muted,
         [string]$MenuNumberColor = "",
         [string]$TextColor = "",
-        [string]$SuffixColor = ""
+        [string]$SuffixColor = "",
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-MenuLine Demo' -ForegroundColor Cyan
+        Write-Host '  ===================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        Write-Host '  [With right-aligned suffix]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-MenuLine -MenuNumber '1' -Text 'Active Deployments' -SuffixNumber '12' -Suffix 'running'")
+        Write-MenuLine -MenuNumber '1' -Text 'Active Deployments' -SuffixNumber '12' -Suffix 'running'
+
+        & $renderCodeBlock @("Write-MenuLine -MenuNumber '2' -Text 'Pending Approvals' -SuffixNumber '3' -Suffix 'waiting'")
+        Write-MenuLine -MenuNumber '2' -Text 'Pending Approvals' -SuffixNumber '3' -Suffix 'waiting'
+
+        Write-Host ''
+        Write-Host '  [Without suffix]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-MenuLine -MenuNumber '3' -Text 'Settings'")
+        Write-MenuLine -MenuNumber '3' -Text 'Settings'
+
+        Write-Host ''
+        Write-Host '  [Muted style]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-MenuLine -MenuNumber 'X' -Text 'Exit' -Muted")
+        Write-MenuLine -MenuNumber 'X' -Text 'Exit' -Muted
+
+        Write-Host ''
+        return
+    }
 
     # Initialize theme if not set
     if (-not $script:Theme) {

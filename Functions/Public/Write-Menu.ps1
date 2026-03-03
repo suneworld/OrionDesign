@@ -94,16 +94,69 @@ For MultiSelect:
 - Numbers: Array of selection numbers
 #>
 function Write-Menu {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][string]$Title,
-        [Parameter(Mandatory)][array]$Options,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][string]$Title,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 1)][array]$Options,
         [ValidateSet('Simple', 'Modern', 'Boxed', 'Compact')] [string]$Style = 'Modern',
         [switch]$AllowEscape,
         [int]$DefaultSelection = 1,
         [switch]$MultiSelect,
-        [string]$ExitLabel = 'Exit'
+        [string]$ExitLabel = 'Exit',
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        $demoOptions  = @('Deploy to Production', 'Run Tests', 'Rollback Changes', 'View Logs')
+        $demoTitle    = 'Deployment Menu'
+
+        Write-Host ''
+        Write-Host '  Write-Menu Demo' -ForegroundColor Cyan
+        Write-Host '  ===============' -ForegroundColor DarkGray
+        Write-Host '  (Static preview - actual function accepts keyboard input)' -ForegroundColor DarkGray
+        Write-Host ''
+
+        foreach ($style in @('Simple', 'Modern', 'Boxed', 'Compact')) {
+            Write-Host "  [Style: $style]" -ForegroundColor Yellow
+            Write-Host ''
+            & $renderCodeBlock @(
+                "`$options = @('Deploy to Production', 'Run Tests', 'Rollback Changes', 'View Logs')",
+                "Write-Menu -Title '$demoTitle' -Options `$options -Style $style"
+            )
+
+            # Static preview header
+            if (Get-Command Write-Separator -ErrorAction SilentlyContinue) {
+                try { Write-Separator $demoTitle -Style Thick } catch { Write-Host "=== $demoTitle ==="  }
+            } else { Write-Host "=== $demoTitle ===" }
+
+            Write-Host ''
+            for ($i = 0; $i -lt $demoOptions.Count; $i++) {
+                Write-Host "  $($i+1). $($demoOptions[$i])"
+            }
+            Write-Host '  X. Exit' -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        return
+    }
 
     # Default theme
     if (-not $script:Theme) {

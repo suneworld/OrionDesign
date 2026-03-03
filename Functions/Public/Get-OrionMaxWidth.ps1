@@ -37,8 +37,29 @@ Returns the current maximum width setting.
 #>
 function Get-OrionMaxWidth {
     [CmdletBinding()]
-    param()
-    
+    param(
+        [switch]$Demo
+    )
+
+    if ($Demo) {
+        Write-Host ''
+        Write-Host '  Get-OrionMaxWidth Demo' -ForegroundColor Cyan
+        Write-Host '  ======================' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  Returns the current global max width used by all OrionDesign functions.' -ForegroundColor DarkGray
+        Write-Host ''
+        $current = if ($script:OrionMaxWidth) { $script:OrionMaxWidth } else { 100 }
+        Write-Host '  Current value: ' -NoNewline
+        Write-Host $current -ForegroundColor Cyan
+        Write-Host ''
+        Write-Host '  Usage examples:' -ForegroundColor DarkGray
+        Write-Host '    Get-OrionMaxWidth                 # Returns current value' -ForegroundColor Green
+        Write-Host '    Set-OrionMaxWidth -Width 120       # Change max width' -ForegroundColor Green
+        Write-Host '    Set-OrionMaxWidth -Reset           # Reset to default (100)' -ForegroundColor Green
+        Write-Host ''
+        return
+    }
+
     if (-not $script:OrionMaxWidth) {
         return 100  # Default value
     }

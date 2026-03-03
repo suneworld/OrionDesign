@@ -84,7 +84,32 @@ Returns the current theme configuration as JSON for easy viewing or export.
 #>
 function Get-OrionTheme {
     [CmdletBinding()]
-    param()
+    param(
+        [switch]$Demo
+    )
+
+    if ($Demo) {
+        Write-Host ''
+        Write-Host '  Get-OrionTheme Demo' -ForegroundColor Cyan
+        Write-Host '  ===================' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  Returns the current OrionDesign theme as a hashtable.' -ForegroundColor DarkGray
+        Write-Host ''
+        $t = Get-OrionTheme
+        $props = @('Name','Accent','Success','Warning','Error','Text','Muted','Action','Result','Question','Divider','UseAnsi')
+        foreach ($prop in $props) {
+            $val = $t[$prop]
+            Write-Host "  $($prop.PadRight(10)): " -ForegroundColor DarkGray -NoNewline
+            Write-Host $val -ForegroundColor Cyan
+        }
+        Write-Host ''
+        Write-Host '  Usage examples:' -ForegroundColor DarkGray
+        Write-Host '    Get-OrionTheme                                          # Get current theme' -ForegroundColor Green
+        Write-Host '    $t = Get-OrionTheme; $t.Accent = "Magenta"              # Modify a color' -ForegroundColor Green
+        Write-Host '    Set-OrionTheme -Preset Ocean                            # Apply a preset' -ForegroundColor Green
+        Write-Host ''
+        return
+    }
 
     # Initialize theme if not set
     if (-not $script:Theme) {

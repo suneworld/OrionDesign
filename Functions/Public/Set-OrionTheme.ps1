@@ -121,8 +121,47 @@ function Set-OrionTheme {
     param(
         [hashtable]$Theme,
         [ValidateSet('Default', 'Dark', 'Light', 'Ocean', 'Forest', 'Sunset', 'Monochrome', 'HighContrast', 'OldSchool', 'Matrix', 'Retro80s', 'Cyberpunk', 'Vintage')]
-        [string]$Preset
+        [string]$Preset,
+
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        Write-Host ''
+        Write-Host '  Set-OrionTheme Demo' -ForegroundColor Cyan
+        Write-Host '  ===================' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  Applies a color theme to all OrionDesign functions.' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  Available presets:' -ForegroundColor DarkGray
+        Write-Host ''
+        $presets = @(
+            @{ Name='Default';      Desc='Standard cyan/green/yellow/red' },
+            @{ Name='Dark';         Desc='Muted dark blue/gray tones' },
+            @{ Name='Light';        Desc='Blue on light background' },
+            @{ Name='Ocean';        Desc='Blue/teal marine colors' },
+            @{ Name='Forest';       Desc='Green woodland colors' },
+            @{ Name='OldSchool';    Desc='Amber monochrome (DOS/Unix era)' },
+            @{ Name='Vintage';      Desc='Warm sepia/amber nostalgic feel' },
+            @{ Name='Retro80s';     Desc='Synthwave magenta/cyan neon' },
+            @{ Name='Matrix';       Desc='Green-on-black digital rain' },
+            @{ Name='Cyberpunk';    Desc='Futuristic cyan/purple neon' },
+            @{ Name='Sunset';       Desc='Orange/magenta warm evening' },
+            @{ Name='Monochrome';   Desc='Pure black/white grayscale' },
+            @{ Name='HighContrast'; Desc='Maximum contrast (accessibility)' }
+        )
+        foreach ($p in $presets) {
+            Write-Host '    Set-OrionTheme -Preset ' -ForegroundColor DarkGray -NoNewline
+            Write-Host ($p.Name.PadRight(15)) -ForegroundColor Green -NoNewline
+            Write-Host "  # $($p.Desc)" -ForegroundColor DarkGray
+        }
+        Write-Host ''
+        $t = Get-OrionTheme
+        Write-Host '  Current theme: ' -NoNewline -ForegroundColor DarkGray
+        Write-Host ($t.Name ?? 'Default') -ForegroundColor Cyan
+        Write-Host ''
+        return
+    }
 
     if ($Preset) {
         switch ($Preset) {

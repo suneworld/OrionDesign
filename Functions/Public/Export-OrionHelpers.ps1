@@ -97,8 +97,38 @@ function Export-OrionHelpers {
 
         [bool]$CommentOutImport = $true,
 
-        [bool]$IncludeTheme = $true
+        [bool]$IncludeTheme = $true,
+
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        Write-Host ''
+        Write-Host '  Export-OrionHelpers Demo' -ForegroundColor Cyan
+        Write-Host '  ========================' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  Makes scripts portable by bundling required OrionDesign functions.' -ForegroundColor DarkGray
+        Write-Host '  Analyzes which OrionDesign functions your script uses and exports' -ForegroundColor DarkGray
+        Write-Host '  them to a standalone OrionDesign-Helpers.ps1 file.' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  Usage examples:' -ForegroundColor DarkGray
+        Write-Host '    Export-OrionHelpers -ScriptPath ".\MyScript.ps1"' -ForegroundColor Green
+        Write-Host '    # Scans MyScript.ps1 and creates OrionDesign-Helpers.ps1 alongside it' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '    Export-OrionHelpers -ScriptPath ".\Deploy.ps1" -OutputPath ".\lib"' -ForegroundColor Green
+        Write-Host '    # Creates the helper file in a lib subdirectory' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '    Export-OrionHelpers -ScriptPath ".\MyScript.ps1" -WhatIf' -ForegroundColor Green
+        Write-Host '    # Preview what would be exported without writing any files' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  What happens:' -ForegroundColor DarkGray
+        Write-Host '    1  Parse script to find all OrionDesign function calls' -ForegroundColor White
+        Write-Host '    2  Resolve dependencies (including private helpers)' -ForegroundColor White
+        Write-Host '    3  Export all found functions to OrionDesign-Helpers.ps1' -ForegroundColor White
+        Write-Host '    4  Optionally comment out the Import-Module OrionDesign line' -ForegroundColor White
+        Write-Host ''
+        return
+    }
 
     # If no ScriptPath provided, show interactive file selection
     if (-not $ScriptPath) {

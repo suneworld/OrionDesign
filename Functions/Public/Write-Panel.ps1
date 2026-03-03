@@ -74,16 +74,60 @@ Write-Panel -Content @("Multiple lines", "of content", "in panel") -Title "Statu
 Displays a success panel with multiple lines and a title.
 #>
 function Write-Panel {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][array]$Content,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][array]$Content,
         [string]$Title = "",
         [ValidateSet('Box', 'Left', 'Top', 'Card', 'Minimal')] [string]$Style = 'Box',
         [ValidateSet('Info', 'Success', 'Warning', 'Error', 'Default')] [string]$Type = 'Info',
         [string]$Icon = "",
         [int]$Width = 0,
-        [int]$Padding = 1
+        [int]$Padding = 1,
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-Panel Demo' -ForegroundColor Cyan
+        Write-Host '  ================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        $types = @('Info', 'Success', 'Warning', 'Error')
+        foreach ($type in $types) {
+            Write-Host "  [Type: $type | Style: Box]" -ForegroundColor Yellow
+            Write-Host ''
+            & $renderCodeBlock @("Write-Panel -Content 'Server SQL-01 status update.' -Type $type -Style Box")
+            Write-Panel -Content 'Server SQL-01 status update.' -Type $type -Style Box
+            Write-Host ''
+        }
+
+        Write-Host '  [Multi-line with Title | Style: Card]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @(
+            "Write-Panel -Content @('Deployment complete', '3 services restarted', 'Health check: OK') -Title 'Deploy Result' -Type Success -Style Card"
+        )
+        Write-Panel -Content @('Deployment complete', '3 services restarted', 'Health check: OK') -Title 'Deploy Result' -Type Success -Style Card
+
+        return
+    }
 
     # Default theme
     if (-not $script:Theme) {

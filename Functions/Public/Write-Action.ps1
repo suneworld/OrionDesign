@@ -167,9 +167,9 @@ Right-aligned mode: Use -RightAlign for standalone right-aligned text.
   - Respects Indent value as right margin
 #>
 function Write-Action {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][string]$Text,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][string]$Text,
         [string]$Color = "",
         [int]$Indent = 1,
         [switch]$RightAlign,
@@ -185,8 +185,50 @@ function Write-Action {
         [string]$Subtext = "",
         [switch]$ShowIcon,
         [switch]$ShowStatus,
-        [switch]$NoNewLine
+        [switch]$NoNewLine,
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-Action Demo' -ForegroundColor Cyan
+        Write-Host '  =================' -ForegroundColor DarkGray
+        Write-Host ''
+        Write-Host '  [Standard Mode]  pairs with Write-ActionResult' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @('Write-Action "Connecting to database"', 'Write-ActionResult "Connected"')
+        Write-Action -Text 'Connecting to database'; Write-ActionResult -Text 'Connected'
+        & $renderCodeBlock @('Write-Action "Loading configuration"', 'Write-ActionResult "File not found"')
+        Write-Action -Text 'Loading configuration'; Write-ActionResult -Text 'File not found'
+
+        Write-Host ''
+        Write-Host '  [Complete Mode]  standalone output with status' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-Action 'Deploy Database' -Complete -Status Success -ShowIcon -Duration '00:02:15'")
+        Write-Action -Text 'Deploy Database' -Complete -Status Success -ShowIcon -Duration '00:02:15'
+        & $renderCodeBlock @("Write-Action 'Validate Schema' -Complete -Status Failed -ShowIcon -FailureReason 'Column mismatch'")
+        Write-Action -Text 'Validate Schema' -Complete -Status Failed -ShowIcon -FailureReason 'Column mismatch'
+
+        return
+    }
 
     # Use theme colors if available
     if (-not $script:Theme) {

@@ -123,16 +123,52 @@ Write-Banner -Theme $customTheme -ScriptName "Custom Script" -Design Classic -Wi
 Creates a banner using a custom color theme with classic design, centered to width 70.
 #>
 function Write-Banner {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
         [hashtable]$Theme = $script:Theme,
-        [Parameter(Mandatory)][string]$ScriptName,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 1)][string]$ScriptName,
         [string]$Author = "",
         [string]$AuthorDate = "",
         [string]$Description = "",
         [ValidateSet('Wings', 'Classic', 'Modern', 'Minimal', 'Geometric', 'Diamond')] [string]$Design = 'Wings',
-        [int]$Width = $null
+        [int]$Width = $null,
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-Banner Demo' -ForegroundColor Cyan
+        Write-Host '  =================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        foreach ($design in @('Wings', 'Modern', 'Minimal', 'Geometric')) {
+            Write-Host "  [Design: $design]" -ForegroundColor Yellow
+            Write-Host ''
+            & $renderCodeBlock @("Write-Banner -ScriptName 'Deployment Manager' -Author 'Sune' -Design $design")
+            Write-Banner -ScriptName 'Deployment Manager' -Author 'Sune' -Design $design
+            Write-Host ''
+        }
+
+        return
+    }
 
     # Default theme if not provided
     if (-not $Theme) {

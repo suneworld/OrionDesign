@@ -82,16 +82,88 @@ Write-Question "Enter port number" -Type Number -Validation { $_ -gt 0 -and $_ -
 Numeric input with custom validation.
 #>
 function Write-Question {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][string]$Text,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][string]$Text,
         [ValidateSet('Text', 'YesNo', 'Choice', 'Secure', 'Number')] [string]$Type = 'Text',
         [array]$Options = @(),
         [string]$Default = "",
         [switch]$Required,
         [scriptblock]$Validation,
-        [string]$ValidationMessage = "Invalid input. Please try again."
+        [string]$ValidationMessage = "Invalid input. Please try again.",
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-Question Demo' -ForegroundColor Cyan
+        Write-Host '  ===================' -ForegroundColor DarkGray
+        Write-Host '  (Static preview - actual function waits for user input)' -ForegroundColor DarkGray
+        Write-Host ''
+
+        $theme = if ($script:Theme) { $script:Theme } else { @{ Question='Yellow'; Muted='DarkGray'; Accent='Cyan' } }
+        $qColor = if ($theme.Question) { $theme.Question } else { 'Yellow' }
+        $mColor = if ($theme.Muted)    { $theme.Muted    } else { 'DarkGray' }
+
+        # Text type
+        Write-Host '  [Type: Text]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-Question 'What is your name?' -Type Text")
+        Write-Host '  ► ' -ForegroundColor $qColor -NoNewline
+        Write-Host 'What is your name? ' -NoNewline
+        Write-Host '(text input)' -ForegroundColor $mColor
+        Write-Host ''
+
+        # YesNo type
+        Write-Host '  [Type: YesNo]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-Question 'Continue with deployment?' -Type YesNo -Default Yes")
+        Write-Host '  ► ' -ForegroundColor $qColor -NoNewline
+        Write-Host 'Continue with deployment? ' -NoNewline
+        Write-Host '[Y/N] (default: Y) ' -ForegroundColor $mColor -NoNewline
+        Write-Host ''
+        Write-Host ''
+
+        # Choice type
+        Write-Host '  [Type: Choice]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-Question 'Select environment' -Type Choice -Options @('Dev','Test','Prod') -Required")
+        Write-Host '  ► ' -ForegroundColor $qColor -NoNewline
+        Write-Host 'Select environment:'
+        Write-Host "    1. Dev" ; Write-Host "    2. Test" ; Write-Host "    3. Prod"
+        Write-Host '  Enter choice (1-3): ' -NoNewline -ForegroundColor $mColor
+        Write-Host ''
+        Write-Host ''
+
+        # Secure type
+        Write-Host '  [Type: Secure]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-Question 'Enter password' -Type Secure")
+        Write-Host '  ► ' -ForegroundColor $qColor -NoNewline
+        Write-Host 'Enter password: ' -NoNewline
+        Write-Host '(masked input)' -ForegroundColor $mColor
+        Write-Host ''
+
+        return
+    }
 
     # Default theme
     if (-not $script:Theme) {

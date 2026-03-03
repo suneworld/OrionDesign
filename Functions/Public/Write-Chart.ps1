@@ -66,16 +66,54 @@ Write-Chart -Data @(10, 20, 30, 25, 15) -ChartType Line -Title "Trend Analysis"
 Displays a line chart of trend data.
 #>
 function Write-Chart {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)]$Data,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)]$Data,
         [ValidateSet('Bar', 'Column', 'Line', 'Pie')] [string]$ChartType = 'Bar',
         [string]$Title = "",
         [int]$Width = 50,
         [int]$Height = 10,
         [switch]$ShowValues,
-        [switch]$ShowPercentage
+        [switch]$ShowPercentage,
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-Chart Demo' -ForegroundColor Cyan
+        Write-Host '  ================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        Write-Host '  [Bar Chart]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-Chart -Data @{CPU=75; Memory=60; Disk=90} -ChartType Bar -Title 'System Usage' -ShowValues")
+        Write-Chart -Data @{CPU=75; Memory=60; Disk=90} -ChartType Bar -Title 'System Usage' -ShowValues
+
+        Write-Host '  [Pie Chart]' -ForegroundColor Yellow
+        Write-Host ''
+        & $renderCodeBlock @("Write-Chart -Data @{Critical=5; High=12; Medium=23; Low=41} -ChartType Pie -Title 'Issues by Severity' -ShowPercentage")
+        Write-Chart -Data @{Critical=5; High=12; Medium=23; Low=41} -ChartType Pie -Title 'Issues by Severity' -ShowPercentage
+
+        return
+    }
 
     # Default theme
     if (-not $script:Theme) {

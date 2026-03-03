@@ -63,14 +63,52 @@ Write-InfoBox -Title "Configuration" -Content @("Setting 1: Enabled", "Setting 2
 Displays configuration information in modern style.
 #>
 function Write-InfoBox {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][string]$Title,
-        [Parameter(Mandatory)]$Content,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][string]$Title,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 1)]$Content,
         [ValidateSet('Classic', 'Modern', 'Simple', 'Accent')] [string]$Style = 'Classic',
         [int]$Width = 0,
-        [switch]$WrapContent  # Enable word wrapping for long content lines
+        [switch]$WrapContent,
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-InfoBox Demo' -ForegroundColor Cyan
+        Write-Host '  ==================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        foreach ($style in @('Classic', 'Modern', 'Simple', 'Accent')) {
+            Write-Host "  [Style: $style]" -ForegroundColor Yellow
+            Write-Host ''
+            & $renderCodeBlock @(
+                "Write-InfoBox -Title 'Server Info' -Content @{Server='SQL-01'; DB='Production'; Status='Online'} -Style $style"
+            )
+            Write-InfoBox -Title 'Server Info' -Content @{Server='SQL-01'; DB='Production'; Status='Online'} -Style $style
+            Write-Host ''
+        }
+
+        return
+    }
 
     # Helper function for word wrapping
     function Wrap-Text {

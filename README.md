@@ -2,9 +2,25 @@
 
 ## 🎨 OrionDesign PowerShell UI Framework
 
-A comprehensive collection of PowerShell functions for creating beautiful terminal user interfaces with consistent styling and configurable global settings.
+**Version 3.1.0** | A comprehensive collection of PowerShell functions for creating beautiful terminal user interfaces with consistent styling and configurable global settings.
 
 Created and maintained by Sune Alexandersen Narud
+
+---
+
+## 🆕 What's New in v3.1.0
+
+Every public function now includes a **`-Demo`** parameter. Run any function with `-Demo` to see a live, self-contained demonstration of all its modes and options — including the exact code that produced each example.
+
+```powershell
+# Examples
+Write-Alert    -Demo   # Shows all 4 alert types
+Write-Header   -Demo   # Shows all underline/numbering modes
+Write-Chart    -Demo   # Bar chart and Pie chart examples
+Write-Steps    -Demo   # All 4 step list styles
+Set-OrionTheme -Demo   # All 13 available presets
+# ... same for every public function
+```
 
 ### 📦 Installation
 ```powershell
@@ -28,52 +44,46 @@ Set-OrionMaxWidth -Reset
 ### 🎯 Core UI Functions
 
 #### Information Display
-| Function        | Purpose                                | Example                                              |
-|-----------------|----------------------------------------|------------------------------------------------------|
-| `Write-Banner`  | Script headers with decorative borders | `Write-Banner -ScriptName "MyScript" -Author "User"` |
-| `Write-Header`  | Section headers with underlines        | `Write-Header -Text "Configuration" -Level 1`        |
-| `Write-InfoBox` | Highlighted information panels         | `Write-InfoBox -Message "Important info" -Type Info` |
-| `Write-Alert`   | Attention-grabbing alerts              | `Write-Alert -Message "Warning!" -Type Warning`      |
+| Function        | Purpose                                | Example                                                  |
+|-----------------|----------------------------------------|----------------------------------------------------------|
+| `Write-Banner`  | Script headers with decorative borders | `Write-Banner -ScriptName "MyScript" -Author "User"`     |
+| `Write-Header`  | Section headers with underlines        | `Write-Header "Configuration"`                           |
+| `Write-InfoBox` | Highlighted information panels         | `Write-InfoBox "Title" "Content goes here" -Style Modern` |
+| `Write-Alert`   | Attention-grabbing alerts              | `Write-Alert "Warning!" -Type Warning`                   |
+| `Write-Panel`   | Content containers with border styles  | `Write-Panel "Details here" -Type Info -Style Box`       |
 
 #### Status & Results  
-| Function             | Purpose                         | Example                                                |
-|----------------------|---------------------------------|--------------------------------------------------------|
-| `Write-Action`       | Action text (pairs with Result) | `Write-Action "Processing files"`                      |
-| `Write-Action -Complete` | Standalone result with details | `Write-Action "Deploy" -Complete -Status Success -ShowIcon` |
-| `Write-ActionResult` | Complete action line (right-aligned) | `Write-ActionResult "Done" -Status Success`       |
-| `Write-Progress`     | Task progress indicators        | `Write-Progress -TaskName "Installing" -Percentage 75` |
-| `Write-Steps`        | Step-by-step processes          | `Write-Steps -Steps @("Step 1", "Step 2")`             |
-| `Write-Timeline`     | Chronological events            | `Write-Timeline -Events @{...}`                        |
+| Function                 | Purpose                              | Example                                                         |
+|--------------------------|--------------------------------------|-----------------------------------------------------------------|
+| `Write-Action`           | Action text (pairs with Result)      | `Write-Action "Processing files"`                               |
+| `Write-Action -Complete` | Standalone result with icon/details  | `Write-Action "Deploy" -Complete -Status Success -ShowIcon`     |
+| `Write-ActionResult`     | Right-aligned result (pairs w/ Action) | `Write-ActionResult "Done" -Status Success`                   |
+| `Write-ProgressBar`      | Progress bar in various styles       | `Write-ProgressBar 75 100 -Style Bar`                           |
+| `Write-Steps`            | Step-by-step process lists           | `Write-Steps @("Step 1", "Step 2") -CurrentStep 1`              |
 
 #### Data Presentation
-| Function           | Purpose                  | Example                                                     |
-|--------------------|--------------------------|-------------------------------------------------------------|
-| `Write-Table`      | Formatted data tables    | `Write-Table -Data $objects -Properties @("Name", "Value")` |
-| `Write-Chart`      | Simple bar charts        | `Write-Chart -Data @{A=10; B=20}`                           |
-| `Write-Comparison` | Side-by-side comparisons | `Write-Comparison -Left "Old" -Right "New"`                 |
-| `Write-Dashboard`  | Multi-metric dashboards  | `Write-Dashboard -Title "Stats" -Metrics @{...}`            |
+| Function      | Purpose              | Example                       |
+|---------------|----------------------|-------------------------------|
+| `Write-Chart` | Bar and pie charts   | `Write-Chart @{CPU=75; RAM=60}`|
 
 #### Interactive Elements
-| Function         | Purpose               | Example                                            |
-|------------------|-----------------------|----------------------------------------------------|
-| `Write-Menu`     | Selection menus       | `Write-Menu -Title "Options" -Options @("A", "B")` |
-| `Write-MenuLine` | Custom menu line      | `Write-MenuLine -MenuNumber 1 -MenuTitle "Option"` |
-| `Write-Question` | User prompts          | `Write-Question -Prompt "Continue?" -Type YesNo`   |
+| Function              | Purpose                             | Example                                           |
+|-----------------------|-------------------------------------|---------------------------------------------------|
+| `Show-OrionSmartMenu` | Arrow-key or numeric selection menu | `Show-OrionSmartMenu "Title" "Pick:" @("A","B")`  |
+| `Write-Menu`          | Numeric selection menus             | `Write-Menu "Options" @("A", "B")`                |
+| `Write-MenuLine`      | Single custom menu line             | `Write-MenuLine 1 "Option Name"`                  |
+| `Write-Question`      | User prompts (text/YesNo/Choice)    | `Write-Question "Continue?" -Type YesNo`          |
 
 > **Note:** `Write-Menu` automatically includes an Exit option (X) as the last item in every menu.
 
-> **New in v2.1.4:** `Write-MenuLine` provides single-line menu output with optional right-aligned suffix and `-Muted` parameter for disabled options.
-
 #### Layout & Formatting
-| Function          | Purpose            | Example                                                    |
-|-------------------|--------------------|------------------------------------------------------------|
-| `Write-Separator` | Section dividers   | `Write-Separator -Text "Section" -Style Double`            |
-| `Write-Panel`     | Content containers | `Write-Panel -Title "Info" -Content "Details"`             |
-| `Write-CodeBlock` | Code snippets      | `Write-CodeBlock -Code "Get-Process" -Language PowerShell` |
+| Function          | Purpose          | Example                                   |
+|-------------------|------------------|-------------------------------------------|
+| `Write-Separator` | Section dividers | `Write-Separator "Section" -Style Double` |
 
 #### Utility Functions
-| Function              | Purpose                         | Example                                           |
-|-----------------------|---------------------------------|---------------------------------------------------|
+| Function              | Purpose                          | Example                                            |
+|-----------------------|----------------------------------|----------------------------------------------------|
 | `Export-OrionHelpers` | Bundle functions for portability | `Export-OrionHelpers -ScriptPath ".\MyScript.ps1"` |
 
 ### 🎨 Design Themes
@@ -89,7 +99,10 @@ Set-OrionTheme -Preset HighContrast
 Get-OrionTheme
 
 # See all themes in action
-Show-OrionDemo -Demo Themes
+Show-OrionDemo
+
+# List all 13 presets as a table
+Set-OrionTheme -Demo
 ```
 
 #### Available Themes
@@ -122,15 +135,13 @@ Show-OrionDemo -Demo Themes
 ### 📏 Width-Aware Functions
 
 The following functions automatically respect the global max width setting:
-- `Write-Action` / `Write-ActionResult` - Auto right-alignment to max width
-- `Write-Action -Complete` - Truncates long details
-- `Write-Separator` - Adjusts separator length  
-- `Write-Table` - Responsive column widths
-- `Write-Dashboard` - Scales headers and content
-- `Write-Banner` - Adjusts border width
-- `Write-Panel` - Wraps content appropriately
+- `Write-Action` / `Write-ActionResult` — Auto right-alignment to max width
+- `Write-Action -Complete` — Truncates long details  
+- `Write-Separator` — Adjusts separator length  
+- `Write-Banner` — Adjusts border width
+- `Write-Panel` — Wraps content appropriately
 
-### ⚡ Real-Time Status Pattern (v2.1.4)
+### ⚡ Real-Time Status Pattern
 
 The `Write-Action` / `Write-ActionResult` pair provides elegant real-time status reporting with automatic alignment:
 
@@ -197,52 +208,86 @@ Write-ActionResult "This is also a long result" -Status Success
 # Get help for any function
 Get-Help Write-Banner -Full
 Get-Help Set-OrionMaxWidth -Examples
-Get-Help Write-Table -Parameter Data
 
 # Show all available functions
 Get-Command -Module OrionDesign
 
-# View demos
-Show-OrionDemo                      # Basic demo
-Show-OrionDemo -Demo Themes         # Theme showcase
-Show-OrionDemo -Demo Interactive    # Interactive demo
-Show-OrionDemo -Demo All            # Comprehensive demo
+# Run the built-in module showcase
+Show-OrionDemo
+
+# Run per-function demos (available on every public function)
+Write-Alert      -Demo
+Write-Banner     -Demo
+Write-Chart      -Demo
+Write-Header     -Demo
+Write-InfoBox    -Demo
+Write-Menu       -Demo
+Write-MenuLine   -Demo
+Write-Panel      -Demo
+Write-ProgressBar -Demo
+Write-Question   -Demo
+Write-Separator  -Demo
+Write-Steps      -Demo
+Write-Action     -Demo
+Write-ActionResult -Demo
+Set-OrionTheme   -Demo   # Lists all 13 theme presets
+Get-OrionTheme   -Demo
+Set-OrionMaxWidth -Demo
+Get-OrionMaxWidth -Demo
+Export-OrionHelpers -Demo
+Show-OrionSmartMenu -Demo
 ```
 
 ### 🚀 Quick Start Examples
 
 ```powershell
-# Basic script header
+# Script header
 Write-Banner -ScriptName "Data Migration" -Author "IT Team" -Design Modern
 
-# Progress tracking
-Write-Progress -TaskName "Processing Files" -Percentage 45 -ShowBar
+# Section dividers
+Write-Separator "Configuration" -Style Double
+Write-Separator "Results"       -Style Single
 
 # Real-time action/result pattern
 Write-Action "Connecting to database"
 Write-ActionResult "Connected" -Status Success
 
-# Standalone result with details
-Write-Action "Backup Database" -Complete -Status Success -Duration "00:02:15" -Details "142 tables backed up" -ShowIcon
+Write-Action "Processing files"
+Write-ActionResult "42 files processed"   # auto-detects Success
 
-# Data table
-$data = @(
-    [PSCustomObject]@{Name="Server1"; Status="Online"; CPU="15%"}
-    [PSCustomObject]@{Name="Server2"; Status="Offline"; CPU="N/A"}
-)
-Write-Table -Data $data -Title "Server Status"
+# Standalone complete action
+Write-Action "Backup Database" -Complete -Status Success -Duration "00:02:15" -ShowIcon
 
-# Interactive menu (Exit option automatically added with X key)
-$choice = Write-Menu -Title "Select Environment" -Options @("Development", "Staging", "Production")
+# Step-by-step process
+Write-Steps @("Connect", "Validate", "Deploy", "Verify") -CurrentStep 3 -CompletedSteps @(1,2) -Style Checklist
+
+# Progress bar
+Write-ProgressBar 45 100 -Style Bar -Label "Processing Files"
+
+# Interactive smart menu (supports arrow-key navigation)
+$choice = Show-OrionSmartMenu "Select Environment" "Choose:" @("Development", "Staging", "Production")
+
+# Numeric menu (with automatic Exit option)
+$choice = Write-Menu "Select Environment" @("Development", "Staging", "Production")
 if ($choice.Exit) {
     Write-Host "User chose to exit"
 } else {
     Write-Host "Selected: $($choice.Value)"
 }
 
+# Highlighted info panel
+Write-InfoBox "Deployment Info" @{Server="prod-01"; Version="2.4.1"; Region="EU-West"} -Style Modern
+
+# Alert messages
+Write-Alert "Configuration updated successfully" -Type Success
+Write-Alert "Low disk space on C:" -Type Warning
+
+# Chart
+Write-Chart @{CPU=75; Memory=60; Disk=90} -Style Bar -Title "Resource Usage"
+
 # Custom width for specific output
 Set-OrionMaxWidth -Width 80
-Write-Separator -Text "Narrow Layout" -Style Double
+Write-Separator "Narrow Layout" -Style Double
 Set-OrionMaxWidth -Reset
 ```
 
@@ -277,4 +322,4 @@ Export-OrionHelpers -ScriptPath ".\MyScript.ps1" -CommentOutImport:$false
 
 ---
 
-**OrionDesign v2.1.4** | PowerShell UI Framework | 20 Functions | 13 Themes | Global Configuration | ANSI Support
+**OrionDesign v3.1.0** | PowerShell UI Framework | 21 Functions | 13 Themes | Global Configuration | ANSI Support | -Demo on every function

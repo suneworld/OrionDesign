@@ -120,13 +120,57 @@ Convert-ToColoredSegments
 Write-Colored
 #>
 function Write-Header {
-    [CmdletBinding()]
+    [CmdletBinding(DefaultParameterSetName = 'Default')]
     param(
-        [Parameter(Mandatory)][string]$Text,
+        [Parameter(Mandatory, ParameterSetName = 'Default', Position = 0)][string]$Text,
         [ValidateSet('Auto','Full','Ansi','None')] [string]$Underline = 'Auto',
         [int]$Number,
-        [int]$Width
+        [int]$Width,
+
+        [Parameter(Mandatory, ParameterSetName = 'Demo')]
+        [switch]$Demo
     )
+
+    if ($Demo) {
+        $renderCodeBlock = {
+            param([string[]]$Lines)
+            $innerWidth = ($Lines | Measure-Object -Property Length -Maximum).Maximum + 4
+            $bar = '─' * $innerWidth
+            Write-Host '  # Code' -ForegroundColor DarkGray
+            Write-Host "  ┌$bar┐" -ForegroundColor DarkGray
+            foreach ($line in $Lines) {
+                $padded = ("  $line").PadRight($innerWidth)
+                Write-Host "  │" -ForegroundColor DarkGray -NoNewline
+                Write-Host $padded -ForegroundColor Green -NoNewline
+                Write-Host '│' -ForegroundColor DarkGray
+            }
+            Write-Host "  └$bar┘" -ForegroundColor DarkGray
+            Write-Host ''
+        }
+
+        Write-Host ''
+        Write-Host '  Write-Header Demo' -ForegroundColor Cyan
+        Write-Host '  =================' -ForegroundColor DarkGray
+        Write-Host ''
+
+        Write-Host '  [Underline: Auto]' -ForegroundColor Yellow
+        & $renderCodeBlock @("Write-Header 'Getting Started'")
+        Write-Header 'Getting Started'
+
+        Write-Host '  [Underline: Full]' -ForegroundColor Yellow
+        & $renderCodeBlock @("Write-Header 'Environment Setup' -Underline Full")
+        Write-Header 'Environment Setup' -Underline Full
+
+        Write-Host '  [Numbered Step]' -ForegroundColor Yellow
+        & $renderCodeBlock @("Write-Header 'Configure Deployment' -Number 2")
+        Write-Header 'Configure Deployment' -Number 2
+
+        Write-Host '  [Color Markup]' -ForegroundColor Yellow
+        & $renderCodeBlock @("Write-Header '<accent>Important:</accent> <warning>Review Settings</warning>'")
+        Write-Header '<accent>Important:</accent> <warning>Review Settings</warning>'
+
+        return
+    }
 
     # Add a linebreak
     Write-Host

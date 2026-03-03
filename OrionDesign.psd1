@@ -1,6 +1,6 @@
 ﻿@{
     RootModule        = 'OrionDesign.psm1'
-    ModuleVersion     = '3.0.0'
+    ModuleVersion     = '3.1.0'
     GUID              = '7e6a0c07-1b71-4e11-8d7c-123456789abc'
     Author            = 'Sune Alexandersen Narud'
     Description       = 'Orion Design Framework – Beautiful PowerShell UI functions with global configuration'
@@ -14,6 +14,7 @@
         'Set-OrionMaxWidth',
         'Set-OrionTheme',
         'Show-OrionDemo',
+        'Show-OrionSmartMenu',
         'Write-Action',
         'Write-ActionResult',
         'Write-Alert',
