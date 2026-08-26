@@ -356,6 +356,6 @@ to be able to use the generated module.
 
 ## References and links
 
-* [Getting startaed with Sampler (Project ReadMe)][1]
+* [Getting started with Sampler (Project ReadMe)][1]
 
 [1]:https://github.com/gaelcolas/Sampler/blob/main/README.md
