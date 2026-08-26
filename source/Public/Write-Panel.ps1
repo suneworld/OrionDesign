@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Panel Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Layout & Formatting
@@ -146,23 +146,23 @@ function Write-Panel {
 
     # Set colors and icons based on type
     switch ($Type) {
-        'Info' { 
+        'Info' {
             $color = $script:Theme.Accent
             if (-not $Icon) { $Icon = "ℹ" }
         }
-        'Success' { 
+        'Success' {
             $color = $script:Theme.Success
             if (-not $Icon) { $Icon = "✓" }
         }
-        'Warning' { 
+        'Warning' {
             $color = $script:Theme.Warning
             if (-not $Icon) { $Icon = "⚠" }
         }
-        'Error' { 
+        'Error' {
             $color = $script:Theme.Error
             if (-not $Icon) { $Icon = "✗" }
         }
-        'Default' { 
+        'Default' {
             $color = $script:Theme.Text
             if (-not $Icon) { $Icon = "●" }
         }
@@ -183,7 +183,7 @@ function Write-Panel {
         }
         $Width = $maxLength + ($Padding * 2) + 6  # Space for borders, icons, and spacing
         if ($Width -lt 30) { $Width = 30 }
-        
+
         # Apply global max width if set
         if ($script:OrionMaxWidth -and $Width -gt $script:OrionMaxWidth) {
             $Width = $script:OrionMaxWidth
@@ -230,13 +230,13 @@ function Write-Panel {
                 }
 
                 Write-Host $line -ForegroundColor $script:Theme.Text -NoNewline
-                
+
                 # Calculate exact remaining space to match border width
                 $contentWidth = $Padding + $line.Length
                 if (-not $Title) { $contentWidth += $Icon.Length + 1 }
                 $remainingSpace = $Width - 2 - $contentWidth - $Padding  # Width - borders - content - right padding
                 $remainingSpace = [Math]::Max(0, $remainingSpace)
-                
+
                 Write-Host (" " * $Padding) -NoNewline  # Right padding
                 Write-Host (" " * $remainingSpace) -NoNewline  # Fill to border
                 Write-Host "│" -ForegroundColor $color
@@ -300,7 +300,7 @@ function Write-Panel {
             if ($Title) {
                 $usedSpace = 4 + $Icon.Length + $Title.Length  # "│ " + icon + " " + title + "│"
                 $remaining = [Math]::Max(0, $Width - $usedSpace)
-                
+
                 Write-Host "│ " -ForegroundColor $color -NoNewline
                 Write-Host $Icon -ForegroundColor $color -NoNewline
                 Write-Host " $Title" -ForegroundColor $color -NoNewline
@@ -320,7 +320,7 @@ function Write-Panel {
                 $iconSpace = if (-not $Title) { $Icon.Length + 1 } else { 0 }
                 $usedSpace = 2 + 1 + $line.Length + $iconSpace  # "│" + " " + content + icon + "│"
                 $remaining = [Math]::Max(0, $Width - $usedSpace)
-                
+
                 Write-Host "│" -ForegroundColor $color -NoNewline
                 Write-Host " " -NoNewline
 

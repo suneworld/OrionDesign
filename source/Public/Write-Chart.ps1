@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Chart Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Data Presentation
@@ -159,20 +159,20 @@ function Write-Chart {
             foreach ($item in $chartData) {
                 $barLength = [Math]::Round(($item.Value / $maxValue) * $Width)
                 $label = $item.Label.PadRight(15)
-                
+
                 Write-Host $label -ForegroundColor $script:Theme.Text -NoNewline
                 Write-Host " │" -ForegroundColor $script:Theme.Muted -NoNewline
-                
+
                 # Color coding based on value
                 $color = $script:Theme.Accent
                 if ($item.Value -ge $maxValue * 0.8) { $color = $script:Theme.Error }
                 elseif ($item.Value -ge $maxValue * 0.6) { $color = $script:Theme.Warning }
                 elseif ($item.Value -ge $maxValue * 0.3) { $color = $script:Theme.Success }
-                
+
                 for ($i = 0; $i -lt $barLength; $i++) {
                     Write-Host "█" -ForegroundColor $color -NoNewline
                 }
-                
+
                 if ($ShowValues) {
                     Write-Host " $($item.Value)" -ForegroundColor $script:Theme.Text
                 } else {
@@ -241,14 +241,14 @@ function Write-Chart {
                 for ($col = 0; $col -lt $scaledData.Count; $col++) {
                     if ($scaledData[$col] -eq $row) {
                         Write-Host "●" -ForegroundColor $script:Theme.Accent -NoNewline
-                    } elseif ($col -gt 0 -and 
-                              (($scaledData[$col-1] -gt $row -and $scaledData[$col] -lt $row) -or 
+                    } elseif ($col -gt 0 -and
+                              (($scaledData[$col-1] -gt $row -and $scaledData[$col] -lt $row) -or
                                ($scaledData[$col-1] -lt $row -and $scaledData[$col] -gt $row))) {
                         Write-Host "│" -ForegroundColor $script:Theme.Accent -NoNewline
                     } else {
                         Write-Host " " -NoNewline
                     }
-                    
+
                     # Connect points with lines
                     if ($col -lt $scaledData.Count - 1) {
                         if ($scaledData[$col] -eq $row -and $scaledData[$col+1] -eq $row) {
@@ -280,18 +280,18 @@ function Write-Chart {
             foreach ($item in $chartData) {
                 $percentage = [Math]::Round(($item.Value / $total) * 100, 1)
                 $barLength = [Math]::Round($percentage / 2)  # Scale to reasonable size
-                
+
                 $color = $colors[$colorIndex % $colors.Count]
                 $colorIndex++
 
                 Write-Host "  " -NoNewline
                 Write-Host "●" -ForegroundColor $color -NoNewline
                 Write-Host " $($item.Label)".PadRight(15) -ForegroundColor $script:Theme.Text -NoNewline
-                
+
                 for ($i = 0; $i -lt $barLength; $i++) {
                     Write-Host "█" -ForegroundColor $color -NoNewline
                 }
-                
+
                 if ($ShowPercentage) {
                     Write-Host " $percentage%" -ForegroundColor $script:Theme.Text
                 } else {

@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Steps Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Status & Results
@@ -52,7 +52,7 @@ Array of completed step numbers.
 .EXAMPLE
 Write-Steps @(
     "Connect to server",
-    "Backup database", 
+    "Backup database",
     "Apply updates",
     "Verify changes"
 ) -Style Numbered
@@ -138,8 +138,8 @@ function Write-Steps {
 
     for ($i = 0; $i -lt $Steps.Count; $i++) {
         $stepNumber = $i + 1
-        $step = $Steps[$i]
-        
+$step = $Steps[$i]
+
         # Determine step text and status
         if ($step -is [hashtable]) {
             $stepText = $step.Text
@@ -165,24 +165,24 @@ function Write-Steps {
                 Write-Host "  $stepNumber. " -ForegroundColor $script:Theme.Accent -NoNewline
                 Write-Host $stepText -ForegroundColor $statusInfo.Color
             }
-            
+
             'Arrows' {
                 $arrow = if ($i -eq 0) { "▶️" } else { "  ↓" }
                 Write-Host "$arrow " -ForegroundColor $script:Theme.Accent -NoNewline
                 Write-Host $stepText -ForegroundColor $statusInfo.Color
-                
+
                 if ($i -lt $Steps.Count - 1) {
                     Write-Host "    │" -ForegroundColor $script:Theme.Muted
                 }
             }
-            
+
             'Progress' {
                 Write-Host $statusInfo.Icon -NoNewline
                 Write-Host " Step $stepNumber" -ForegroundColor $script:Theme.Accent -NoNewline
                 Write-Host ": $stepText " -ForegroundColor $script:Theme.Text -NoNewline
                 Write-Host $statusInfo.Prefix -ForegroundColor $statusInfo.Color
             }
-            
+
             'Checklist' {
                 $checkbox = switch ($stepStatus) {
 #                    'Complete' { "☑️ 🗹 " }
@@ -216,7 +216,7 @@ function Write-Steps {
             $completed = $CompletedSteps.Count
             $total = $Steps.Count
         }
-        
+
         $percentage = if ($total -gt 0) { [Math]::Round(($completed / $total) * 100) } else { 0 }
         Write-Host "Progress: " -ForegroundColor $script:Theme.Text -NoNewline
         Write-Host "$completed/$total" -ForegroundColor $script:Theme.Accent -NoNewline

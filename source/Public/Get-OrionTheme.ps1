@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Get-OrionTheme Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          February 4, 2026
 Module:        OrionDesign v2.1.2
 Category:      Configuration

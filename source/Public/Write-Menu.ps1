@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Menu Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          January 30, 2026
 Module:        OrionDesign v2.1.0
 Category:      Interactive Elements
@@ -29,8 +29,8 @@ HLD INTEGRATION:
 Creates styled interactive menus for user selection with built-in Exit option.
 
 .DESCRIPTION
-The Write-Menu function displays a formatted menu with options that users can select from. 
-Supports different styles and keyboard navigation. Every menu automatically includes an 
+The Write-Menu function displays a formatted menu with options that users can select from.
+Supports different styles and keyboard navigation. Every menu automatically includes an
 Exit option (selectable with 'X') as the last item for consistent user experience.
 
 .PARAMETER Title
@@ -197,7 +197,7 @@ function Write-Menu {
     for ($i = 0; $i -lt $Options.Count; $i++) {
         $optionNumber = $i + 1
         $option = $Options[$i]
-        
+
         switch ($Style) {
             'Simple' {
                 Write-Host "  $optionNumber. $option" -ForegroundColor $script:Theme.Text
@@ -250,13 +250,13 @@ function Write-Menu {
         } else {
             Write-Host "Select option (1-$($Options.Count), or X to exit): " -ForegroundColor $script:Theme.Muted -NoNewline
         }
-        
+
         $selection = Read-Host
-        
+
         if ([string]::IsNullOrWhiteSpace($selection) -and $DefaultSelection -and -not $MultiSelect) {
             $selection = $DefaultSelection
         }
-        
+
         # Check for Exit selection
         if ($selection -eq 'X' -or $selection -eq 'x') {
             Write-Host "👋 $ExitLabel" -ForegroundColor $script:Theme.Muted
@@ -274,7 +274,7 @@ function Write-Menu {
             $selectedNumbers = @()
             $validSelection = $true
             $parts = $selection -split ',' | ForEach-Object { $_.Trim() } | Where-Object { $_ -ne '' }
-            
+
             if ($parts.Count -eq 0) {
                 $validSelection = $false
             } else {
@@ -290,7 +290,7 @@ function Write-Menu {
                     }
                 }
             }
-            
+
             if ($validSelection -and $selectedNumbers.Count -gt 0) {
                 Write-Host "✅ Selected: " -ForegroundColor $script:Theme.Success -NoNewline
                 $selectedValues = $selectedNumbers | ForEach-Object { $Options[$_ - 1] }

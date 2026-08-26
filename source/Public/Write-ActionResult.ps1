@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-ActionResult Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          February 4, 2026
 Module:        OrionDesign v2.1.2
 Category:      Interactive Display
@@ -65,7 +65,7 @@ The result text to display.
 The status type for color coding. Valid values:
 - 'Success' - Uses theme Result color (Accent-based) - this is the auto-detect default
 - 'Failed' - Uses theme Error color (Red)
-- 'Warning' - Uses theme Warning color (Yellow)  
+- 'Warning' - Uses theme Warning color (Yellow)
 - 'Info' - Uses theme Accent color
 - 'Running' - Uses theme Accent color
 - 'Pending' - Uses theme Warning color
@@ -78,28 +78,28 @@ Write-Action "Connecting to database"
 Write-ActionResult "Connected"
 
 Displays with automatic right-alignment and margins (auto-detects as Success):
- Connecting to database                                             Connected 
+ Connecting to database                                             Connected
 
 .EXAMPLE
 Write-Action "Processing file"
 Write-ActionResult "File not found"
 
 Auto-detects "not found" as Failed, shows in Error color:
- Processing file                                              File not found 
+ Processing file                                              File not found
 
 .EXAMPLE
 Write-Action "Checking service"
-Write-ActionResult "125 users" 
+Write-ActionResult "125 users"
 
 No failure pattern detected, defaults to Success (Result/Accent color):
- Checking service                                                  125 users 
+ Checking service                                                  125 users
 
 .EXAMPLE
 Write-Action "Syncing data"
 Write-ActionResult "Done"
 
 Any text without failure/warning patterns shows as Success:
- Syncing data                                                           Done 
+ Syncing data                                                           Done
 
 .EXAMPLE
 Write-Action "This is a very long action description that takes most of the line"
@@ -107,7 +107,7 @@ Write-ActionResult "This is a very long result that causes overflow"
 
 When combined text exceeds effective width, automatically outputs on new line:
  This is a very long action description that takes most of the line
-                                 This is a very long result that causes overflow 
+                                 This is a very long result that causes overflow
 
 .NOTES
 Auto-detection philosophy: "Success unless proven otherwise"
@@ -239,13 +239,13 @@ function Write-ActionResult {
     $maxWidth = if ($script:OrionMaxWidth) { $script:OrionMaxWidth } else { 100 }
     $actionLength = if ($script:LastActionTextLength) { $script:LastActionTextLength } else { 0 }
     $rightMargin = if ($script:LastActionRightMargin) { $script:LastActionRightMargin } else { 1 }
-    
+
     # Effective width accounts for right margin
     $effectiveWidth = $maxWidth - $rightMargin
-    
+
     # Calculate if we need a new line (action + space + status > effectiveWidth)
     $combinedLength = $actionLength + 1 + $Text.Length
-    
+
     if ($combinedLength -gt $effectiveWidth -and $actionLength -gt 0) {
         # Not enough room - go to new line and right-align
         Write-Host ""

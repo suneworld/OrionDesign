@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-MenuLine Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          February 5, 2026
 Module:        OrionDesign v3.0.0
 Category:      Interactive Display
@@ -75,7 +75,7 @@ OUTPUT FORMAT:
 THEME COLORS USED:
  - MenuNumber: Accent color (cyan by default)
  - Period (.): Muted color (dark gray)
- - Text: Text color (white by default)  
+ - Text: Text color (white by default)
  - SuffixNumber: Accent color (matches MenuNumber)
  - Suffix: Text color (matches Text)
 
@@ -89,7 +89,7 @@ The menu option number or identifier displayed on the left side.
 Can be a number (1, 2, 3) or text (A, B, X).
 Displayed in the theme's Accent color.
 
-.PARAMETER Text  
+.PARAMETER Text
 The menu option text or description displayed after the number.
 This is the main text the user sees for the menu option.
 Displayed in the theme's Text color.
@@ -247,7 +247,7 @@ Write-Menu
 .LINK
 Write-Action
 
-.LINK  
+.LINK
 Write-ActionResult
 
 .LINK
@@ -378,14 +378,14 @@ function Write-MenuLine {
     if ($hasSuffix) {
         # Build suffix text for length calculation
         $suffixText = if ($Suffix) { "$SuffixNumber $Suffix" } else { "$SuffixNumber" }
-        
+
         # Calculate padding for right-alignment
         $padding = $effectiveWidth - $leftLength - $suffixText.Length
-        
+
         if ($padding -gt 0) {
             Write-Host (" " * $padding) -NoNewline
         }
-        
+
         # Output SuffixNumber in Accent color (or Muted), Suffix in Text color (or Muted)
         Write-Host $SuffixNumber -ForegroundColor $suffixNumColor -NoNewline
         if ($Suffix) {

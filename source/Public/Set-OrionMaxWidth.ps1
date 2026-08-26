@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Set-OrionMaxWidth Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Global Configuration
@@ -14,7 +14,7 @@ Critical configuration function that provides consistent width control
 and prevents overly long output across the entire framework.
 
 HLD INTEGRATION:
-┌─ GLOBAL CONFIG ─┐    ┌─ SCRIPT SCOPE ─┐    ┌─ FUNCTIONS ─┐
+┌─ GLOBAL CONFIG ─┐    ┌─ SCRIPT SCOPE ─┐     ┌─ FUNCTIONS ─┐
 │ Set-OrionMaxWdth│◄──►│ $script:OrionMax│───►│ All UI      │
 │ • Width Setting │    │ Width Variable  │    │ Functions   │
 │ • Validation    │    │ • Range: 50-200 │    │ Respect     │

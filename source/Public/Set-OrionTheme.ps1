@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Set-OrionTheme Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Configuration
@@ -34,7 +34,7 @@ You can either provide a custom theme hashtable or use one of the predefined the
 A hashtable containing theme configuration. Should include:
 - Accent: Color for highlights and accents
 - Success: Color for explicit success states (e.g., -Status Success)
-- Warning: Color for warning states  
+- Warning: Color for warning states
 - Error: Color for error states
 - Text: Default text color
 - Muted: Color for secondary text
@@ -49,7 +49,7 @@ Use a predefined theme. Valid values:
 
 STANDARD THEMES:
 - 'Default' - Standard cyan/green/yellow/red theme
-- 'Dark' - Dark theme with muted colors  
+- 'Dark' - Dark theme with muted colors
 - 'Light' - Light theme with darker colors
 
 NATURE THEMES:
@@ -82,7 +82,7 @@ Set-OrionTheme -Preset Matrix
 
 Applies the Matrix theme with green-on-black hacker aesthetic.
 
-.EXAMPLE  
+.EXAMPLE
 Set-OrionTheme -Preset Retro80s
 
 Applies the 80s synthwave theme with magenta/cyan neon colors.

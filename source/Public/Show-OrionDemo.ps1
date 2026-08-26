@@ -3,7 +3,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Unified Demo Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          January 26, 2026
 Module:        OrionDesign v1.6.0
 Category:      Demonstration
@@ -32,7 +32,7 @@ HLD INTEGRATION:
     .DESCRIPTION
     Show-OrionDemo provides demonstrations of the OrionDesign module functions.
     Use the -Demo parameter to select which type of demo to run:
-    
+
     - Basic: Quick overview of all OrionDesign functions with examples
     - Themes: Comprehensive showcase of all 13 color theme presets
     - Interactive: Hands-on demonstration of Write-Menu and Write-Question
@@ -47,12 +47,12 @@ HLD INTEGRATION:
 
     .PARAMETER Section
     For 'Basic' and 'All' demos, display only a specific section.
-    Valid values: All, Banners, Headers, InfoBoxes, Alerts, Actions, Progress, 
+    Valid values: All, Banners, Headers, InfoBoxes, Alerts, Actions, Progress,
                   Steps, Charts, Panels, Separators, Themes, Width
 
     .PARAMETER Theme
     For 'Themes' demo, show only a specific theme instead of all themes.
-    Valid values: Default, Dark, Light, Ocean, Forest, Sunset, Monochrome, 
+    Valid values: Default, Dark, Light, Ocean, Forest, Sunset, Monochrome,
                   HighContrast, OldSchool, Matrix, Retro80s, Cyberpunk, Vintage
 
     .PARAMETER Pause
@@ -102,15 +102,15 @@ HLD INTEGRATION:
     param(
         [ValidateSet("Basic", "Themes", "Interactive", "All")]
         [string]$Demo = "Basic",
-        
-        [ValidateSet("All", "Banners", "Headers", "InfoBoxes", "Alerts", "Actions", "Progress", 
+
+        [ValidateSet("All", "Banners", "Headers", "InfoBoxes", "Alerts", "Actions", "Progress",
                      "Steps", "Charts", "Panels", "Separators", "Themes", "Width")]
         [string]$Section = "All",
-        
+
         [ValidateSet('Default', 'Dark', 'Light', 'Ocean', 'Forest', 'Sunset', 'Monochrome', 
                      'HighContrast', 'OldSchool', 'Matrix', 'Retro80s', 'Cyberpunk', 'Vintage', 'All')]
         [string]$Theme = 'All',
-        
+
         [switch]$Pause,
         [switch]$SkipClear
     )
@@ -181,7 +181,7 @@ HLD INTEGRATION:
             [string]$Description,
             [string]$Category
         )
-        
+
         Write-Host
         Write-Host "═══════════════════════════════════════════════════════════════════════════════════════" -ForegroundColor DarkGray
         Write-Host "THEME: $ThemeName - $Description" -ForegroundColor DarkGray
@@ -191,28 +191,28 @@ HLD INTEGRATION:
 
         Set-OrionTheme -Preset $ThemeName
         $currentTheme = Get-OrionTheme
-        
+
         Write-Host "Color Palette:" -ForegroundColor $currentTheme.Text
         Write-Host "  Accent:  " -NoNewline -ForegroundColor $currentTheme.Text
         Write-Host "████ " -NoNewline -ForegroundColor $currentTheme.Accent
         Write-Host "($($currentTheme.Accent))" -ForegroundColor $currentTheme.Muted
-        
+
         Write-Host "  Success: " -NoNewline -ForegroundColor $currentTheme.Text
         Write-Host "████ " -NoNewline -ForegroundColor $currentTheme.Success
         Write-Host "($($currentTheme.Success))" -ForegroundColor $currentTheme.Muted
-        
+
         Write-Host "  Warning: " -NoNewline -ForegroundColor $currentTheme.Text
         Write-Host "████ " -NoNewline -ForegroundColor $currentTheme.Warning
         Write-Host "($($currentTheme.Warning))" -ForegroundColor $currentTheme.Muted
-        
+
         Write-Host "  Error:   " -NoNewline -ForegroundColor $currentTheme.Text
         Write-Host "████ " -NoNewline -ForegroundColor $currentTheme.Error
         Write-Host "($($currentTheme.Error))" -ForegroundColor $currentTheme.Muted
-        
+
         Write-Host "  Text:    " -NoNewline -ForegroundColor $currentTheme.Text
         Write-Host "████ " -NoNewline -ForegroundColor $currentTheme.Text
         Write-Host "($($currentTheme.Text))" -ForegroundColor $currentTheme.Muted
-        
+
         Write-Host "  Muted:   " -NoNewline -ForegroundColor $currentTheme.Text
         Write-Host "████ " -NoNewline -ForegroundColor $currentTheme.Muted
         Write-Host "($($currentTheme.Muted))" -ForegroundColor $currentTheme.Muted
@@ -221,21 +221,21 @@ HLD INTEGRATION:
 
         Write-Header -Text "$ThemeName Theme Components" -Underline Full
         Write-Banner -ScriptName "OrionDesign $ThemeName" -Author "Theme Demo" -Design Minimal -Description "Showcasing the $ThemeName color scheme"
-        
+
         Write-Alert -Message "$ThemeName Success Alert" -Type Success
         Write-Alert -Message "$ThemeName Warning Alert" -Type Warning
         Write-Alert -Message "$ThemeName Error Alert" -Type Error
         Write-Alert -Message "$ThemeName Info Alert" -Type Info
-        
+
         Write-InfoBox -Title "$ThemeName Theme" -Content "This InfoBox demonstrates how the $ThemeName theme affects content presentation." -Style Modern
-        
+
         Write-ProgressBar -CurrentValue 75 -MaxValue 100 -Text "$ThemeName Progress" -Style Bar -ShowPercentage
-        
+
         Write-ActionResult -Action "$ThemeName Theme Test" -Status Success -Details "Theme applied successfully"
-        
+
         $steps = @("Load config", "Apply scheme", "Update components", "Verify")
         Write-Steps -Steps $steps -CurrentStep 3 -CompletedSteps @(1,2) -Style Numbered
-        
+
         Write-Panel -Title "$ThemeName Panel" -Content @(
             "Theme: $ThemeName",
             "Category: $Category"
@@ -251,7 +251,7 @@ HLD INTEGRATION:
     #endregion
 
     #region Basic Demo
-    
+
     function Show-BasicDemo {
         if (-not $SkipClear) { Clear-Host }
 
@@ -280,13 +280,13 @@ HLD INTEGRATION:
         Write-Header -Text "Header with No Underline" -Underline None
         Write-Header -Text "Advanced Options" -Number 3
         Write-Header -Text "<accent>Important:</accent> <success>System Ready</success>"
-            
+
         Demo-Separator "Write-InfoBox Styles"
         Write-InfoBox -Title "Classic Style" -Content "System backup completed successfully." -Style Classic
         Write-InfoBox -Title "Modern Style" -Content "New security patches available." -Style Modern
         Write-InfoBox -Title "Accent Style" -Content "Database connection established." -Style Accent
         Write-InfoBox -Title "Simple Style" -Content "Quick informational note." -Style Simple
-            
+
         Demo-Separator "Write-Alert Types"
         Write-Alert -Message "This is a success message!" -Type Success
         Write-Alert -Message "This is a warning message!" -Type Warning
@@ -318,7 +318,7 @@ HLD INTEGRATION:
         Write-ActionResult -Action "Deploy Application" -Status Success -Details "Deployed in 2.3 seconds"
         Write-ActionResult -Action "Deploy Application" -Status Warning -Details "Deployed with warnings"
         Write-ActionResult -Action "Deploy Application" -Status Failed -Details "Deployment failed"
-            
+
         Demo-Separator "Write-ProgressBar Styles"
         Write-ProgressBar -CurrentValue 75 -MaxValue 100 -Text "Bar Style" -Style Bar -ShowPercentage
         Write-ProgressBar -CurrentValue 60 -MaxValue 100 -Text "Dots Style" -Style Dots -ShowPercentage
@@ -346,10 +346,10 @@ HLD INTEGRATION:
 
         Demo-Separator "Write-Separator Styles"
         Write-Separator -Text "Single" -Style Single
-        Write-Separator -Text "Double" -Style Double  
+        Write-Separator -Text "Double" -Style Double
         Write-Separator -Text "Thick" -Style Thick
         Write-Separator -Text "Dotted" -Style Dotted
-            
+
         Demo-Separator "Write-Panel Styles"
         $panelContent = @("OS: Windows Server 2022", "CPU: Intel Xeon", "Memory: 16 GB")
         Write-Panel -Title "Box Style" -Content $panelContent -Style Box
@@ -371,10 +371,10 @@ HLD INTEGRATION:
     #endregion
 
     #region Themes Demo
-    
+
     function Show-ThemesDemo {
         if (-not $SkipClear) { Clear-Host }
-        
+
         Write-Banner -ScriptName "OrionDesign Theme Gallery" -Author "Sune A Narud" -Design Modern -Description "Complete showcase of all available theme presets"
 
         Write-Host "Welcome to the OrionDesign Theme Showcase!" -ForegroundColor White
@@ -407,13 +407,13 @@ HLD INTEGRATION:
             }
         } else {
             $categories = 'Standard', 'Nature', 'Retro/Vintage', 'Tech/Futuristic', 'Artistic', 'Accessibility'
-            
+
             foreach ($category in $categories) {
                 Write-Host
                 Write-Host ("═" * 80) -ForegroundColor Cyan
                 Write-Host "  $category THEMES" -ForegroundColor Cyan
                 Write-Host ("═" * 80) -ForegroundColor Cyan
-                
+
                 $categoryThemes = $allThemes | Where-Object { $_.Category -eq $category }
                 foreach ($themeInfo in $categoryThemes) {
                     Show-ThemeDemo -ThemeName $themeInfo.Name -Description $themeInfo.Description -Category $themeInfo.Category
@@ -431,10 +431,10 @@ HLD INTEGRATION:
     #endregion
 
     #region Interactive Demo
-    
+
     function Show-InteractiveDemo {
         if (-not $SkipClear) { Clear-Host }
-        
+
         Write-Banner -ScriptName "OrionDesign Interactive Demo" -Author "Sune A Narud" -Design Modern -Description "Interactive demonstration of Write-Menu and Write-Question"
 
         Write-Host "Welcome to the Interactive Functions Demo!" -ForegroundColor White
@@ -489,7 +489,7 @@ HLD INTEGRATION:
     #endregion
 
     #region Comprehensive Demo (All)
-    
+
     function Show-ComprehensiveDemo {
         if (-not $SkipClear) { Clear-Host }
 
@@ -590,7 +590,7 @@ HLD INTEGRATION:
             Show-DemoSectionHeader -Title "ACTIONS - Write-Action + Write-ActionStatus + Write-ActionResult" -Subtitle "Real-time status reporting"
 
             Show-ExampleHeader "Write-Action + Write-ActionStatus Pattern"
-            
+
             Write-Action "Connecting to Azure"
             Start-Sleep -Milliseconds 200
             Write-ActionStatus "Connected" -Status Success

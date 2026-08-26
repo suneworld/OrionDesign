@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Get-OrionMaxWidth Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Global Configuration
@@ -14,7 +14,7 @@ Core configuration function that enables width management and consistency
 across all UI components in the framework.
 
 HLD INTEGRATION:
-┌─ GLOBAL CONFIG ─┐    ┌─ SCRIPT SCOPE ─┐    ┌─ OUTPUT ─┐
+┌─ GLOBAL CONFIG ─┐    ┌─ SCRIPT SCOPE  ─┐    ┌─ OUTPUT ─┐
 │ Get-OrionMaxWdth│◄──►│ $script:OrionMax│───►│ Current  │
 │ • Read Setting  │    │ Width Variable  │    │ Width    │
 │ • Validation    │    │ • Default: 100  │    │ Value    │
@@ -63,6 +63,6 @@ function Get-OrionMaxWidth {
     if (-not $script:OrionMaxWidth) {
         return 100  # Default value
     }
-    
+
     return $script:OrionMaxWidth
 }

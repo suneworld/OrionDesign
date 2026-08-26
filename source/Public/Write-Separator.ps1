@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Separator Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Layout & Formatting
@@ -52,7 +52,7 @@ Custom character for 'Custom' style.
 .PARAMETER Color
 Color of the separator. Accepts either:
 - Semantic theme colors: Accent, Success, Warning, Error, Text, Muted
-- Direct console colors: Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta, 
+- Direct console colors: Black, DarkBlue, DarkGreen, DarkCyan, DarkRed, DarkMagenta,
   DarkYellow, Gray, DarkGray, Blue, Green, Cyan, Red, Magenta, Yellow, White
 
 .PARAMETER Center
@@ -155,7 +155,7 @@ function Write-Separator {
             $Length = try { [Console]::WindowWidth } catch { 80 }
         }
     }
-    
+
     # Ensure length doesn't exceed global max width
     if ($script:OrionMaxWidth -and $Length -gt $script:OrionMaxWidth) {
         $Length = $script:OrionMaxWidth
@@ -189,11 +189,11 @@ function Write-Separator {
         if ($Center) {
             $textLength = $Text.Length + 2  # Add spaces around text
             $remainingLength = $Length - $textLength
-            
+
             if ($remainingLength -gt 0) {
                 $leftLength = [Math]::Floor($remainingLength / 2)
                 $rightLength = $remainingLength - $leftLength
-                
+
                 Write-Host ($sepChar * $leftLength) -ForegroundColor $sepColor -NoNewline
                 Write-Host " $Text " -ForegroundColor $script:Theme.Text -NoNewline
                 Write-Host ($sepChar * $rightLength) -ForegroundColor $sepColor
@@ -207,7 +207,7 @@ function Write-Separator {
             $textLength = $Text.Length
             $spacesCount = 2  # Space before and after text: " Text "
             $suffixLength = $Length - $prefixLength - $textLength - $spacesCount
-            
+
             if ($suffixLength -gt 0) {
                 Write-Host ($sepChar * $prefixLength) -ForegroundColor $sepColor -NoNewline
                 Write-Host " $Text " -ForegroundColor $script:Theme.Text -NoNewline

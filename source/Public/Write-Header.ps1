@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Header Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Information Display
@@ -33,7 +33,7 @@ The Write-Header function displays styled text headers with customizable underli
 .PARAMETER Text
 The header text to display. Supports markup tags for colored formatting:
 - <accent>text</accent> - Displays text in theme accent color (cyan)
-- <success>text</success> - Displays text in theme success color (green)  
+- <success>text</success> - Displays text in theme success color (green)
 - <warning>text</warning> - Displays text in theme warning color (yellow)
 - <error>text</error> - Displays text in theme error color (red)
 - <muted>text</muted> - Displays text in theme muted color (dark gray)
@@ -174,7 +174,7 @@ function Write-Header {
 
     # Add a linebreak
     Write-Host
-    
+
     # Default theme
     if (-not $script:Theme) {
         $script:Theme = @{

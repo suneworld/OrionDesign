@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Export-OrionHelpers Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          January 27, 2026
 Module:        OrionDesign v2.0.0
 Category:      Utility / Bundling
@@ -14,12 +14,12 @@ helper file with all required function definitions. Makes scripts portable
 without requiring the OrionDesign module to be installed.
 
 HLD INTEGRATION:
-┌─ SCRIPT ANALYSIS ─┐    ┌─ DEPENDENCY RESOLUTION ─┐    ┌─ OUTPUT ─┐
-│ Export-OrionHelpers│◄──►│ Parse Script           │───►│ Helper   │
-│ • Script Path      │    │ Find Function Calls    │    │ File     │
-│ • Output Path      │    │ Resolve Dependencies   │    │ Bundled  │
-│ • Auto-Comment     │    │ Include Private Funcs  │    │ Portable │
-└────────────────────┘    └────────────────────────┘    └──────────┘
+┌─ SCRIPT ANALYSIS  ─┐    ┌─ DEPENDENCY RESOLUTION ─┐    ┌─ OUTPUT ─┐
+│ Export-OrionHelpers│◄──►│ Parse Script            │───►│ Helper   │
+│ • Script Path      │    │ Find Function Calls     │    │ File     │
+│ • Output Path      │    │ Resolve Dependencies    │    │ Bundled  │
+│ • Auto-Comment     │    │ Include Private Funcs   │    │ Portable │
+└────────────────────┘    └─────────────────────────┘    └──────────┘
 ================================================================================
 #>
 
@@ -133,9 +133,9 @@ function Export-OrionHelpers {
     # If no ScriptPath provided, show interactive file selection
     if (-not $ScriptPath) {
         $currentDir = Get-Location
-        $ps1Files = Get-ChildItem -Path $currentDir -Filter "*.ps1" -File -ErrorAction SilentlyContinue | 
+        $ps1Files = Get-ChildItem -Path $currentDir -Filter "*.ps1" -File -ErrorAction SilentlyContinue |
                     Where-Object { $_.Name -ne "OrionDesign-Helpers.ps1" }
-        
+
         if ($ps1Files.Count -eq 0) {
             Write-Host ""
             Write-Host "  ⚠️  No PowerShell scripts (.ps1) found in current directory" -ForegroundColor Yellow
@@ -162,7 +162,7 @@ function Export-OrionHelpers {
             Write-Host " ($sizeKB KB)" -ForegroundColor DarkGray
             $index++
         }
-        
+
         Write-Host ""
         Write-Host "    [0] " -NoNewline -ForegroundColor Yellow
         Write-Host "Cancel" -ForegroundColor Red
@@ -170,7 +170,7 @@ function Export-OrionHelpers {
         Write-Host "  ─────────────────────────────────────────────────────────────" -ForegroundColor DarkGray
 
         $selection = Read-Host "  Enter selection (1-$($ps1Files.Count))"
-        
+
         if ($selection -eq "0" -or [string]::IsNullOrWhiteSpace($selection)) {
             Write-Host ""
             Write-Host "  ❌ Operation cancelled." -ForegroundColor Red
@@ -222,7 +222,7 @@ function Export-OrionHelpers {
     $privatePath = Join-Path $modulePath "Functions\Private"
 
     # Get all available OrionDesign functions
-    $publicFunctions = Get-ChildItem -Path $publicPath -Filter "*.ps1" -ErrorAction SilentlyContinue | 
+    $publicFunctions = Get-ChildItem -Path $publicPath -Filter "*.ps1" -ErrorAction SilentlyContinue |
                        Where-Object { $_.BaseName -ne "Export-OrionHelpers" }
     $privateFunctions = Get-ChildItem -Path $privatePath -Filter "*.ps1" -ErrorAction SilentlyContinue
 

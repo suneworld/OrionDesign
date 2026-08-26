@@ -154,35 +154,35 @@ function Write-ProgressBar {
     switch ($Style) {
         'Bar' {
             Write-Host "[" -ForegroundColor $script:Theme.Muted -NoNewline
-            
+
             # Enhanced with fractional progress from former Blocks style
             $blockChars = @("▏","▎","▍","▌","▋","▊","▉","█")
             $fullBlocks = [Math]::Floor($filledWidth)
             $partialBlock = ($filledWidth - $fullBlocks) * 8
-            
+
             # Full filled blocks
             for ($i = 0; $i -lt $fullBlocks; $i++) {
                 Write-Host "█" -ForegroundColor $Color -NoNewline
             }
-            
+
             # Partial block for precise progress
             if ($partialBlock -gt 0 -and $fullBlocks -lt $Width) {
                 $charIndex = [Math]::Floor($partialBlock)
                 Write-Host $blockChars[$charIndex] -ForegroundColor $Color -NoNewline
                 $fullBlocks++
             }
-            
+
             # Empty portion
             for ($i = $fullBlocks; $i -lt $Width; $i++) {
                 Write-Host "░" -ForegroundColor $script:Theme.Muted -NoNewline
             }
-            
+
             Write-Host "]" -ForegroundColor $script:Theme.Muted -NoNewline
-            
+
             if ($ShowPercentage) {
                 Write-Host " $percentage%" -ForegroundColor $script:Theme.Text -NoNewline
             }
-            
+
             if ($Text) {
                 Write-Host " $Text" -ForegroundColor $script:Theme.Text -NoNewline
             }
@@ -197,14 +197,14 @@ function Write-ProgressBar {
                 $dots += "●"
             }
             $dots = $dots.PadRight(4)
-            
+
             Write-Host "⟳ " -ForegroundColor $Color -NoNewline
             Write-Host "$dots" -ForegroundColor $script:Theme.Text -NoNewline
-            
+
             if ($ShowPercentage) {
                 Write-Host " $percentage%" -ForegroundColor $script:Theme.Text -NoNewline
             }
-            
+
             if ($Text) {
                 Write-Host " $Text" -ForegroundColor $script:Theme.Text -NoNewline
             }
@@ -213,14 +213,14 @@ function Write-ProgressBar {
         'Spinner' {
             $spinnerChars = @("⠋","⠙","⠹","⠸","⠼","⠴","⠦","⠧","⠇","⠏")
             $spinnerIndex = $CurrentValue % $spinnerChars.Count
-            
+
             Write-Host $spinnerChars[$spinnerIndex] -ForegroundColor $Color -NoNewline
             Write-Host " " -NoNewline
-            
+
             if ($ShowPercentage) {
                 Write-Host "$percentage% " -ForegroundColor $script:Theme.Text -NoNewline
             }
-            
+
             if ($Text) {
                 Write-Host "$Text" -ForegroundColor $script:Theme.Text -NoNewline
             }
@@ -229,23 +229,23 @@ function Write-ProgressBar {
         'Modern' {
             # Modern progress with rounded ends
             Write-Host "●" -ForegroundColor $Color -NoNewline
-            
+
             for ($i = 0; $i -lt $filledWidth - 1; $i++) {
                 Write-Host "━" -ForegroundColor $Color -NoNewline
             }
-            
+
             if ($filledWidth -gt 0) {
                 Write-Host "●" -ForegroundColor $Color -NoNewline
             }
-            
+
             for ($i = $filledWidth; $i -lt $Width; $i++) {
                 Write-Host "┄" -ForegroundColor $script:Theme.Muted -NoNewline
             }
-            
+
             if ($ShowPercentage) {
                 Write-Host " $percentage%" -ForegroundColor $script:Theme.Text -NoNewline
             }
-            
+
             if ($Text) {
                 Write-Host " $Text" -ForegroundColor $script:Theme.Text -NoNewline
             }

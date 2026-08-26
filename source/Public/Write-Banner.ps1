@@ -225,27 +225,27 @@ function Write-Banner {
 # Wings Design - Beautiful wing-shaped pattern
 function Write-WingsDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
-    
+
     $bannerWidth = $MaxWidth
     $centerPos = [Math]::Floor($bannerWidth / 2)
     $paddingSymbol = '█'
-    
+
     # Wing pattern - creates expanding then contracting pattern
     $wingPattern = @(2, 4, 6, 8, 10, 12, 14, 16, 18, 16, 14, 12, 10, 8, 6, 4, 2)
-    
+
     # Top wing
     foreach ($width in $wingPattern[0..8]) {
         $spaces = ' ' * ($centerPos - $width)
         $wing = $paddingSymbol * $width
         Write-Host ($spaces + $wing + (' ' * ($bannerWidth - ($centerPos - $width) - $width * 2)) + $wing) -ForegroundColor $Theme.Accent
     }
-    
+
     # Script name line
     $nameWidth = $ScriptName.Length
     $nameSpaces = [Math]::Max(0, [Math]::Floor(($bannerWidth - $nameWidth) / 2))
     $nameLine = (' ' * $nameSpaces) + $ScriptName + (' ' * ($bannerWidth - $nameSpaces - $nameWidth))
     Write-Host $nameLine -ForegroundColor $Theme.Text -BackgroundColor $Theme.Success
-    
+
     # Author and date line (if provided)
     if ($Author -or $AuthorDate) {
         $authorInfo = if ($Author -and $AuthorDate) { "$Author - $AuthorDate" } elseif ($Author) { $Author } else { $AuthorDate }
@@ -254,14 +254,14 @@ function Write-WingsDesign {
         $authorLine = (' ' * $authorSpaces) + $authorInfo + (' ' * ($bannerWidth - $authorSpaces - $authorWidth))
         Write-Host $authorLine -ForegroundColor $Theme.Muted
     }
-    
+
     # Bottom wing
     foreach ($width in $wingPattern[9..16]) {
         $spaces = ' ' * ($centerPos - $width)
         $wing = $paddingSymbol * $width
         Write-Host ($spaces + $wing + (' ' * ($bannerWidth - ($centerPos - $width) - $width * 2)) + $wing) -ForegroundColor $Theme.Accent
     }
-    
+
     # Description (if provided)
     if ($Description) {
         Write-Host
@@ -279,23 +279,23 @@ function Write-WingsDesign {
 # Classic Design - Traditional rectangular banner
 function Write-ClassicDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
-    
+
     $bannerWidth = $MaxWidth
     $border = '=' * $bannerWidth
     $paddingSymbol = '█'
-    
+
     # Top border
     Write-Host $border -ForegroundColor $Theme.Accent
-    
+
     # Empty line
     $emptyLine = $paddingSymbol + (' ' * ($bannerWidth - 2)) + $paddingSymbol
     Write-Host $emptyLine -ForegroundColor $Theme.Accent
-    
+
     # Script name
     $nameSpaces = [Math]::Max(0, [Math]::Floor(($bannerWidth - 2 - $ScriptName.Length) / 2))
     $nameLine = $paddingSymbol + (' ' * $nameSpaces) + $ScriptName + (' ' * ($bannerWidth - 2 - $nameSpaces - $ScriptName.Length)) + $paddingSymbol
     Write-Host $nameLine -ForegroundColor $Theme.Text
-    
+
     # Author info
     if ($Author -or $AuthorDate) {
         $authorInfo = if ($Author -and $AuthorDate) { "$Author - $AuthorDate" } elseif ($Author) { $Author } else { $AuthorDate }
@@ -303,13 +303,13 @@ function Write-ClassicDesign {
         $authorLine = $paddingSymbol + (' ' * $authorSpaces) + $authorInfo + (' ' * ($bannerWidth - 2 - $authorSpaces - $authorInfo.Length)) + $paddingSymbol
         Write-Host $authorLine -ForegroundColor $Theme.Muted
     }
-    
+
     # Empty line
     Write-Host $emptyLine -ForegroundColor $Theme.Accent
-    
+
     # Bottom border
     Write-Host $border -ForegroundColor $Theme.Accent
-    
+
     # Description
     if ($Description) {
         Write-Host
@@ -326,32 +326,32 @@ function Write-ClassicDesign {
 # Modern Design - Sleek with gradient effect
 function Write-ModernDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
-    
+
     $bannerWidth = $MaxWidth
-    
+
     # Modern header with gradient-like effect
     $chars = @('▓', '▒', '░')
     for ($i = 0; $i -lt 3; $i++) {
         Write-Host ($chars[$i] * $bannerWidth) -ForegroundColor $Theme.Accent
     }
-    
+
     # Script name with modern styling
     Write-Host
     $segments = Convert-ToColoredSegments -Text "<accent>▶</accent> <text>$ScriptName</text> <accent>◀</accent>" -Theme $Theme
     Write-Colored -Segments $segments -Theme $Theme
-    
+
     # Author info with modern bullets
     if ($Author -or $AuthorDate) {
         $authorInfo = if ($Author -and $AuthorDate) { "$Author • $AuthorDate" } elseif ($Author) { $Author } else { $AuthorDate }
         Write-Host "  $authorInfo" -ForegroundColor $Theme.Muted
     }
-    
+
     # Modern footer
     Write-Host
     for ($i = 2; $i -ge 0; $i--) {
         Write-Host ($chars[$i] * $bannerWidth) -ForegroundColor $Theme.Accent
     }
-    
+
     # Description
     if ($Description) {
         Write-Host
@@ -368,22 +368,22 @@ function Write-ModernDesign {
 # Minimal Design - Clean and simple
 function Write-MinimalDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
-    
+
     # Simple header line
     Write-Host ('─' * $MaxWidth) -ForegroundColor $Theme.Muted
-    
+
     # Script name
     Write-Host $ScriptName.ToUpper() -ForegroundColor $Theme.Text
-    
+
     # Author info
     if ($Author -or $AuthorDate) {
         $authorInfo = if ($Author -and $AuthorDate) { "$Author | $AuthorDate" } elseif ($Author) { $Author } else { $AuthorDate }
         Write-Host $authorInfo -ForegroundColor $Theme.Muted
     }
-    
+
     # Simple footer line
     Write-Host ('─' * $MaxWidth) -ForegroundColor $Theme.Muted
-    
+
     # Description
     if ($Description) {
         Write-Host
@@ -400,9 +400,9 @@ function Write-MinimalDesign {
 # Geometric Design - Angular and modern
 function Write-GeometricDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
-    
+
     $bannerWidth = $MaxWidth
-    
+
     # Geometric top pattern
     for ($i = 1; $i -le 5; $i++) {
         $spaces = ' ' * (5 - $i)
@@ -416,20 +416,20 @@ function Write-GeometricDesign {
             Write-Host $simplePattern -ForegroundColor $Theme.Accent
         }
     }
-    
+
     # Author info with geometric styling
     if ($Author -or $AuthorDate) {
         $authorInfo = if ($Author -and $AuthorDate) { "◆ $Author ◆ $AuthorDate ◆" } elseif ($Author) { "◆ $Author ◆" } else { "◆ $AuthorDate ◆" }
         $authorSpaces = [Math]::Max(0, [Math]::Floor(($bannerWidth - $authorInfo.Length) / 2))
         Write-Host ((' ' * $authorSpaces) + $authorInfo) -ForegroundColor $Theme.Muted
     }
-    
+
     # Geometric bottom pattern
     for ($i = 5; $i -ge 1; $i--) {
         $pattern = '▼' * $i + (' ' * ($bannerWidth - $i * 2)) + '▼' * $i
         Write-Host $pattern -ForegroundColor $Theme.Accent
     }
-    
+
     # Description
     if ($Description) {
         Write-Host
@@ -446,12 +446,12 @@ function Write-GeometricDesign {
 # Diamond Design - Progressive indentation creating diamond/pyramid shape
 function Write-DiamondDesign {
     param($ScriptName, $Author, $AuthorDate, $Description, $Theme, $MaxWidth)
-    
+
     $bannerWidth = $MaxWidth
     $paddingSymbol = '═'
     $indentationIncrement = 4  # How much to indent each level
-    
-    # Helper function to calculate padding 
+
+    # Helper function to calculate padding
     function Get-Padding {
         param (
             [int]$TotalWidth,
@@ -468,7 +468,7 @@ function Write-DiamondDesign {
         $RightPadding = $paddingSymbol * ($PaddingEachSide + $PaddingRemainder)
         return @($LeftPadding, $RightPadding)
     }
-    
+
     # Helper function to center text
     function Center-Text {
         param([string]$Text, [int]$TotalWidth)
@@ -497,7 +497,7 @@ function Write-DiamondDesign {
     $Content2 = $ScriptName
     $ContentPadding2 = 4
     $Padding2 = Get-Padding -TotalWidth $bannerWidth -LeftIndentLength $Indent2.Length -RightIndentLength $Indent2.Length -Content $Content2 -ContentPadding $ContentPadding2
-    
+
     # Left padding
     Write-Host ($Indent2 + $Padding2[0]) -ForegroundColor $Theme.Accent -NoNewline
     # Content
@@ -512,7 +512,7 @@ function Write-DiamondDesign {
         $Content3 = if ($Author -and $AuthorDate) { "$Author - $AuthorDate" } elseif ($Author) { $Author } else { $AuthorDate }
         $ContentPadding3 = 3
         $Padding3 = Get-Padding -TotalWidth $bannerWidth -LeftIndentLength $Indent3.Length -RightIndentLength $Indent3.Length -Content $Content3 -ContentPadding $ContentPadding3
-        
+
         # Left padding
         Write-Host ($Indent3 + $Padding3[0]) -ForegroundColor $Theme.Accent -NoNewline
         # Content

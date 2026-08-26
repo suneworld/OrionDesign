@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-InfoBox Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Information Display
@@ -51,7 +51,7 @@ Width of the information box (default: auto-calculate).
 .EXAMPLE
 Write-InfoBox -Title "System Information" -Content @{
     "Server" = "SQL-01"
-    "Database" = "Production" 
+    "Database" = "Production"
     "Version" = "2019 SP3"
 }
 
@@ -114,11 +114,11 @@ function Write-InfoBox {
     function Wrap-Text {
         param([string]$Text, [int]$MaxWidth)
         if ($Text.Length -le $MaxWidth -or $MaxWidth -le 0) { return @($Text) }
-        
+
         $words = $Text -split '\s+'
         $lines = @()
         $currentLine = ""
-        
+
         foreach ($word in $words) {
             $testLine = if ($currentLine) { "$currentLine $word" } else { $word }
             if ($testLine.Length -le $MaxWidth) {
@@ -175,22 +175,22 @@ function Write-InfoBox {
     if ($Width -eq 0) {
         # Use global max width if available
         $globalWidth = if ($script:OrionMaxWidth) { $script:OrionMaxWidth } else { 80 }
-        
+
         # Calculate minimum width based on actual content requirements
         $titleWidthReq = $Title.Length + 10  # Title + decorative elements
         $contentWidthReq = $maxContentWidth + 4  # Content + border chars (│ + space + content + space + │)
         $minWidth = [Math]::Max($titleWidthReq, $contentWidthReq)
-        
+
         # Respect global width while ensuring content fits
         $Width = [Math]::Max(40, [Math]::Min($globalWidth, $minWidth))
-        
+
         # If content still doesn't fit within global limit, expand to accommodate it
         if ($minWidth -gt $globalWidth) {
             $Width = $minWidth
             Write-Verbose "Content width ($minWidth) exceeds global limit ($globalWidth), expanding to fit content"
         }
     }
-    
+
     # Ensure minimum width to prevent negative values
     $Width = [Math]::Max($Width, $Title.Length + 6)
 
@@ -209,28 +209,28 @@ function Write-InfoBox {
                 if ($Content -is [hashtable] -and $line -match '^([^:]+): (.+)$') {
                     $key = $matches[1]
                     $value = $matches[2]
-                    
+
                     if ($WrapContent -and $value.Length -gt ($Width - $maxKeyLength - 8)) {
                         # Wrap long values
                         $maxValueWidth = $Width - $maxKeyLength - 8
                         $wrappedLines = Wrap-Text -Text $value -MaxWidth $maxValueWidth
-                        
+
                         # First line with key
                         Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
                         Write-Host $key.PadRight($maxKeyLength) -ForegroundColor $script:Theme.Accent -NoNewline
                         Write-Host " : " -ForegroundColor $script:Theme.Muted -NoNewline
                         Write-Host $wrappedLines[0] -ForegroundColor $script:Theme.Text -NoNewline
-                        
+
                         $contentLength = 2 + $maxKeyLength + 3 + $wrappedLines[0].Length + 1
                         $padding = [Math]::Max(0, $Width - $contentLength)
                         Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
-                        
+
                         # Additional wrapped lines
                         for ($i = 1; $i -lt $wrappedLines.Count; $i++) {
                             Write-Host "│ " -ForegroundColor $script:Theme.Accent -NoNewline
                             Write-Host (" " * ($maxKeyLength + 3)) -NoNewline
                             Write-Host $wrappedLines[$i] -ForegroundColor $script:Theme.Text -NoNewline
-                            
+
                             $contentLength = 2 + $maxKeyLength + 3 + $wrappedLines[$i].Length + 1
                             $padding = [Math]::Max(0, $Width - $contentLength)
                             Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
@@ -241,7 +241,7 @@ function Write-InfoBox {
                         Write-Host $key.PadRight($maxKeyLength) -ForegroundColor $script:Theme.Accent -NoNewline
                         Write-Host " : " -ForegroundColor $script:Theme.Muted -NoNewline
                         Write-Host $value -ForegroundColor $script:Theme.Text -NoNewline
-                        
+
                         $contentLength = 2 + $maxKeyLength + 3 + $value.Length + 1
                         $padding = [Math]::Max(0, $Width - $contentLength)
                         Write-Host (" " * $padding + "│") -ForegroundColor $script:Theme.Accent
@@ -285,7 +285,7 @@ function Write-InfoBox {
                 if ($Content -is [hashtable] -and $line -match '^([^:]+): (.+)$') {
                     $key = $matches[1]
                     $value = $matches[2]
-                    
+
                     Write-Host "▌ " -ForegroundColor $script:Theme.Accent -NoNewline
                     Write-Host "● " -ForegroundColor $script:Theme.Success -NoNewline
                     Write-Host $key -ForegroundColor $script:Theme.Accent -NoNewline
@@ -309,7 +309,7 @@ function Write-InfoBox {
                 if ($Content -is [hashtable] -and $line -match '^([^:]+): (.+)$') {
                     $key = $matches[1]
                     $value = $matches[2]
-                    
+
                     Write-Host "  $key" -ForegroundColor $script:Theme.Muted -NoNewline
                     Write-Host ": " -ForegroundColor $script:Theme.Muted -NoNewline
                     Write-Host $value -ForegroundColor $script:Theme.Text
@@ -330,7 +330,7 @@ function Write-InfoBox {
                 if ($Content -is [hashtable] -and $line -match '^([^:]+): (.+)$') {
                     $key = $matches[1]
                     $value = $matches[2]
-                    
+
                     Write-Host " ◆ " -ForegroundColor $script:Theme.Accent -NoNewline
                     Write-Host $key -ForegroundColor $script:Theme.Accent -NoNewline
                     Write-Host ": " -ForegroundColor $script:Theme.Muted -NoNewline

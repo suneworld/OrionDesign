@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Convert-ToColoredSegments Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Private Helper Function
@@ -30,7 +30,7 @@ function Convert-ToColoredSegments {
     $pattern = '<(/?)([a-zA-Z]+)>'
     $tagMatches = [regex]::Matches($Text, $pattern)
 
-    $segments = @(); 
+    $segments = @();
     $colorStack = New-Object System.Collections.Stack
     $styleStack = New-Object System.Collections.Stack
     $pos = 0

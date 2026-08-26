@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Question Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Interactive Elements
@@ -246,10 +246,10 @@ function Write-Question {
                 if ([string]::IsNullOrWhiteSpace($userInput)) {
                     $userInput = if ($Default -eq 'Yes') { 'Y' } else { 'N' }
                 }
-                if ($userInput -match '^[Yy]') { 
-                    return $true 
-                } elseif ($userInput -match '^[Nn]') { 
-                    return $false 
+                if ($userInput -match '^[Yy]') {
+                    return $true
+                } elseif ($userInput -match '^[Nn]') {
+                    return $false
                 } else {
                     Write-Host "  ❌ Please enter Y for Yes or N for No" -ForegroundColor $script:Theme.Error
                     $validInput = $false
@@ -285,7 +285,7 @@ function Write-Question {
                         return $null
                     }
                 }
-                
+
                 # Validate the number (whether from input or default)
                 if (-not [string]::IsNullOrWhiteSpace($userInput)) {
                     $number = 0

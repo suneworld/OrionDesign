@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Action Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          February 4, 2026
 Module:        OrionDesign v2.1.2
 Category:      Interactive Display
@@ -48,7 +48,7 @@ The text length and right margin are stored for Write-ActionResult to calculate 
 Uses theme 'Action' color (or falls back to 'Text' color).
 
 COMPLETE MODE (-Complete):
-Displays a standalone result with optional icons, status colors, duration, 
+Displays a standalone result with optional icons, status colors, duration,
 subtext, and additional details. Use this for summarized action outcomes.
 
 RIGHT-ALIGNED MODE (-RightAlign):
@@ -112,7 +112,7 @@ Write-Action "Connecting to database"
 Write-ActionResult "Connected"
 
 Standard mode - displays with automatic right-alignment and margins:
- Connecting to database                                             Connected 
+ Connecting to database                                             Connected
 
 .EXAMPLE
 Write-Action "Loading configuration" -Indent 0
@@ -152,7 +152,7 @@ Standard mode with 4-space indentation:
 Write-Action "Completed successfully" -RightAlign
 
 Right-aligned mode (implies Complete):
-                                                       Completed successfully 
+                                                       Completed successfully
 
 .NOTES
 Standard mode: Pairs with Write-ActionResult for real-time status reporting.
@@ -174,7 +174,7 @@ function Write-Action {
         [int]$Indent = 1,
         [switch]$RightAlign,
         [switch]$Complete,
-        
+
         # Complete mode parameters
         [ValidateSet('Success', 'Failed', 'Warning', 'Info', 'Running', 'Pending')]
         [string]$Status = "",
@@ -262,7 +262,7 @@ function Write-Action {
     if ($Complete) {
         # ===== COMPLETE MODE =====
         # Standalone output with optional icons, status, duration, details
-        
+
         $maxContentWidth = $script:OrionMaxWidth - $indentString.Length - 10
 
         # Status icons and colors
@@ -353,7 +353,7 @@ function Write-Action {
     else {
         # ===== STANDARD MODE =====
         # No newline, pairs with Write-ActionResult
-        
+
         # Use Action color for descriptions (falls back to Text if Action not defined)
         $actionColor = if ($script:Theme.Action) { $script:Theme.Action } else { $script:Theme.Text }
         $textColor = if ($Color) { $Color } else { $actionColor }

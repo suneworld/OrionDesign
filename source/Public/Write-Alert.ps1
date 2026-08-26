@@ -2,7 +2,7 @@
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-Alert Function
 ================================================================================
-Author:        Sune Alexandersen Narud  
+Author:        Sune Alexandersen Narud
 Date:          August 22, 2025
 Module:        OrionDesign v1.6.0
 Category:      Information Display
@@ -50,7 +50,7 @@ Optional action question (e.g., "Continue anyway?").
 .PARAMETER ActionType
 Type of action if Action is specified. Valid values:
 - 'YesNo' - Yes/No question
-- 'Continue' - Continue/Cancel question  
+- 'Continue' - Continue/Cancel question
 - 'Custom' - Custom action text
 
 .PARAMETER Details
@@ -172,7 +172,7 @@ function Write-Alert {
         $padding = [Math]::Max(0, $maxWidth - $titleLineLength)
         $titleLine += (" " * $padding) + $alertInfo.Border
         Write-Host $titleLine -ForegroundColor $alertInfo.Color
-        
+
         # Separator line
         Write-Host $border -ForegroundColor $alertInfo.Color
     }
@@ -180,26 +180,26 @@ function Write-Alert {
     # Message line - clean design without icons
     $messageLine = $alertInfo.Border + " " + $alertInfo.Label + ": " + $Message + " "
     $messageLength = $messageLine.Length + 1  # +1 for ending border
-    
+
     if ($messageLength -gt $maxWidth) {
         # Multi-line message
         $words = $Message -split ' '
         $currentLine = $alertInfo.Border + " " + $alertInfo.Label + ": "
-        
+
         foreach ($word in $words) {
             if (($currentLine + $word + " ").Length -gt $maxWidth - 1) {
                 # Finish current line
                 $padding = [Math]::Max(0, $maxWidth - $currentLine.Length - 1)
                 $currentLine += (" " * $padding) + $alertInfo.Border
                 Write-Host $currentLine -ForegroundColor $alertInfo.Color
-                
+
                 # Start new line
                 $currentLine = $alertInfo.Border + "   " + $word + " "
             } else {
                 $currentLine += $word + " "
             }
         }
-        
+
         # Finish last line
         $padding = [Math]::Max(0, $maxWidth - $currentLine.Length - 1)
         $currentLine += (" " * $padding) + $alertInfo.Border
