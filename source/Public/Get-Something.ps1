@@ -1,4 +1,4 @@
-function Get-Something
+﻿function Get-Something
 {
     <#
       .SYNOPSIS

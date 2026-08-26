@@ -1,4 +1,4 @@
-function Get-PrivateFunction
+﻿function Get-PrivateFunction
 {
     <#
       .SYNOPSIS

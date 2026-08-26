@@ -1,4 +1,4 @@
-function Show-OrionSmartMenu {
+﻿function Show-OrionSmartMenu {
     <#
     .SYNOPSIS
         Displays a reusable interactive menu with smart input mode selection.

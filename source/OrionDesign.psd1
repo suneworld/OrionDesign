@@ -33,7 +33,7 @@ Copyright = '(c) 2026 Sune Alexandersen Narud. All rights reserved.'
 Description = 'Orion Design Framework - Beautiful PowerShell UI functions for creating rich terminal interfaces. Includes themed output, progress bars, menus, banners, charts, alerts, panels and more. Every function includes a built-in -Demo parameter.'
 
 # Minimum version of the Windows PowerShell engine required by this module
-PowerShellVersion = '5.1'
+PowerShellVersion = '5.0'
 
 # Name of the Windows PowerShell host required by this module
 # PowerShellHostName = ''
@@ -93,6 +93,7 @@ DscResourcesToExport = @()
 PrivateData = @{
 
         PSData = @{
+
             Tags         = @('UI', 'Terminal', 'Console', 'Output', 'Formatting', 'Theme', 'Menu', 'Banner', 'Chart', 'ProgressBar', 'Colors', 'TUI', 'PowerShell5', 'PSCore')
             ProjectUri   = 'https://github.com/suneworld/OrionDesign'
             LicenseUri   = 'https://github.com/suneworld/OrionDesign/blob/master/LICENSE'
@@ -117,7 +118,8 @@ PrivateData = @{
 - Enhanced Write-Action/Write-ActionResult alignment
 '@
         }
-    }
+
+    } # End of PrivateData hashtable
 
 # HelpInfo URI of this module
 # HelpInfoURI = ''
@@ -126,16 +128,3 @@ PrivateData = @{
 # DefaultCommandPrefix = ''
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-

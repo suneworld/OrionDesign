@@ -1,4 +1,4 @@
-<#
+﻿<#
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-MenuLine Function
 ================================================================================
@@ -21,10 +21,10 @@ USE CASES:
 
 LAYOUT STRUCTURE:
 ┌────────────────────────────────────────────────────────────────────────────┐
-│ [Indent] [Number]. [Title]                            [SuffixNumber] [Suffix] │
-│    ↑         ↑        ↑                                     ↑            ↑       │
-│  Margin   Accent   Text                                  Accent       Text     │
-│  (1 sp)   Color    Color                                 Color        Color    │
+│ [Indent] [Number]. [Title]                         [SuffixNumber] [Suffix] │
+│    ↑         ↑        ↑                               ↑            ↑       │
+│  Margin   Accent   Text                              Accent       Text     │
+│  (1 sp)   Color    Color                             Color        Color    │
 └────────────────────────────────────────────────────────────────────────────┘
 
 HLD INTEGRATION:

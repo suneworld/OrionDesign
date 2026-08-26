@@ -1,4 +1,4 @@
-<#
+﻿<#
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-ProgressBar Function
 ================================================================================
@@ -15,11 +15,11 @@ with bar charts, blocks, and percentage displays.
 
 HLD INTEGRATION:
 ┌─ STATUS & RESULTS ─┐    ┌─ PROGRESS TYPES ─┐    ┌─ OUTPUT ─┐
-│ Write-ProgressBar  │◄──►│ Bar/Blocks/Dots   │───►│ Visual   │
-│ • Current/Max      │    │ Percentage Show   │    │ Progress │
-│ • Visual Styles    │    │ Text Labels       │    │ Real-time│
-│ • Customizable     │    │ Color Coding      │    │ Updates  │
-└───────────────────┘    └───────────────────┘    └──────────┘
+│ Write-ProgressBar  │◄──►│ Bar/Blocks/Dots  │───►│ Visual   │
+│ • Current/Max      │    │ Percentage Show  │    │ Progress │
+│ • Visual Styles    │    │ Text Labels      │    │ Real-time│
+│ • Customizable     │    │ Color Coding     │    │ Updates  │
+└────────────────────┘    └──────────────────┘    └──────────┘
 ================================================================================
 #>
 

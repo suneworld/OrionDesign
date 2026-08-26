@@ -1,4 +1,4 @@
-function Show-OrionDemo {
+﻿function Show-OrionDemo {
     <#
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Unified Demo Function

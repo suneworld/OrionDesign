@@ -1,4 +1,4 @@
-<#
+﻿<#
 ================================================================================
 ORION DESIGN - POWERSHELL UI FRAMEWORK | Write-InfoBox Function
 ================================================================================
@@ -14,8 +14,8 @@ Versatile information display component providing highlighted content areas
 with automatic width calculation and various visual styles.
 
 HLD INTEGRATION:
-┌─ INFORMATION ─┐    ┌─ BOX STYLES ─┐    ┌─ OUTPUT ─┐
-│ Write-InfoBox │◄──►│ Classic/Modern│───►│ Bordered │
+┌─ INFORMATION  ─┐    ┌─ BOX STYLES  ─┐    ┌─ OUTPUT ─┐
+│ Write-InfoBox  │◄──►│ Classic/Modern│───►│ Bordered │
 │ • Title/Content│    │ Simple/Accent │    │ Info     │
 │ • Auto Width   │    │ Icon Support  │    │ Content  │
 │ • Safety Checks│    │ Width Control │    │ Safe     │
