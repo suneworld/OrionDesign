@@ -12,13 +12,13 @@
 RootModule = 'OrionDesign.psm1'
 
 # Version number of this module.
-ModuleVersion = '0.0.1'
+ModuleVersion = '3.1.1'
 
 # Supported PSEditions
 # CompatiblePSEditions = @()
 
 # ID used to uniquely identify this module
-GUID = '981576c1-f22d-473f-8b3e-06acf22c59d5'
+GUID = 'f827a4ef-a736-449b-b684-dfeba0fdadc3'
 
 # Author of this module
 Author = 'Sune Alexandersen Narud'
@@ -97,6 +97,10 @@ PrivateData = @{
             ProjectUri   = 'https://github.com/suneworld/OrionDesign'
             LicenseUri   = 'https://github.com/suneworld/OrionDesign/blob/master/LICENSE'
             ReleaseNotes = @'
+## v3.1.1
+- Fixed not all functions beein available by implementing modules
+  using the Sampler Framework.
+
 ## v3.1.0
 - Added -Demo parameter to all 21 public functions
 - Each demo shows live output with exact code that produced it
