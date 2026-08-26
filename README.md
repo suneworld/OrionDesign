@@ -338,3 +338,28 @@ Export-OrionHelpers -ScriptPath ".\MyScript.ps1" -CommentOutImport:$false
 **OrionDesign v3.1.0** | PowerShell UI Framework | 21 Functions | 13 Themes | Global Configuration | ANSI Support | -Demo on every function
 
 🔗 [PSGallery](https://www.powershellgallery.com/packages/OrionDesign) · [GitHub](https://github.com/suneworld/OrionDesign)
+
+## How do I use this repo?
+
+This module is generated with Plaster and the SamplerModule template.
+
+To build the module you need to use Sampler
+
+~~~
+Install-Module Sampler
+~~~
+
+Navigate to the root of a clone of this repo.
+
+~~~
+.\build build
+~~~
+
+You might need to change the format of `output\module\OrionDesign\3.1.1\OrionDesign.psm1` from UTF8 to UTF8wBOM
+to be able to use the generated module.
+
+## References and links
+
+* [Getting started with Sampler (Project ReadMe)][1]
+
+[1]:https://github.com/gaelcolas/Sampler/blob/main/README.md
