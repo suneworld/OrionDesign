@@ -158,7 +158,8 @@ function Set-OrionTheme {
         Write-Host ''
         $t = Get-OrionTheme
         Write-Host '  Current theme: ' -NoNewline -ForegroundColor DarkGray
-        Write-Host ($t.Name ?? 'Default') -ForegroundColor Cyan
+        $name = if ($null -eq $t.Name) { 'Default' } else { $t.Name }
+        Write-Host $name -ForegroundColor Cyan
         Write-Host ''
         return
     }
