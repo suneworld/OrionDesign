@@ -341,13 +341,17 @@ Export-OrionHelpers -ScriptPath ".\MyScript.ps1" -CommentOutImport:$false
 
 ## How do I use this repo?
 
-This module is generated with Plaster and the SampleModule template.
+This module is generated with Plaster and the SamplerModule template.
 
-To build the module you need to use samplew
+To build the module you need to use Sampler
 
 ~~~
 Install-Module Sampler
+~~~
 
+Navigate to the root of a clone of this repo.
+
+~~~
 .\build build
 ~~~
 
