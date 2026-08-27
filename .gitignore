@@ -1,5 +1,14 @@
+# VS Code workspace files (local editor config, not part of the module)
+*.code-workspace
+.vscode/
+
+# PowerShell test output
+TestResults/
+
+# Sampler build outpits
 output/
 
+# Other files to omit (and to not)
 **.bak
 *.local.*
 !**/README.md
